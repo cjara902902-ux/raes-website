@@ -69,6 +69,12 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 .gbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;margin-top:4px}
 .testbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}.testq{padding:12px 0;border-bottom:1px solid var(--line)}.testq:last-child{border-bottom:0}.testq label{display:block;padding:5px 0;cursor:pointer}.testq input{margin-right:8px;accent-color:var(--accent)}.test-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.test-result{font-weight:700;margin:12px 0}.correct{color:#15803d}.wrong{color:var(--warn)}
 #gprog{font-weight:600}
+
+.memory-topic{padding:10px 0;border-bottom:1px solid var(--line, #ddd)}
+.memory-topic:last-child{border-bottom:0}
+.memory-topic h3{margin:0 0 6px;font-size:1rem}
+.memory-topic p{margin:5px 0;line-height:1.55}
+.memory-hook{padding:8px 10px;border-left:3px solid var(--accent, #e5b900);border-radius:4px;background:var(--panel, rgba(127,127,127,.08))}
 </style>
 </head>
 <body>
@@ -630,19 +636,17 @@ var L=[
 (function(){$("llist").innerHTML=""})();
 $("ltog").onclick=function(){var ds=$("llist").querySelectorAll("details"),o=!ds[0].open;ds.forEach(function(d){d.open=o});this.textContent=o?"Close all":"Open all"};
 
-// Keep Plain English aligned with every starred section in the main Notes tab.
+// Plain English is designed as a memory aid, not just a simplified copy of the notes.
 (function(){
-  var h='<h2>Plain-English versions of the starred notes</h2><p class="sub">These sections follow the same starred chapter topics as the Notes tab. The key terms stay the same, with the explanation written in simpler language.</p>';
-  DN.forEach(function(section){
-    h+='<details class="star"><summary>'+section[0]+'</summary><div class="body"><ul>';
-    section[1].forEach(function(line){
-      var plain=line.replace(/<span class="ex">/g,'').replace(/<\/span>/g,'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
-      plain=plain.replace(/\(Textbook knowledge, not on your slides\. Check your lecture\.\)/g,'(extra textbook information; check your lecture notes)');
-      if(plain)h+='<li>'+plain+'</li>';
+  var h='<h2>Make the notes stick</h2><p class="sub">Each topic gives you a plain-language meaning, a real-life example when useful, and a memory hook. Learn the bold course term first, then use the hook to recall what it means. These are memory aids for the starred lecture topics, not replacements for the full Notes tab.</p>';
+  L.forEach(function(section){
+    h+='<details class="star"><summary>'+section[0]+'</summary><div class="body">';
+    section[1].forEach(function(topic){
+      h+='<div class="memory-topic"><h3>'+topic[0]+'</h3><p>'+topic[1]+'</p><p class="memory-hook"><b>Remember it:</b> '+topic[2]+'</p></div>';
     });
-    h+='</ul></div></details>';
+    h+='</div></details>';
   });
-  $('llist').insertAdjacentHTML('afterbegin',h);
+  $('llist').innerHTML=h;
 })();
 
 // Practice test: questions are based on the uploaded study guide and lecture notes.

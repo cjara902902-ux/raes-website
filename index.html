@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Psych 2 Exam 1 Study Site</title>
+<style>
+:root{--bg:#eef1f6;--surface:#fff;--ink:#1b2437;--muted:#5b667d;--line:#d5dbe7;--accent:#0f766e;--accent-ink:#fff;--warn:#b45309;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121826;--surface:#1c2539;--ink:#eef1f8;--muted:#a3adc4;--line:#33405c;--accent:#2dd4bf;--accent-ink:#0b1a18;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#121826;--surface:#1c2539;--ink:#eef1f8;--muted:#a3adc4;--line:#33405c;--accent:#2dd4bf;--accent-ink:#0b1a18;--warn:#fbbf24}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:700px;margin:0 auto;padding:20px 16px 40px}
+h1{font:600 1.5rem/1.2 Georgia,"Times New Roman",serif;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+button{font:inherit;color:inherit;cursor:pointer}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.scene{perspective:1200px}
+.card{position:relative;width:100%;min-height:300px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:0;background:none;padding:0;text-align:left}
+.card.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center;overflow:auto}
+.back{transform:rotateY(180deg);border-color:var(--accent)}
+.tag{position:absolute;top:12px;left:16px;font-size:.8rem;color:var(--muted)}
+.q{font:600 1.35rem/1.35 Georgia,"Times New Roman",serif}
+.a{font-size:1.05rem}
+.hint{position:absolute;bottom:10px;right:16px;font-size:.8rem;color:var(--muted)}
+.note{font-size:.8rem;color:var(--warn);margin-top:10px}
+.row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{flex:1;min-width:90px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
+.btn.go{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.again{border-color:var(--warn);color:var(--warn)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.empty{text-align:center;padding:48px 16px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.card,.bar i{transition:none}}
+input[type=search]{width:100%;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:12px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";float:right;color:var(--muted)}
+details[open] summary::after{content:"\2212"}
+.body{padding:0 16px 14px}
+.body ul{margin:6px 0 0;padding-left:20px}
+.body li{margin:4px 0}
+.ex{color:var(--muted)}
+.star{border-color:var(--accent)}
+mark{background:var(--mark);color:inherit;border-radius:3px}
+.fix{font-size:.85rem;color:var(--muted);margin-top:8px}
+textarea{width:100%;min-height:200px;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical}
+.nrow{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.nrow button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px}
+.nrow button.go{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+#st{color:var(--muted);font-size:.85rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
+.tabs{display:flex;gap:2px;overflow-x:auto;margin:12px 0 16px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.tabs button{border:0;background:none;padding:10px 10px;white-space:nowrap;border-bottom:3px solid transparent;color:var(--muted);font-weight:600;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.gl{list-style:none;padding:0;margin:0}
+.gl li{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.gl label{display:flex;gap:10px;padding:10px 12px;cursor:pointer}
+.gl input{margin-top:5px;width:18px;height:18px;flex:none;accent-color:var(--accent)}
+.gbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;margin-top:4px}
+#gprog{font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>Psych 2 Exam 1 study site</h1>
+<nav class="tabs" role="tablist" aria-label="Study sections">
+<button role="tab" data-tab="cards" aria-selected="true">Flashcards</button>
+<button role="tab" data-tab="notes" aria-selected="false">Notes</button>
+<button role="tab" data-tab="learn" aria-selected="false">Plain English</button>
+<button role="tab" data-tab="guide" aria-selected="false">Study guide</button>
+</nav>
+<section id="tab-cards">
+<p class="sub">60 cards. Tap a card or press Space to flip it. Arrow keys move between cards.</p>
+<div class="chips" id="chips"></div>
+<div class="bar"><i id="fill"></i></div>
+<div class="meta"><span id="pos"></span><span id="score"></span></div>
+<div class="scene"><button class="card" id="card" aria-live="polite"></button></div>
+<div class="row">
+<button class="btn again" id="again">Still learning</button>
+<button class="btn go" id="got">Got it</button>
+</div>
+<div class="row">
+<button class="btn" id="prev">Back</button>
+<button class="btn" id="next">Next</button>
+<button class="btn" id="shuf">Shuffle</button>
+<button class="btn" id="reset">Reset progress</button>
+</div>
+
+</section>
+<section id="tab-notes" hidden>
+<p class="sub">Your handwritten notes, typed up, followed by notes built from all 60 flashcards.</p>
+<input type="search" id="q" placeholder="Search your notes" aria-label="Search notes">
+<div id="list"></div>
+
+<h2>My new notes</h2>
+<textarea id="ta" aria-label="My new notes" placeholder="Type anything you want to remember. It saves in this browser as you type."></textarea>
+<div class="nrow">
+<button class="go" id="copy">Copy notes</button>
+<button id="clr">Clear</button>
+<span id="st"></span>
+</div>
+
+</section>
+<section id="tab-guide" hidden>
+<p class="sub">Every topic on your Exam 1 study guide. Check a topic off once you can explain it without looking. <span id="gprog"></span></p>
+<div id="glist"></div>
+</section>
+<section id="tab-learn" hidden>
+<p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
+<button class="gbtn" id="ltog">Open all</button>
+<div id="llist"></div>
+</section>
+</main>
+<script>
+
+var C=[
+[1,"What is psychology?","The scientific study of mind and behavior."],
+[1,"Developmental psychology","Studies changes in behavior over the life span (“womb to tomb”)."],
+[1,"Personality psychology","Examines consistencies in people’s behavior over time and the traits that differentiate us from one another."],
+[1,"Cognitive psychology","Studies sensation, perception, learning and thinking, with emphasis on higher mental processes: cognitions, thoughts, and their relationship to experiences and behavior."],
+[1,"Forensic psychology","Deals with questions related to the justice system."],
+[1,"Biological psychology / neuroscience","Specializes in the biological bases of behavior."],
+[1,"Health psychology","Focuses on how health is affected by the interaction of biological, psychological, and sociocultural factors."],
+[1,"Social psychology","Studies how people are affected by others."],
+[1,"Cross-cultural psychology","Focuses on similarities and differences in psychological functioning across cultures and ethnic groups."],
+[1,"Clinical psychology","Investigates the diagnosis and treatment of psychological disorders (an applied subfield)."],
+[1,"Industrial-organizational psychology","Applies psychological theories, principles, and research findings in the workplace."],
+[1,"Sport and exercise psychology","Focuses on psychological aspects of sport performance (motivation, performance anxiety) and the effects of sport on mental and emotional wellbeing."],
+[1,"Behavioral genetics","Focuses on how we might inherit genes and how the environment influences whether we display traits. (A “new frontier.”)"],
+[1,"Evolutionary psychology","Examines the influence of our genetic heritage on our behavior. (A “new frontier.”)"],
+[1,"Clinical neuropsychology","Focuses on relationships between biological factors and psychological disorders. (A “new frontier.”)"],
+[1,"How many years of study for each degree level in psychology?","Bachelor’s: 4-year degree. Master’s: 2–3 years past a bachelor’s. Doctoral (Ph.D. and Psy.D.): 5–6 years past a bachelor’s."],
+[1,"Portrait of a psychologist (U.S.)","About 300,000 psychologists. Women outnumber men, and about ¾ of doctorates go to women. The vast majority are white; about 6% are members of racial minority groups."],
+[1,"Neuroscience perspective","Biological bases of behavior: the brain and the nervous system."],
+[1,"Psychodynamic perspective","Behavior is influenced by inner forces. Example: Freudian slips."],
+[1,"Behavioral perspective","Focuses on observable events."],
+[1,"Cognitive perspective","How people think, understand, and know about the world."],
+[1,"Humanistic perspective","Emphasizes free will and our natural tendency to be in control of our lives."],
+[1,"Name psychology’s five key issues","1) Nature vs. nurture. 2) Observable behavior vs. internal mental processes. 3) Conscious vs. unconscious. 4) Free will vs. determinism. 5) Individual differences vs. universal principles."],
+[1,"Free will vs. determinism","How much behavior results from choices made freely by the individual, and how much is determined by factors outside a person’s willful control?"],
+[2,"What are the four steps of the scientific method?","1) Identify questions of interest. 2) Formulate an explanation (theory, then hypothesis). 3) Carry out research (operationalize, choose method, collect and analyze data). 4) Communicate the findings."],
+[2,"Theory vs. hypothesis","A theory is a broad explanation and prediction about a phenomenon. A hypothesis is a prediction stated in a way that allows it to be tested."],
+[2,"Operationalization","Translating a hypothesis into specific, testable procedures that can be measured and observed. Example: “Intelligent people are more successful” must define how intelligence and success are measured."],
+[2,"Name the four types of descriptive research","Archival research, naturalistic observation, survey research, and case study."],
+[2,"Naturalistic observation vs. archival research","Naturalistic observation: watching naturally occurring behavior without intervention. Archival research: using existing data to test a hypothesis."],
+[2,"Survey research vs. case study","Survey: a sample of people answers questions about behavior, thoughts, and attitudes to represent a larger population. Case study: in-depth, intensive investigation of one individual or a small group."],
+[2,"Correlational research","Examines whether two sets of variables are associated (“correlated”). Correlations range from +1 to −1."],
+[2,"Correlation vs. causation","Correlation does NOT mean causation. Only experiments can show cause and effect."],
+[2,"Experimental research","Investigates the relationship between two or more variables by deliberately producing a change in one variable and observing the effects on others."],
+[2,"Independent vs. dependent variable","Independent variable: manipulated by the experimenter. Dependent variable: measured, and expected to change because of the independent variable. (A variable is any behavior, event, or characteristic that can vary.)"],
+[2,"Random assignment to condition","Participants are assigned to experimental groups (conditions) by chance and chance alone."],
+[2,"Significant outcome and replication","Significant outcome: statistics show differences between groups are large enough to matter. Replication: repeating findings using other procedures in other settings."],
+[3,"Reliability vs. validity (Ch 7)","Reliability: a test gives consistent results. Validity: a test measures what it is supposed to measure.","Not in your slides. Check against class notes."],
+[3,"Piaget’s four stages of cognitive development (Ch 9)","Sensorimotor, preoperational, concrete operational, formal operational.","Not in your slides. Check against class notes."],
+[3,"Maslow’s hierarchy of needs, bottom to top (Ch 10)","Physiological, safety, love and belongingness, esteem, self-actualization.","Not in your slides. Check against class notes."],
+[3,"Attachment styles (Ch 9)","Secure, avoidant, ambivalent (anxious), and disorganized-disoriented.","Not in your slides. Check against class notes."],
+[4,"What are the three goals of psychology?","Predict behavior, change behavior, and explain behavior."],
+[4,"Developmental psychology example: power and longevity","Your note: people with a lot of power (in every way) tend to live longer, so going from powerful to less powerful can affect you."],
+[4,"Why are personality tests used?","Personality psychology studies individual differences. Your note: tests can help decide whether someone is a good fit to hire. Another example in your notes: age-appropriate toys."],
+[4,"What is a schema? (Cognitive psychology)","A mental framework built from experience. Your note: what society probably implanted in your head."],
+[4,"Forensic psychology: what is an example of its work?","It deals with the justice system. Your note: finding biases."],
+[4,"Biological psychology example: conscientiousness","Your notes say conscientiousness can influence the longevity of life, and that mindset can matter for outcomes like surviving illness."],
+[4,"Sonder (starred in your notes)","Realizing that everyone has a separate life, is the main character in their own, and that you will never experience it."],
+[4,"Behavioral genetics example: the “warrior gene”","Behavioral genetics looks at how genes interact with the environment. Your note: the “warrior / axe murderer” gene makes violent tendencies easier. Environment still influences whether a trait shows up."],
+[4,"I/O psychology: what questions does it ask?","How do people behave at work, why do some become leaders, and how can teams improve in every way?"],
+[3,"Spearman’s g (Ch 7)","General intelligence: one underlying factor that influences performance on all mental tasks.","Not in your slides. Check against class notes."],
+[3,"Gardner’s multiple intelligences (Ch 7)","Eight intelligences: linguistic, logical-mathematical, spatial, musical, bodily-kinesthetic, interpersonal, intrapersonal, naturalistic.","Not in your slides. Check against class notes."],
+[3,"Sternberg’s triarchic theory (Ch 7)","Three kinds of intelligence: analytical, creative, and practical.","Not in your slides. Check against class notes."],
+[3,"Intellectual disability (Ch 7)","Significantly below-average intellectual functioning (IQ roughly 70 or below) plus limits in adaptive functioning (everyday living skills), beginning in childhood.","Not in your slides. Check against class notes."],
+[3,"Pitfalls to problem solving (Ch 7)","Functional fixedness (seeing objects only for their usual use), mental set (sticking with what worked before), confirmation bias, and anchoring.","Not in your slides. Check against class notes."],
+[3,"Erikson’s eight psychosocial stages (Ch 9)","Trust vs. mistrust; autonomy vs. shame and doubt; initiative vs. guilt; industry vs. inferiority; identity vs. role confusion; intimacy vs. isolation; generativity vs. stagnation; integrity vs. despair.","Not in your slides. Check against class notes."],
+[3,"Four parenting styles (Ch 9)","Authoritative (warm, firm limits), authoritarian (strict, low warmth), permissive (warm, few rules), uninvolved (neglectful).","Not in your slides. Check against class notes."],
+[3,"Aging theories (Ch 9)","Disengagement theory: older adults naturally withdraw from roles. Activity theory: staying active leads to better aging. Continuity theory: people keep their long-standing habits and personality.","Not in your slides. Check against class notes."],
+[3,"James-Lange vs. Cannon-Bard vs. Schachter-Singer (Ch 10)","James-Lange: body arousal comes first, then the emotion. Cannon-Bard: arousal and emotion happen at the same time. Schachter-Singer: arousal plus a cognitive label creates the emotion.","Not in your slides. Check against class notes."],
+[3,"Basic emotions (Ch 10)","Ekman’s six: happiness, sadness, fear, anger, surprise, and disgust. Display rules differ by culture.","Not in your slides. Check against class notes."],
+[3,"Intrinsic vs. extrinsic motivation (Ch 10)","Intrinsic: driven by internal rewards like enjoyment. Extrinsic: driven by outside rewards like money or grades.","Not in your slides. Check against class notes."]
+];
+var NAMES={0:"All",1:"Ch 1",2:"Ch 2",3:"Ch 7, 9, 10",4:"My notes"};
+var st={ch:0,mode:"all",i:0,flip:false,order:C.map(function(_,k){return k}),known:{}};
+var $=function(id){return document.getElementById(id)};
+function deck(){return st.order.filter(function(k){return (st.ch===0||C[k][0]===st.ch)&&(st.mode==="all"||!st.known[k])})}
+function chips(){
+  var h="";
+  [0,1,2,3,4].forEach(function(c){h+='<button class="chip" data-ch="'+c+'" aria-pressed="'+(st.ch===c)+'">'+NAMES[c]+'</button>'});
+  h+='<button class="chip" data-m="1" aria-pressed="'+(st.mode==="learn")+'">Only unlearned</button>';
+  $("chips").innerHTML=h;
+}
+function render(){
+  var d=deck();
+  if(st.i>=d.length)st.i=Math.max(0,d.length-1);
+  var kn=Object.keys(st.known).length;
+  $("score").textContent=kn+" of "+C.length+" learned";
+  $("fill").style.width=(kn/C.length*100)+"%";
+  var c=$("card");
+  if(!d.length){c.className="card";c.innerHTML='<div class="face empty">No cards here. Switch the filter or reset progress.</div>';$("pos").textContent="0 cards";return}
+  var k=d[st.i],x=C[k];
+  $("pos").textContent="Card "+(st.i+1)+" of "+d.length;
+  c.className="card"+(st.flip?" flip":"");
+  c.setAttribute("aria-label",st.flip?"Answer. Press to see question.":"Question. Press to see answer.");
+  c.innerHTML='<div class="face"><span class="tag">'+NAMES[x[0]]+'</span><div class="q">'+x[1]+'</div><span class="hint">Tap to flip</span></div>'+
+    '<div class="face back"><span class="tag">'+NAMES[x[0]]+'</span><div class="a">'+x[2]+'</div>'+(x[3]?'<div class="note">'+x[3]+'</div>':'')+'</div>';
+}
+function go(n){var d=deck();if(!d.length)return;st.i=(st.i+n+d.length)%d.length;st.flip=false;render()}
+function mark(v){
+  var d=deck();if(!d.length)return;var k=d[st.i];
+  if(v)st.known[k]=1;else delete st.known[k];
+  st.flip=false;
+  if(st.mode==="learn"&&v){render();return}
+  go(1);
+}
+$("card").onclick=function(){st.flip=!st.flip;render()};
+$("next").onclick=function(){go(1)};
+$("prev").onclick=function(){go(-1)};
+$("got").onclick=function(){mark(true)};
+$("again").onclick=function(){mark(false)};
+$("shuf").onclick=function(){
+  for(var j=st.order.length-1;j>0;j--){var r=Math.floor(Math.random()*(j+1)),t=st.order[j];st.order[j]=st.order[r];st.order[r]=t}
+  st.i=0;st.flip=false;render()
+};
+$("reset").onclick=function(){st.known={};st.i=0;st.flip=false;render()};
+$("chips").onclick=function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.ch!==undefined)st.ch=+b.dataset.ch;
+  if(b.dataset.m)st.mode=st.mode==="learn"?"all":"learn";
+  st.i=0;st.flip=false;chips();render()
+};
+document.addEventListener("keydown",function(e){
+  if($("tab-cards").hidden)return;
+  if(e.key==="ArrowRight")go(1);
+  else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key===" "&&document.activeElement.tagName!=="BUTTON"){e.preventDefault();st.flip=!st.flip;render()}
+});
+chips();render();
+
+var N=[
+["Psychology: the basics",[
+"Psychology = scientific study of mind and behavior.",
+"Goals: predict behavior, change behavior, and explain it."
+]],
+["Subfields overview",[
+"The basic subfields are distinct, but they can be combined."
+]],
+["Developmental (life span) psychology",[
+"From children to the elderly: how do you develop from the womb to the tomb?",
+"<span class='ex'>Example: imagine going from being powerful to less powerful. What does that do to you? People with a lot of power (in every way) tend to live longer.</span>"
+]],
+["Personality psychology",[
+"The study of individual differences.",
+"<span class='ex'>Example: age-appropriate toys.</span>",
+"<span class='ex'>Example: personality tests are used to decide if you are a fit to hire.</span>"
+]],
+["Cognitive and forensic psychology",[
+"Cognitive = studies and researches questions (how we think).",
+"Schema = what society probably implanted in your head.",
+"Forensic = deals with the justice system. Example: finding biases."
+]],
+["Biological psychology (neuroscience)",[
+"Neuroscience = the biological causes of behavior.",
+"Marked as “most interested.”",
+"<span class='ex'>Example: whether you survive cancer or not is all about your mindset.</span>",
+"<span class='ex'>Example: conscientiousness can determine the longevity of life.</span>"
+]],
+["Social and cross-cultural psychology",[
+"Social psychology = how people are affected by others.",
+"<span class='ex'>Cross-cultural example: Facebook is not good for health because it creates insecurities. We only post and exaggerate the good stuff. (Do the opposite? Post something vulnerable and people will feel bad for you.)</span>"
+]],
+["★ Sonder",[
+"A “bad” emotion: the realization that everyone has a separate life, that they are the main character in their own life, and that you will never experience it."
+],1],
+["Applied psychology",[
+"Going to see a counselor or clinical psychologist.",
+"<b>Clinical psychology</b>",
+"<b>Industrial-organizational psychology:</b> how do people behave at work, why do people become leaders, how do you improve teams in every way?",
+"<b>Sport and exercise psychology:</b> how to improve people in their chosen sports. (Note: no psychologists for college sports…)"
+]],
+["New frontiers",[
+"The popular one is neuroscience.",
+"<b>Clinical neuropsychology:</b> brain study (biological). <span class='ex'>Example: three kids killed because of an impulsive decision by their mom.</span>",
+"<b>Behavioral genetics:</b> how our genes interact with the environment. <span class='ex'>Example: the “warrior / axe murderer” gene makes it easier to kill others and gives you murder tendencies.</span>",
+"<b>Evolutionary psychology:</b> the idea that our genetic heritage is influenced by evolution."
+]],
+["Flashcard notes: Ch 1 subfields",[
+"<b>Developmental:</b> changes over the life span. <b>Personality:</b> consistencies over time and differences between people.",
+"<b>Cognitive:</b> sensation, perception, learning, thinking, and higher mental processes. <b>Forensic:</b> the justice system.",
+"<b>Biological / neuroscience:</b> biological bases of behavior. <b>Health:</b> how biological, psychological, and sociocultural factors affect health.",
+"<b>Social:</b> how people are affected by others. <b>Cross-cultural:</b> similarities and differences across cultures and ethnic groups.",
+"<b>Applied:</b> clinical (diagnosis and treatment of disorders), industrial-organizational (workplace), sport and exercise (performance, anxiety, wellbeing).",
+"<b>New frontiers:</b> clinical neuropsychology (biology and disorders), behavioral genetics (genes plus environment), evolutionary psychology (genetic heritage and behavior)."
+]],
+["Flashcard notes: Ch 1 degrees, perspectives, key issues",[
+"<b>Degrees:</b> bachelor’s = 4 years; master’s = 2–3 years past bachelor’s; doctoral (Ph.D., Psy.D.) = 5–6 years past bachelor’s.",
+"<b>Portrait:</b> about 300,000 U.S. psychologists; women outnumber men and earn about ¾ of doctorates; the vast majority are white, about 6% are racial minority group members.",
+"<b>Perspectives:</b> neuroscience (brain and nervous system), psychodynamic (inner forces, Freudian slips), behavioral (observable events), cognitive (how people think and know), humanistic (free will, control of our lives).",
+"<b>Key issues:</b> nature vs. nurture; observable behavior vs. mental processes; conscious vs. unconscious; free will vs. determinism; individual differences vs. universal principles.",
+"<b>Future:</b> more specialization, growing neuroscience influence, more public-interest impact, and more focus on diversity."
+]],
+["Flashcard notes: Ch 2 research methods",[
+"<b>Scientific method:</b> 1) identify questions, 2) formulate an explanation (theory, hypothesis), 3) carry out research (operationalize, choose method, collect and analyze data), 4) communicate findings.",
+"<b>Theory</b> = broad explanation. <b>Hypothesis</b> = testable prediction. <b>Operationalization</b> = turning a hypothesis into measurable procedures.",
+"<b>Descriptive research:</b> archival (existing data), naturalistic observation (no intervention), survey (sample represents a population), case study (in-depth look at one person or small group).",
+"<b>Correlation:</b> relationship between variables, from +1 to −1. Correlation does not mean causation.",
+"<b>Experiment:</b> deliberately change one variable and watch the effect. Independent variable = manipulated. Dependent variable = measured. Random assignment = groups formed by chance alone.",
+"<b>Significant outcome:</b> group differences big enough by statistical tests. <b>Replication:</b> repeating findings with other procedures in other settings."
+]],
+["Flashcard notes: Ch 7, 9, 10 (check against class notes)",[
+"<b>Ch 7:</b> reliability = consistent results; validity = measures what it should. Spearman’s g; Gardner’s eight intelligences; Sternberg’s analytical, creative, practical. Intellectual disability = IQ roughly 70 or below plus adaptive-functioning limits. Pitfalls: functional fixedness, mental set, confirmation bias, anchoring.",
+"<b>Ch 9:</b> attachment styles: secure, avoidant, ambivalent, disorganized. Parenting: authoritative, authoritarian, permissive, uninvolved. Piaget: sensorimotor, preoperational, concrete operational, formal operational. Erikson: trust, autonomy, initiative, industry, identity, intimacy, generativity, integrity (each vs. its negative). Aging: disengagement, activity, continuity.",
+"<b>Ch 10:</b> Maslow, bottom to top: physiological, safety, love and belongingness, esteem, self-actualization. Emotion theories: James-Lange (arousal first), Cannon-Bard (simultaneous), Schachter-Singer (arousal plus label). Ekman’s six basic emotions. Intrinsic vs. extrinsic motivation."
+]]
+];
+var list=document.getElementById("list");
+function draw(t){
+  var h="",n=0;
+  N.forEach(function(s){
+    var items=s[1].filter(function(x){return !t||(s[0]+" "+x).toLowerCase().indexOf(t)>-1});
+    if(!items.length)return;
+    n++;
+    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div></details>';
+  });
+  list.innerHTML=h||'<p class="sub">No notes match that search.</p>';
+}
+document.getElementById("q").oninput=function(){draw(this.value.trim().toLowerCase())};
+draw("");
+var ta=document.getElementById("ta"),nst=document.getElementById("st");
+try{ta.value=localStorage.getItem("psych2-notes")||""}catch(e){}
+ta.oninput=function(){try{localStorage.setItem("psych2-notes",ta.value);nst.textContent="Saved"}catch(e){nst.textContent="Not saved (storage unavailable)"}};
+document.getElementById("copy").onclick=function(){
+  var all=N.map(function(s){return s[0]+"\n"+s[1].map(function(x){return"- "+x.replace(/<[^>]+>/g,"")}).join("\n")}).join("\n\n")+"\n\nMy new notes\n"+ta.value;
+  try{navigator.clipboard.writeText(all).then(function(){nst.textContent="Copied"},function(){nst.textContent="Copy blocked. Select the text manually."})}catch(e){nst.textContent="Copy blocked. Select the text manually."}
+};
+document.getElementById("clr").onclick=function(){if(ta.value&&!confirm("Clear your new notes?"))return;ta.value="";ta.oninput()};
+
+
+var NOTE7="Not in your slides. Built from general textbook knowledge. Check against class notes.";
+var G=[
+["Chapter 1",1,"",[["Educating psychologists","Degree levels, years of study past a bachelor’s, and Ph.D. vs. Psy.D."],["Subfields of psychology","What each subfield studies; which are applied (clinical, I/O, sport and exercise) and which are new frontiers."],["Perspectives","Neuroscience, psychodynamic, behavioral, cognitive, and humanistic, with one key idea each."]]],
+["Chapter 2",2,"",[["Scientific method","The four steps; theory vs. hypothesis; operationalization."],["Research techniques","Archival research, naturalistic observation, surveys, and case studies."],["Correlational research","What a correlation is, the +1 to −1 range, and why correlation is not causation."],["Experimental research","Independent vs. dependent variable, random assignment, significant outcomes, and replication."]]],
+["Chapter 7",3,NOTE7,[["Assessing and measuring intelligence","How IQ tests work (such as the Stanford-Binet and Wechsler scales) and what an average score means."],["Nature, nurture, and IQ","Genes and environment both shape IQ; know how twin and adoption studies are used."],["Theories of intelligence","Spearman’s g, Gardner’s multiple intelligences, and Sternberg’s triarchic theory."],["Variations in intellectual ability","Intellectual disability at one end and giftedness at the other."],["Intelligence and culture","Why tests can be culturally biased and how cultures define intelligence differently."],["Pitfalls to problem solving","Functional fixedness, mental set, confirmation bias, and anchoring."],["Reliability and validity","Reliability = consistent results; validity = measures what it should."],["Intellectual disabilities","IQ roughly 70 or below plus limits in adaptive functioning, starting in childhood."]]],
+["Chapter 9",3,NOTE7,[["Attachment styles","Secure, avoidant, ambivalent, and disorganized."],["Parenting styles","Authoritative, authoritarian, permissive, and uninvolved."],["Childcare and social development","How the type and quality of childcare relate to children’s social development. Check your lecture for the specific findings."],["Erikson’s psychosocial development","All eight stages in order, each as a conflict."],["Piaget’s cognitive development","Sensorimotor, preoperational, concrete operational, formal operational."],["Aging theories","Disengagement, activity, and continuity theories."]]],
+["Chapter 10",3,NOTE7,[["Approaches to motivation","Instinct, drive-reduction, arousal, and incentive approaches, plus Maslow."],["Cultural expressions of emotions","Display rules differ across cultures, though some expressions are shared."],["Functions of emotions","Emotions prepare us to act, shape our thinking, and help us communicate."],["Basic emotions","Ekman’s six: happiness, sadness, fear, anger, surprise, disgust."],["Emotion theories","James-Lange, Cannon-Bard, and Schachter-Singer."],["Maslow’s hierarchy of needs","Five levels, bottom to top, and what self-actualization means."],["Types of motivation","Intrinsic vs. extrinsic."]]]
+];
+var gs={};
+try{gs=JSON.parse(localStorage.getItem("psych2-guide")||"{}")}catch(e){gs={}}
+function gcount(){var t=0,d=0;G.forEach(function(g,gi){g[3].forEach(function(_,ti){t++;if(gs[gi+"-"+ti])d++})});$("gprog").textContent=d+" of "+t+" topics reviewed"}
+(function(){
+  var h="";
+  G.forEach(function(g,gi){
+    h+="<h2>"+g[0]+"</h2>"+(g[2]?'<p class="sub">'+g[2]+"</p>":"")+'<ul class="gl">';
+    g[3].forEach(function(t,ti){var k=gi+"-"+ti;h+='<li><label><input type="checkbox" data-k="'+k+'"'+(gs[k]?" checked":"")+"><span><b>"+t[0]+".</b> "+t[1]+"</span></label></li>"});
+    h+='</ul><button class="gbtn" data-ch="'+g[1]+'">Practice these flashcards</button>';
+  });
+  $("glist").innerHTML=h;gcount();
+})();
+$("glist").onchange=function(e){var k=e.target.dataset.k;if(!k)return;if(e.target.checked)gs[k]=1;else delete gs[k];try{localStorage.setItem("psych2-guide",JSON.stringify(gs))}catch(x){}gcount()};
+$("glist").onclick=function(e){var b=e.target.closest(".gbtn");if(!b)return;st.ch=+b.dataset.ch;st.mode="all";st.i=0;st.flip=false;chips();render();showTab("cards")};
+function showTab(n){["cards","notes","learn","guide"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});window.scrollTo(0,0)}
+document.querySelector(".tabs").onclick=function(e){var b=e.target.closest("button");if(b)showTab(b.dataset.tab)};
+var L=[
+["Chapter 1",[
+["What psychology is for","Psychology studies how people think, feel, and act, using real evidence instead of hunches. It has three jobs: predict what people will do, explain why, and help change behavior.","PEC: Predict, Explain, Change."],
+["The subfields in six buckets","Your slides sort them into groups. Change and differences: developmental (how we change from birth to death) and personality (what makes you you). Thinking: cognitive (how the mind learns and thinks) and forensic (psychology in courts and crime). Body: biological (brain and body causes) and health (how mind, body, and culture affect staying healthy). People: social (how others influence you) and cross-cultural (how culture changes behavior).","Remember the bucket names: Change, Think, Body, People, Work, Frontier."],
+["Applied subfields and new frontiers","Applied means used in real life: clinical (diagnosing and treating disorders), I/O (psychology at work), sport and exercise (athletes’ mindset and nerves). New frontiers: clinical neuropsychology (brain biology and disorders), behavioral genetics (genes plus environment), evolutionary psychology (how our ancestors’ genes shape behavior).","Clinical = clinic. I/O = office. Sport = stadium. Frontier = genes and brains."],
+["Degrees","A bachelor’s takes 4 years. A master’s adds 2–3 years. A doctorate (Ph.D. or Psy.D.) adds 5–6 years. Ph.D. leans toward research; Psy.D. leans toward practice with patients.","Each step up adds more years: 4, then +2–3, then +5–6. Psy.D. = D for Doing therapy."],
+["The five perspectives","Neuroscience: it’s all brain and nerves. Psychodynamic: hidden inner forces drive you (a Freudian slip is your real thought slipping out). Behavioral: only study what you can see. Cognitive: how you think and understand the world. Humanistic: you have free will and steer your own life.","Never Pet Bears Chewing Honey: Neuroscience, Psychodynamic, Behavioral, Cognitive, Humanistic."],
+["The five key issues","Psychology keeps debating five either/or questions: heredity or environment, visible behavior or inner thoughts, aware or unaware, free choice or determined, unique person or universal rule.","Born or raised? Seen or thought? Aware or hidden? Chosen or forced? Me or everyone?"],
+["Terms from your handwritten notes","Schema: a mental template for how things usually go, like the script you expect at a restaurant. Behavioral genetics: genes and environment working together. Sonder: realizing everyone else is the main character of their own life.","Schema = script. Behavioral genetics = genes plus surroundings."]
+]],
+["Chapter 2",[
+["The scientific method","It works like detective work: notice a question, come up with an explanation, test it, then tell others what you found.","Ask, Explain, Test, Tell."],
+["Theory, hypothesis, operationalizing","A theory is the big explanation. A hypothesis is a specific guess you can test. Operationalizing means deciding exactly how you will measure things. For “intelligent people are more successful,” you must pick how to measure intelligence (an IQ score) and success (income).","Theory is the big picture, hypothesis is the bet, operationalizing is the measuring tape."],
+["Descriptive research","Archival: digging through existing records. Naturalistic observation: watching people in real life without interfering, like a nature documentary. Survey: asking a sample of people questions to represent a bigger group. Case study: a deep dive on one person or a small group.","Archive = attic of old records. Naturalistic = nature. Survey = sample. Case = close-up."],
+["Correlation","Two things move together, but that does not prove one causes the other. Ice cream sales and drownings both rise in summer because of hot weather, not because ice cream drowns people. The number runs from +1 (move together perfectly) through 0 (no link) to −1 (move in opposite directions).","Correlation ≠ causation: ice cream and sunburn."],
+["Experiments","Only experiments can show cause and effect. The independent variable (IV) is what the researcher changes. The dependent variable (DV) is what gets measured and may change as a result. Random assignment means chance decides who goes in which group, like a coin flip. Example: caffeine (IV) and test score (DV).","I change the IV. The DV Depends on it."],
+["Significance and replication","A significant result means the difference between groups is probably not just luck. Replication means other researchers repeat the study in other settings and get the same result.","Significant = not a fluke. Replicate = repeat."]
+]],
+["Chapter 7 (check against class notes)",[
+["Reliability vs. validity","Reliable means consistent: a bathroom scale that gives the same number every time. Valid means it measures the right thing. A scale can be reliable but wrong.","Reliable = Repeats. Valid = Verifies what it claims."],
+["Theories of intelligence","Spearman: one general smartness (g). Gardner: eight kinds (word, math, space, music, body, people, self, nature). Sternberg: three kinds (analytical is book smart, creative is new ideas, practical is street smart).","Spearman 1, Gardner 8, Sternberg 3. Sternberg = A-C-P."],
+["Problem-solving pitfalls","Functional fixedness: seeing a tool for only its usual job (not using a coin as a screwdriver). Mental set: repeating what worked before. Confirmation bias: noticing only evidence that agrees with you. Anchoring: the first number you hear sways your judgment.","Fixed = object stuck in one job. Set = stuck in an old routine."],
+["Intellectual disability","A low IQ score (roughly 70 or below; average is 100) plus trouble with everyday skills like self-care and communication, starting in childhood. Both parts are needed.","70 plus daily-life struggles: need BOTH."]
+]],
+["Chapter 9 (check against class notes)",[
+["Attachment styles","How a baby bonds with a caregiver. Secure: upset when the caregiver leaves, happy when they return. Avoidant: seems not to care. Ambivalent: clingy and hard to calm. Disorganized: confused, mixed reactions.","Secure = safe base. Avoidant = Away. Ambivalent = clingy, mixed feelings."],
+["Parenting styles","Think of two dials: warmth and rules. Authoritative: warm and firm, explains why. Authoritarian: strict, “because I said so.” Permissive: warm but few rules. Uninvolved: neither.","Authoritarian = orders. Authoritative = explains, like an author."],
+["Erikson’s eight stages","Each stage of life has a conflict to work through. Babies learn to trust. Toddlers want independence (autonomy). Preschoolers start things (initiative). Kids build skills (industry). Teens figure out who they are (identity). Young adults seek close bonds (intimacy). Middle-aged adults give back (generativity). Older adults look back and feel satisfied or regretful (integrity vs. despair).","Trust, Autonomy, Initiative, Industry, Identity, Intimacy, Generativity, Integrity: the story from baby to elder."],
+["Piaget’s four stages","How kids’ thinking grows. Sensorimotor (about 0–2): learns through senses and movement. Preoperational (about 2–7): pretend play, not yet logical. Concrete operational (about 7–11): logical about real things. Formal operational (about 11 and up): abstract and hypothetical thinking.","Senses, Pretend, Concrete, Abstract."],
+["Aging theories","Disengagement: older people naturally step back from roles. Activity: staying busy keeps people happy. Continuity: you stay the same person with the same habits.","Disengage = dial down. Activity = active. Continuity = constant."]
+]],
+["Chapter 10 (check against class notes)",[
+["Types of motivation","Intrinsic: you do it because you enjoy it (reading for fun). Extrinsic: you do it for a reward (reading for a grade).","Intrinsic = inside. Extrinsic = external reward."],
+["Maslow’s hierarchy","A pyramid of needs: you take care of the bottom ones first. Body needs (food, water, sleep), then safety, then love and belonging, then esteem, then self-actualization (becoming your best self).","Pretty Soon Love Eventually Surfaces: Physiological, Safety, Love, Esteem, Self-actualization."],
+["Emotion theories","James-Lange: your body reacts first, then you feel the emotion (you’re afraid because you’re shaking). Cannon-Bard: body and feeling happen at the same time. Schachter-Singer: body arousal plus your explanation for it makes the emotion (shaking plus seeing a bear equals fear).","James = Jitters first. Cannon = Concurrent. Schachter-Singer = Sense-making label."],
+["Basic emotions and culture","Six basic emotions: happiness, sadness, fear, anger, surprise, disgust. Their facial expressions look similar worldwide, but display rules (cultural rules about when to show feelings) differ. Emotions help us act, think, and communicate.","Mad, sad, glad, scared, plus surprise and disgust."]
+]]
+];
+(function(){var h="";L.forEach(function(g){h+="<h2>"+g[0]+"</h2>";g[1].forEach(function(x){h+='<details><summary>'+x[0]+'</summary><div class="body"><p style="margin:6px 0"><b>In plain words:</b> '+x[1]+'</p><p style="margin:6px 0"><b>Memory trick:</b> '+x[2]+'</p></div></details>'})});$("llist").innerHTML=h})();
+$("ltog").onclick=function(){var ds=$("llist").querySelectorAll("details"),o=!ds[0].open;ds.forEach(function(d){d.open=o});this.textContent=o?"Close all":"Open all"};
+showTab("cards");
+
+</script>
+</body>
+</html>

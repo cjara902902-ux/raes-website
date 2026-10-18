@@ -80,7 +80,7 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 <button role="tab" data-tab="guide" aria-selected="false">Study guide</button>
 </nav>
 <section id="tab-cards">
-<p class="sub">60 cards. Tap a card or press Space to flip it. Arrow keys move between cards.</p>
+<p class="sub"><span id="nc"></span> cards. Tap a card or press Space to flip it. Arrow keys move between cards.</p>
 <div class="chips" id="chips"></div>
 <div class="bar"><i id="fill"></i></div>
 <div class="meta"><span id="pos"></span><span id="score"></span></div>
@@ -98,7 +98,7 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 
 </section>
 <section id="tab-notes" hidden>
-<p class="sub">Your handwritten notes, typed up, followed by notes built from all 60 flashcards.</p>
+<p class="sub">Your handwritten notes, typed up, then detailed chapter notes built from your slides (★), then flashcard summaries. Notes marked “textbook” go beyond your slides, so check them against lecture.</p>
 <input type="search" id="q" placeholder="Search your notes" aria-label="Search notes">
 <div id="list"></div>
 
@@ -160,10 +160,10 @@ var C=[
 [2,"Independent vs. dependent variable","Independent variable: manipulated by the experimenter. Dependent variable: measured, and expected to change because of the independent variable. (A variable is any behavior, event, or characteristic that can vary.)"],
 [2,"Random assignment to condition","Participants are assigned to experimental groups (conditions) by chance and chance alone."],
 [2,"Significant outcome and replication","Significant outcome: statistics show differences between groups are large enough to matter. Replication: repeating findings using other procedures in other settings."],
-[3,"Reliability vs. validity (Ch 7)","Reliability: a test gives consistent results. Validity: a test measures what it is supposed to measure.","Not in your slides. Check against class notes."],
-[3,"Piaget’s four stages of cognitive development (Ch 9)","Sensorimotor, preoperational, concrete operational, formal operational.","Not in your slides. Check against class notes."],
-[3,"Maslow’s hierarchy of needs, bottom to top (Ch 10)","Physiological, safety, love and belongingness, esteem, self-actualization.","Not in your slides. Check against class notes."],
-[3,"Attachment styles (Ch 9)","Secure, avoidant, ambivalent (anxious), and disorganized-disoriented.","Not in your slides. Check against class notes."],
+[3,"Reliability vs. validity (Ch 7)","Reliability: a test gives consistent results. Validity: a test measures what it is supposed to measure."],
+[3,"Piaget’s four stages of cognitive development (Ch 9)","Sensorimotor (0–2), preoperational (2–7), concrete operational (7–12), formal operational (12+)."],
+[3,"Maslow’s hierarchy of needs, bottom to top (Ch 10)","Physiological, safety, love and belongingness, esteem, self-actualization."],
+[3,"Attachment styles (Ch 9)","Secure, avoidant, ambivalent (anxious), and disorganized-disoriented."],
 [4,"What are the three goals of psychology?","Predict behavior, change behavior, and explain behavior."],
 [4,"Developmental psychology example: power and longevity","Your note: people with a lot of power (in every way) tend to live longer, so going from powerful to less powerful can affect you."],
 [4,"Why are personality tests used?","Personality psychology studies individual differences. Your note: tests can help decide whether someone is a good fit to hire. Another example in your notes: age-appropriate toys."],
@@ -173,17 +173,35 @@ var C=[
 [4,"Sonder (starred in your notes)","Realizing that everyone has a separate life, is the main character in their own, and that you will never experience it."],
 [4,"Behavioral genetics example: the “warrior gene”","Behavioral genetics looks at how genes interact with the environment. Your note: the “warrior / axe murderer” gene makes violent tendencies easier. Environment still influences whether a trait shows up."],
 [4,"I/O psychology: what questions does it ask?","How do people behave at work, why do some become leaders, and how can teams improve in every way?"],
-[3,"Spearman’s g (Ch 7)","General intelligence: one underlying factor that influences performance on all mental tasks.","Not in your slides. Check against class notes."],
+[3,"Spearman’s g (Ch 7)","General intelligence: one underlying factor that influences performance on all mental tasks."],
 [3,"Gardner’s multiple intelligences (Ch 7)","Eight intelligences: linguistic, logical-mathematical, spatial, musical, bodily-kinesthetic, interpersonal, intrapersonal, naturalistic.","Not in your slides. Check against class notes."],
 [3,"Sternberg’s triarchic theory (Ch 7)","Three kinds of intelligence: analytical, creative, and practical.","Not in your slides. Check against class notes."],
-[3,"Intellectual disability (Ch 7)","Significantly below-average intellectual functioning (IQ roughly 70 or below) plus limits in adaptive functioning (everyday living skills), beginning in childhood.","Not in your slides. Check against class notes."],
+[3,"Intellectual disability (Ch 7)","Significant limits in BOTH intellectual functioning and conceptual, social and practical adaptive skills. Levels: mild 55–69, moderate 40–54, severe 25–39, profound below 25."],
 [3,"Pitfalls to problem solving (Ch 7)","Functional fixedness (seeing objects only for their usual use), mental set (sticking with what worked before), confirmation bias, and anchoring.","Not in your slides. Check against class notes."],
 [3,"Erikson’s eight psychosocial stages (Ch 9)","Trust vs. mistrust; autonomy vs. shame and doubt; initiative vs. guilt; industry vs. inferiority; identity vs. role confusion; intimacy vs. isolation; generativity vs. stagnation; integrity vs. despair.","Not in your slides. Check against class notes."],
 [3,"Four parenting styles (Ch 9)","Authoritative (warm, firm limits), authoritarian (strict, low warmth), permissive (warm, few rules), uninvolved (neglectful).","Not in your slides. Check against class notes."],
 [3,"Aging theories (Ch 9)","Disengagement theory: older adults naturally withdraw from roles. Activity theory: staying active leads to better aging. Continuity theory: people keep their long-standing habits and personality.","Not in your slides. Check against class notes."],
 [3,"James-Lange vs. Cannon-Bard vs. Schachter-Singer (Ch 10)","James-Lange: body arousal comes first, then the emotion. Cannon-Bard: arousal and emotion happen at the same time. Schachter-Singer: arousal plus a cognitive label creates the emotion.","Not in your slides. Check against class notes."],
-[3,"Basic emotions (Ch 10)","Ekman’s six: happiness, sadness, fear, anger, surprise, and disgust. Display rules differ by culture.","Not in your slides. Check against class notes."],
-[3,"Intrinsic vs. extrinsic motivation (Ch 10)","Intrinsic: driven by internal rewards like enjoyment. Extrinsic: driven by outside rewards like money or grades.","Not in your slides. Check against class notes."]
+[3,"Basic emotions (Ch 10)","Your slide lists five: happiness, anger, fear, sadness, disgust. (Some books add surprise.) Display rules differ by culture.","Not in your slides. Check against class notes."],
+[3,"Intrinsic vs. extrinsic motivation (Ch 10)","Intrinsic: driven by internal rewards like enjoyment. Extrinsic: driven by outside rewards like money or grades."],
+[3,"Fluid vs. crystallized intelligence (Ch 7)","Fluid: information-processing, reasoning and memory (declines with age). Crystallized: accumulated knowledge, skills and strategies from experience (steady or improving)."],
+[3,"Achievement vs. aptitude test (Ch 7)","Achievement: knowledge in a specific subject (what you learned). Aptitude: predicts ability in a particular area or line of work."],
+[3,"Norms (Ch 7)","Standards of test performance that let you compare one person’s score to the scores of others."],
+[3,"Levels of intellectual disability by IQ (Ch 7)","Mild 55–69; moderate 40–54; severe 25–39; profound below 25. Needs limits in intellectual functioning AND adaptive skills."],
+[3,"Causes of intellectual disability (Ch 7)","Fetal alcohol syndrome (mother’s alcohol use in pregnancy) and familial intellectual disability (no biological defect, but family history)."],
+[3,"Intellectually gifted; culture-fair test; heritability (Ch 7)","Gifted: IQ above 130. Culture-fair test: does not discriminate against minority groups. Heritability: degree a characteristic is attributable to genetics."],
+[3,"Primary vs. secondary drives (Ch 10)","Primary: biological needs of body or species. Secondary: learned through prior experience. Homeostasis = body’s tendency to keep a steady internal state."],
+[3,"Instinct, arousal, incentive, cognitive approaches (Ch 10)","Instinct: inborn behavior patterns. Arousal: seek optimal excitement. Incentive: pulled by external goals. Cognitive: thoughts, expectations, goals."],
+[3,"Need for achievement, affiliation, power (Ch 10)","Achievement: strive for excellence (measured by the TAT). Affiliation: build relationships. Power: influence and control over others."],
+[3,"Facial-affect program vs. facial-feedback hypothesis (Ch 10)","Affect program: built-in, universal expressions. Feedback: facial expressions help determine how we experience and label emotion."],
+[3,"Functions of emotions (Ch 10)","Prepare us for action, shape future behavior, and help us interact more effectively with others."],
+[3,"Piaget stage ages and key ideas (Ch 9)","Sensorimotor 0–2 (object permanence); preoperational 2–7 (egocentric thought); concrete operational 7–12 (reversibility, conservation); formal operational 12+ (abstract thinking)."],
+[3,"Ainsworth’s Strange Situation (Ch 9)","Tests attachment: secure, avoidant, ambivalent, disorganized-disoriented. Related: Lorenz (imprinting) and Harlow (infant monkeys)."],
+[3,"Adolescent egocentrism vs. personal fable (Ch 9)","Egocentrism: teen views the world from only their own viewpoint. Personal fable: belief your experience is unique and shared by no one."],
+[3,"Genetic preprogramming vs. wear-and-tear (Ch 9)","Preprogramming: cells have a built-in limit to reproduction. Wear-and-tear: body’s mechanical functions work less efficiently with age."],
+[3,"Disengagement vs. activity theory (Ch 9)","Disengagement: gradual withdrawal from the world with age. Activity: keep up earlier-life activities as much as possible."],
+[3,"Midlife transition (Ch 9)","Period in adulthood when people may begin to question their lives (a “midlife crisis” in some)."],
+[3,"Erikson: identity vs. role confusion; intimacy vs. isolation (Ch 9)","Adolescence: searching for identity. Early adulthood: developing close relationships."]
 ];
 var NAMES={0:"All",1:"Ch 1",2:"Ch 2",3:"Ch 7, 9, 10",4:"My notes"};
 var st={ch:0,mode:"all",i:0,flip:false,order:C.map(function(_,k){return k}),known:{}};
@@ -243,6 +261,7 @@ document.addEventListener("keydown",function(e){
   else if(e.key==="ArrowLeft")go(-1);
   else if(e.key===" "&&document.activeElement.tagName!=="BUTTON"){e.preventDefault();st.flip=!st.flip;render()}
 });
+$("nc").textContent=C.length;
 chips();render();
 
 var N=[
@@ -321,6 +340,173 @@ var N=[
 "<b>Ch 10:</b> Maslow, bottom to top: physiological, safety, love and belongingness, esteem, self-actualization. Emotion theories: James-Lange (arousal first), Cannon-Bard (simultaneous), Schachter-Singer (arousal plus label). Ekman’s six basic emotions. Intrinsic vs. extrinsic motivation."
 ]]
 ];
+
+var TB="<span class='ex'>(Textbook knowledge, not on your slides. Check your lecture.)</span>";
+var DN=[
+["★ Ch 1 · Educating psychologists and who they are",[
+"<b>Three degree levels:</b> bachelor’s (4-year degree), master’s (2–3 years past a bachelor’s), doctoral, Ph.D. or Psy.D. (5–6 years past a bachelor’s).",
+"<b>Ph.D. vs. Psy.D.:</b> Ph.D. leans toward research; Psy.D. leans toward clinical practice. "+TB,
+"<b>Portrait:</b> about 300,000 psychologists work in the U.S. Women outnumber men, and about ¾ of doctorates today go to women. The vast majority are white; only about 6% belong to racial minority groups.",
+"<b>Where they work:</b> your slide has a chart of U.S. work settings (universities, clinical and private practice, schools, business and government). Look at the chart in the slides for the exact split.",
+"<b>Future of psychology (slide 14):</b> more specialization and new perspectives, neuroscience influencing other branches, growing influence on public-interest issues, and diversity becoming more important in both services and research."
+]],
+["★ Ch 1 · Subfields in depth",[
+"<b>Definition:</b> psychology is the scientific study of mind and behavior. The slides sort the subfields into groups, so learn the group AND its members.",
+"<b>Group 1, change and individual differences:</b> <b>developmental</b> (behavior changes across the life span, “womb to tomb”) and <b>personality</b> (consistencies in behavior over time, plus the traits that make people different from one another).",
+"<b>Group 2, thinking and justice:</b> <b>cognitive</b> (sensation, perception, learning and thinking; higher mental processes such as thoughts and how they relate to experience and behavior) and <b>forensic</b> (questions tied to the justice system).",
+"<b>Group 3, physical health:</b> <b>biological psychology / neuroscience</b> (biological bases of behavior) and <b>health psychology</b> (how health is affected by the interaction of biological, psychological AND sociocultural factors).",
+"<b>Group 4, social networks:</b> <b>social</b> (how people are affected by others) and <b>cross-cultural</b> (similarities and differences in psychological functioning across cultures and ethnic groups).",
+"<b>Group 5, applied:</b> <b>clinical</b> (diagnosis and treatment of psychological disorders), <b>industrial-organizational</b> (applies theories, principles and research findings in the workplace), <b>sport and exercise</b> (sport performance, motivation, performance anxiety, and the effects of sport on mental and emotional wellbeing).",
+"<b>Group 6, new frontiers:</b> <b>clinical neuropsychology</b> (biological factors and psychological disorders), <b>behavioral genetics</b> (how we inherit genes and how environment influences whether traits show up), <b>evolutionary psychology</b> (influence of our genetic heritage on behavior).",
+"<b>Easy mix-up to avoid:</b> biological psychology studies biology behind ALL behavior; clinical neuropsychology ties biology specifically to DISORDERS. Behavioral genetics = genes + environment; evolutionary = genes passed down over generations."
+]],
+["★ Ch 1 · The five perspectives in depth",[
+"<b>Neuroscience:</b> biological bases of behavior, the brain and nervous system. Explains behavior through brain activity. <span class='ex'>Why do you panic before a test? Stress activity in the brain.</span>",
+"<b>Psychodynamic:</b> behavior is driven by inner, often unconscious forces. Freudian slips are the slide’s example. <span class='ex'>You call your teacher “mom” because of hidden inner thoughts.</span>",
+"<b>Behavioral:</b> focus on observable events only; skip hidden thoughts. <span class='ex'>You study because past studying got you good grades.</span>",
+"<b>Cognitive:</b> how people think, understand, and know about the world. <span class='ex'>You study because you expect it will help you pass.</span>",
+"<b>Humanistic:</b> free will and a natural tendency to be in control of our lives. <span class='ex'>You study because you chose to work toward your goals.</span>",
+"<b>Same behavior, five explanations:</b> exams often give one example and ask which perspective it fits. Look for keywords: brain, hidden or unconscious, observable, thinking, free choice."
+]],
+["★ Ch 1 · Psychology’s key issues in depth",[
+"<b>Nature vs. nurture:</b> is behavior from environment or heredity?",
+"<b>Observable behavior vs. internal mental processes:</b> should psychology focus only on what it can see?",
+"<b>Conscious vs. unconscious:</b> how much behavior comes from forces we are fully aware of?",
+"<b>Free will vs. determinism:</b> how much is freely chosen versus determined by factors outside a person’s willful control?",
+"<b>Individual differences vs. universal principles:</b> how much is due to our unique qualities versus culture and society?",
+"<b>Developmental psychologists</b> (Ch 9) typically take an <i>interactionist</i> position on nature vs. nurture: both matter, and the question is how much each contributes."
+]],
+["★ Ch 2 · The scientific method in depth",[
+"<b>Definition:</b> the approach psychologists use to systematically acquire knowledge and understanding about behavior and other phenomena of interest.",
+"<b>Step 1, identify questions:</b> they come from behavior needing explanation, prior research findings, or curiosity, creativity and insight.",
+"<b>Step 2, formulate an explanation:</b> specify a <b>theory</b> (broad explanation and predictions about a phenomenon), then develop a <b>hypothesis</b> (a prediction stated so it can be tested).",
+"<b>Step 3, carry out research:</b> operationalize the hypothesis, select a research method, collect the data, analyze the data.",
+"<b>Step 4, communicate the findings</b> so others can evaluate and build on them.",
+"<b>Operationalization:</b> translating a hypothesis into specific, testable procedures that can be measured and observed. Slide example: “Intelligent people are more successful.” You must define intelligence (maybe an IQ score) and success (maybe income) before you can test it.",
+"<b>Order trick:</b> Question, Explain (theory then hypothesis), Research, Report."
+]],
+["★ Ch 2 · Research techniques compared",[
+"<b>Descriptive research</b> describes behavior but cannot show cause and effect. It has four types on your slides:",
+"<b>Archival research:</b> use existing data (records, past studies) to test a hypothesis. Cheap and fast, but you are limited to what was already recorded. "+TB,
+"<b>Naturalistic observation:</b> observe naturally occurring behavior with NO intervention. Realistic, but the researcher cannot control what happens. "+TB,
+"<b>Survey research:</b> a sample of people answers questions about behavior, thoughts and attitudes, meant to represent a larger population. Only as good as the sample and honest answers. "+TB,
+"<b>Case study:</b> in-depth, intensive investigation of one individual or a small group. Rich detail, but it may not apply to everyone. "+TB,
+"<b>Correlational research:</b> examines whether two sets of variables are associated. The number runs from +1 to −1. <b>Correlation does not mean causation.</b> Positive = both rise together; negative = one rises as the other falls; near 0 = no relationship. The closer to +1 or −1, the stronger. "+TB,
+"<b>Experimental research:</b> deliberately produce a change in one variable and observe the effect on others. It is the only method that can show cause and effect."
+]],
+["★ Ch 2 · Experiments in depth",[
+"<b>Variable:</b> any behavior, event or characteristic that can change or vary.",
+"<b>Independent variable (IV):</b> the variable the experimenter manipulates.",
+"<b>Dependent variable (DV):</b> the variable that is measured and expected to change because of the IV.",
+"<b>Random assignment to condition:</b> participants are placed in groups (conditions) by chance and chance alone, so the groups start out equal on average.",
+"<b>Significant outcome:</b> statistical procedures show the differences between groups are large enough that they are probably not a fluke.",
+"<b>Replication:</b> repeating the findings using other procedures in other settings. A finding repeated by others is more trustworthy.",
+"<b>Worked example:</b> Does sleep help memory? IV = hours of sleep given; DV = score on a memory test; participants randomly assigned to sleep or no-sleep groups. If the difference is significant and later replicated, we are more confident that sleep helps.",
+"<b>Spotting the IV:</b> ask “what did the researcher change?” That is the IV. Ask “what did they measure?” That is the DV."
+]],
+["★ Ch 7 · What intelligence is and the theories",[
+"<b>Definition:</b> the capacity to understand the world, think rationally, and use resources effectively when faced with challenges.",
+"<b>g-factor:</b> a general factor for mental ability, once thought to underlie performance in every aspect of intelligence. Recent theories treat intelligence as <b>multidimensional</b> instead of one number.",
+"<b>Fluid intelligence:</b> information-processing capability, reasoning and memory. Solving new puzzles. Tends to decline with age (Ch 9).",
+"<b>Crystallized intelligence:</b> the accumulation of information, skills and strategies learned through experience. Vocabulary and general knowledge. Stays steady or improves with age.",
+"<b>Information-processing approach:</b> how people store material in memory and use it to solve intellectual tasks; includes speed of processing.",
+"<b>Practical intelligence:</b> related to overall success in living (street smarts).",
+"<b>Emotional intelligence:</b> the set of skills behind accurately assessing, evaluating, expressing and regulating emotions.",
+"<b>Other theories on the study guide:</b> Gardner’s eight multiple intelligences and Sternberg’s triarchic theory (analytical, creative, practical). "+TB,
+"<b>Memory trick:</b> Fluid flows to new problems; Crystallized = crystals built up over time."
+]],
+["★ Ch 7 · Assessing and measuring intelligence",[
+"<b>Intelligence tests</b> quantify and measure intelligence in an objective manner.",
+"<b>Stanford-Binet IV:</b> a classic intelligence test. <b>WAIS-III</b> (Wechsler Adult Intelligence Scale) is for adults. <b>WISC-III</b> (Wechsler Intelligence Scale for Children) is for children.",
+"<b>Adaptive testing:</b> a computer individualizes the test to the test-taker, adjusting questions as you answer.",
+"<b>Achievement test:</b> measures a person’s level of knowledge in a specific subject area (what you have learned). <b>Aptitude test:</b> predicts a person’s ability in a particular area or line of work (what you could learn). <span class='ex'>A final exam in psych = achievement. A test predicting success in flight school = aptitude.</span>",
+"<b>Reliability:</b> the test measures CONSISTENTLY. <b>Validity:</b> the test measures what it is SUPPOSED to measure. <b>Norms:</b> standards of test performance that let you compare one person’s score with others’.",
+"<b>Reliable but not valid:</b> a scale that always reads 5 lb too heavy is consistent but wrong. A test can be reliable without being valid, but a valid test must also be reliable.",
+"<b>Average:</b> IQ tests are built so the average score is 100. "+TB
+]],
+["★ Ch 7 · Variations in intellectual ability",[
+"<b>Intellectual disability</b> (former label: mental retardation): significant limitations BOTH in intellectual functioning AND in conceptual, social and practical adaptive skills.",
+"<b>Levels by IQ:</b> mild = 55 to 69; moderate = 40 to 54; severe = 25 to 39; profound = below 25.",
+"<b>Causes:</b> <b>fetal alcohol syndrome</b> (mother’s alcohol use during pregnancy) is a biological cause. <b>Familial intellectual disability</b> has no apparent biological defect but a family history of intellectual disability.",
+"<b>Intellectually gifted:</b> IQ scores greater than 130. Programs provide enrichment so talents can flourish.",
+"<b>Order trick:</b> disability levels go Mild → Moderate → Severe → Profound as IQ drops: 69, 54, 39, under 25."
+]],
+["★ Ch 7 · Nature, nurture, IQ, culture and problem-solving pitfalls",[
+"<b>Heritability:</b> a measure of the degree to which a characteristic can be attributed to genetic, inherited factors. It describes groups, not any one person.",
+"<b>Culture-fair IQ test:</b> a test that does not discriminate against members of any minority group.",
+"<b>Why it matters:</b> if a test uses language or examples from one culture, lower scores may reflect unfamiliarity rather than lower intelligence, which hurts validity. "+TB,
+"<b>Nature + nurture:</b> genes set a range and environment (nutrition, schooling, stimulation) shapes where in the range you land. Twin and adoption studies are the usual evidence. "+TB,
+"<b>Pitfalls to problem solving:</b> <b>functional fixedness</b> (seeing objects only for their usual use), <b>mental set</b> (sticking with a strategy that worked before), <b>confirmation bias</b> (favoring evidence that agrees with you), <b>anchoring</b> (first number or idea sways judgment). "+TB
+]],
+["★ Ch 9 · Lifespan development and attachment",[
+"<b>Lifespan development:</b> the study of patterns of growth and change throughout life. Developmental psychologists take an <b>interactionist</b> position: both environment and heredity matter.",
+"<b>Attachment:</b> the positive emotional bond that develops between a child and a particular individual.",
+"<b>Lorenz and imprinting:</b> baby animals (such as goslings) bond to the first moving object they see.",
+"<b>Harlow and infant monkeys:</b> monkeys preferred a soft cloth “mother” over a wire mother that gave food, showing comfort matters more than feeding. "+TB,
+"<b>Father’s role:</b> fathers also form important attachments with children.",
+"<b>Ainsworth’s Strange Situation:</b> a child is briefly left and reunited with the caregiver, and reactions show the attachment style: <b>secure</b> (upset at leaving, comforted on return), <b>avoidant</b> (ignores or avoids caregiver), <b>ambivalent</b> (clingy but angry, hard to soothe), <b>disorganized-disoriented</b> (confused, contradictory behavior).",
+"<b>Memory trick:</b> Secure = safe base; Avoidant = Away; Ambivalent = both clingy and mad; Disorganized = confused."
+]],
+["★ Ch 9 · Parenting styles and childcare",[
+"<b>Authoritative:</b> warm AND firm; sets limits and explains reasons. Linked to the best outcomes. "+TB,
+"<b>Authoritarian:</b> strict, low warmth, “because I said so.” "+TB,
+"<b>Permissive:</b> warm, few rules or demands. "+TB,
+"<b>Uninvolved:</b> neither warm nor demanding; neglectful. "+TB,
+"<b>Childcare and social development:</b> childcare quality (responsive caregivers, small groups) matters more than whether a child is in care at all. Use your lecture notes for the specific findings. "+TB
+]],
+["★ Ch 9 · Piaget’s cognitive development",[
+"<b>Sensorimotor (birth to 2):</b> learning through senses and movement. Key idea: <b>object permanence</b> (things still exist when out of sight).",
+"<b>Preoperational (2 to 7):</b> symbols, language and pretend play. Key idea: <b>egocentric thought</b> (seeing the world only from your own viewpoint).",
+"<b>Concrete operational (7 to 12):</b> logical thinking about real, concrete things. Key ideas: <b>reversibility</b> (an action can be undone) and the <b>principle of conservation</b> (amount stays the same even when shape changes, like water poured into a taller glass).",
+"<b>Formal operational (12 to adulthood):</b> abstract, formal and logical thinking, including hypotheticals.",
+"<b>Memory trick:</b> Senses (0–2), Pretend (2–7), Concrete (7–12), Abstract (12+)."
+]],
+["★ Ch 9 · Adolescence and Erikson",[
+"<b>Adolescence:</b> the stage between childhood and adulthood. <b>Puberty:</b> maturation of the sexual organs, starting around 11 or 12 for girls and 13 or 14 for boys.",
+"<b>Adolescent egocentrism:</b> self-absorption; the teen views the world from his own point of view. <b>Personal fables:</b> belief that your experience is unique, exceptional and shared by no one else.",
+"<b>Stormy adolescence?</b> Research shows adolescence is not as stressful and unhappy as once thought, but there is some strife.",
+"<b>Erikson, identity vs. role confusion:</b> adolescents search for who they are (identity). <b>Intimacy vs. isolation:</b> early adulthood, building close relationships with others.",
+"<b>Full list:</b> trust vs. mistrust; autonomy vs. shame and doubt; initiative vs. guilt; industry vs. inferiority; identity vs. role confusion; intimacy vs. isolation; generativity vs. stagnation; integrity vs. despair. "+TB,
+"<b>Adulthood:</b> people launch careers, marriage and families. The <b>midlife transition</b> is a period when people may begin to question their lives (sometimes called a <b>midlife crisis</b>)."
+]],
+["★ Ch 9 · Aging theories and late adulthood",[
+"<b>Genetic preprogramming theories:</b> human cells have a built-in time limit to their reproduction.",
+"<b>Wear-and-tear theories:</b> the mechanical functions of the body work less efficiently as people age.",
+"<b>Cognitive changes:</b> fluid intelligence declines over time; crystallized intelligence stays steady and sometimes improves. Older adults are not simply forgetful.",
+"<b>Disengagement theory:</b> aging brings a gradual withdrawal from the world on physical, psychological and social levels.",
+"<b>Activity theory:</b> late adulthood should continue, as much as possible, the activities of earlier life.",
+"<b>Life review:</b> looking back on one’s life; appears in the social-world slide for late adulthood.",
+"<b>Continuity theory</b> (on your guide’s list of aging theories): people keep their long-standing habits and personality. "+TB,
+"<b>Contrast:</b> disengagement = step back; activity = stay busy. Opposite predictions."
+]],
+["★ Ch 10 · Approaches to motivation",[
+"<b>Motivation:</b> the factors that direct and energize the behavior of humans and other organisms.",
+"<b>Instinct approach:</b> instincts are inborn, biologically determined behavior patterns, not learned. Psychologists disagree on what or how many exist.",
+"<b>Drive-reduction approach:</b> a lack of a basic biological requirement (like water) creates a <b>drive</b>, tension or arousal that energizes behavior to fill the need. <b>Primary drives</b> = biological needs of the body or species. <b>Secondary drives</b> = needs from prior experience and learning.",
+"<b>Homeostasis:</b> the body’s tendency to maintain a steady internal state; underlies primary drives.",
+"<b>Arousal approach:</b> behavior aims to maintain or increase excitement. People differ widely in their optimal arousal level.",
+"<b>Incentive approach:</b> motivation “pulls” from valued external goals (incentives). Many psychologists think internal drives “push” while incentives “pull.”",
+"<b>Cognitive approach:</b> motivation comes from thoughts, expectations and goals. <b>Intrinsic</b> = from inside (enjoyment). <b>Extrinsic</b> = from outside rewards (money, grades).",
+"<b>Push/pull trick:</b> Drive = Push from inside; Incentive = Pull from outside."
+]],
+["★ Ch 10 · Maslow and the three needs",[
+"<b>Maslow’s hierarchy:</b> before higher-order needs can be met, certain primary needs must be satisfied. Bottom to top: physiological, safety, love and belongingness, esteem, self-actualization. "+TB,
+"<b>Need for achievement:</b> a stable, learned characteristic of getting satisfaction from striving for and reaching excellence. Measured with the <b>Thematic Apperception Test (TAT)</b>.",
+"<b>Need for affiliation:</b> interest in establishing and maintaining relationships with others.",
+"<b>Need for power:</b> tendency to seek impact, control or influence over others and to be seen as powerful."
+]],
+["★ Ch 10 · Emotions, theories and culture",[
+"<b>Emotion:</b> a feeling with both physiological and cognitive elements that influences behavior.",
+"<b>Functions:</b> prepare us for action, shape our future behavior, help us interact more effectively with others.",
+"<b>Basic emotions on your slide:</b> happiness, anger, fear, sadness, disgust. Some textbooks add surprise (Ekman’s six). "+TB,
+"<b>James-Lange:</b> physical arousal first, then the emotion. <b>Cannon-Bard:</b> arousal and emotion at the same time. <b>Schachter-Singer:</b> arousal plus a cognitive label. "+TB,
+"<b>No single theory</b> explains every part of emotion, since emotions combine biological and cognitive aspects.",
+"<b>Facial-affect program:</b> assumed to be present at birth in everyone, like a computer program switched on when an emotion is felt, producing the proper expression. Supports universal expressions.",
+"<b>Facial-feedback hypothesis:</b> facial expressions don’t just show emotion; they help determine how we experience and label it. Some theorists say expressions are necessary for experiencing an emotion.",
+"<b>Culture:</b> basic expressions look similar across cultures, but display rules for when to show them differ. "+TB
+]]
+];
+N=DN.concat(N);
 var list=document.getElementById("list");
 function draw(t){
   var h="",n=0;
@@ -344,13 +530,13 @@ document.getElementById("copy").onclick=function(){
 document.getElementById("clr").onclick=function(){if(ta.value&&!confirm("Clear your new notes?"))return;ta.value="";ta.oninput()};
 
 
-var NOTE7="Not in your slides. Built from general textbook knowledge. Check against class notes.";
+var NOTE7="Parts of this chapter are on your slides; items marked textbook knowledge are not. See the Notes tab for details.";
 var G=[
 ["Chapter 1",1,"",[["Educating psychologists","Degree levels, years of study past a bachelor’s, and Ph.D. vs. Psy.D."],["Subfields of psychology","What each subfield studies; which are applied (clinical, I/O, sport and exercise) and which are new frontiers."],["Perspectives","Neuroscience, psychodynamic, behavioral, cognitive, and humanistic, with one key idea each."]]],
 ["Chapter 2",2,"",[["Scientific method","The four steps; theory vs. hypothesis; operationalization."],["Research techniques","Archival research, naturalistic observation, surveys, and case studies."],["Correlational research","What a correlation is, the +1 to −1 range, and why correlation is not causation."],["Experimental research","Independent vs. dependent variable, random assignment, significant outcomes, and replication."]]],
 ["Chapter 7",3,NOTE7,[["Assessing and measuring intelligence","How IQ tests work (such as the Stanford-Binet and Wechsler scales) and what an average score means."],["Nature, nurture, and IQ","Genes and environment both shape IQ; know how twin and adoption studies are used."],["Theories of intelligence","Spearman’s g, Gardner’s multiple intelligences, and Sternberg’s triarchic theory."],["Variations in intellectual ability","Intellectual disability at one end and giftedness at the other."],["Intelligence and culture","Why tests can be culturally biased and how cultures define intelligence differently."],["Pitfalls to problem solving","Functional fixedness, mental set, confirmation bias, and anchoring."],["Reliability and validity","Reliability = consistent results; validity = measures what it should."],["Intellectual disabilities","IQ roughly 70 or below plus limits in adaptive functioning, starting in childhood."]]],
-["Chapter 9",3,NOTE7,[["Attachment styles","Secure, avoidant, ambivalent, and disorganized."],["Parenting styles","Authoritative, authoritarian, permissive, and uninvolved."],["Childcare and social development","How the type and quality of childcare relate to children’s social development. Check your lecture for the specific findings."],["Erikson’s psychosocial development","All eight stages in order, each as a conflict."],["Piaget’s cognitive development","Sensorimotor, preoperational, concrete operational, formal operational."],["Aging theories","Disengagement, activity, and continuity theories."]]],
-["Chapter 10",3,NOTE7,[["Approaches to motivation","Instinct, drive-reduction, arousal, and incentive approaches, plus Maslow."],["Cultural expressions of emotions","Display rules differ across cultures, though some expressions are shared."],["Functions of emotions","Emotions prepare us to act, shape our thinking, and help us communicate."],["Basic emotions","Ekman’s six: happiness, sadness, fear, anger, surprise, disgust."],["Emotion theories","James-Lange, Cannon-Bard, and Schachter-Singer."],["Maslow’s hierarchy of needs","Five levels, bottom to top, and what self-actualization means."],["Types of motivation","Intrinsic vs. extrinsic."]]]
+["Chapter 9",3,NOTE7,[["Attachment styles","Secure, avoidant, ambivalent, and disorganized."],["Parenting styles","Authoritative, authoritarian, permissive, and uninvolved."],["Childcare and social development","How the type and quality of childcare relate to children’s social development. Check your lecture for the specific findings."],["Erikson’s psychosocial development","All eight stages in order, each as a conflict."],["Piaget’s cognitive development","Sensorimotor (0–2), preoperational (2–7), concrete operational (7–12), formal operational (12+)."],["Aging theories","Disengagement, activity, and continuity theories."]]],
+["Chapter 10",3,NOTE7,[["Approaches to motivation","Instinct, drive-reduction, arousal, and incentive approaches, plus Maslow."],["Cultural expressions of emotions","Display rules differ across cultures, though some expressions are shared."],["Functions of emotions","Emotions prepare us to act, shape our thinking, and help us communicate."],["Basic emotions","Your slide lists five: happiness, anger, fear, sadness, disgust (some books add surprise)."],["Emotion theories","James-Lange, Cannon-Bard, and Schachter-Singer."],["Maslow’s hierarchy of needs","Five levels, bottom to top, and what self-actualization means."],["Types of motivation","Intrinsic vs. extrinsic."]]]
 ];
 var gs={};
 try{gs=JSON.parse(localStorage.getItem("psych2-guide")||"{}")}catch(e){gs={}}
@@ -396,7 +582,7 @@ var L=[
 ["Attachment styles","How a baby bonds with a caregiver. Secure: upset when the caregiver leaves, happy when they return. Avoidant: seems not to care. Ambivalent: clingy and hard to calm. Disorganized: confused, mixed reactions.","Secure = safe base. Avoidant = Away. Ambivalent = clingy, mixed feelings."],
 ["Parenting styles","Think of two dials: warmth and rules. Authoritative: warm and firm, explains why. Authoritarian: strict, “because I said so.” Permissive: warm but few rules. Uninvolved: neither.","Authoritarian = orders. Authoritative = explains, like an author."],
 ["Erikson’s eight stages","Each stage of life has a conflict to work through. Babies learn to trust. Toddlers want independence (autonomy). Preschoolers start things (initiative). Kids build skills (industry). Teens figure out who they are (identity). Young adults seek close bonds (intimacy). Middle-aged adults give back (generativity). Older adults look back and feel satisfied or regretful (integrity vs. despair).","Trust, Autonomy, Initiative, Industry, Identity, Intimacy, Generativity, Integrity: the story from baby to elder."],
-["Piaget’s four stages","How kids’ thinking grows. Sensorimotor (about 0–2): learns through senses and movement. Preoperational (about 2–7): pretend play, not yet logical. Concrete operational (about 7–11): logical about real things. Formal operational (about 11 and up): abstract and hypothetical thinking.","Senses, Pretend, Concrete, Abstract."],
+["Piaget’s four stages","How kids’ thinking grows. Sensorimotor (0–2): learns through senses and movement, and learns object permanence. Preoperational (2–7): pretend play, egocentric. Concrete operational (7–12): logical about real things, understands conservation. Formal operational (12 and up): abstract and hypothetical thinking.","Senses, Pretend, Concrete, Abstract."],
 ["Aging theories","Disengagement: older people naturally step back from roles. Activity: staying busy keeps people happy. Continuity: you stay the same person with the same habits.","Disengage = dial down. Activity = active. Continuity = constant."]
 ]],
 ["Chapter 10 (check against class notes)",[

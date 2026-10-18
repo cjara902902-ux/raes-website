@@ -124,9 +124,9 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 <div id="glist"></div>
 </section>
 <section id="tab-test" hidden>
-<p class="sub">Practice with multiple-choice questions from the Exam 1 study guide and starred lecture notes. Submit to see your score and explanations, then try again.</p>
+<p class="sub">A randomized question bank built from the lecture slides and study notes. Answer one question at a time, check it immediately, then move on. The bank reshuffles so you can practice again.</p>
 <div class="chips"><button class="chip" id="test-all" aria-pressed="true">All chapters</button><button class="chip" id="test-ch1" aria-pressed="false">Ch 1</button><button class="chip" id="test-ch2" aria-pressed="false">Ch 2</button><button class="chip" id="test-ch7" aria-pressed="false">Ch 7</button><button class="chip" id="test-ch9" aria-pressed="false">Ch 9</button><button class="chip" id="test-ch10" aria-pressed="false">Ch 10</button></div>
-<form id="testform"><div id="testquestions"></div><div class="test-actions"><button type="submit" class="btn go">Submit answers</button><button type="button" class="btn" id="testreset">Try again</button></div></form><div id="testresult" class="test-result" aria-live="polite"></div>
+<div class="testbox"><div class="meta"><span id="testprogress">Question 1</span><span id="testscore">Checked: 0 · Correct: 0</span></div><div id="testquestions"></div><div id="testfeedback" class="test-result" aria-live="polite"></div><div class="test-actions"><button type="button" class="btn go" id="checkone">Check answer</button><button type="button" class="btn" id="testprev">Previous</button><button type="button" class="btn" id="testnext">Next question</button><button type="button" class="btn" id="testreset">Shuffle / restart</button></div></div><p class="sub" id="testresult" aria-live="polite"></p>
 </section>
 <section id="tab-learn" hidden>
 <p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
@@ -677,17 +677,95 @@ var T=[
 [10,'Which emotion theory says arousal and emotion occur at the same time?', ['James-Lange','Cannon-Bard','Schachter-Singer','Drive-reduction'],1,'Cannon-Bard proposes that physiological arousal and emotion happen simultaneously.'],
 [10,'What is one function of emotions listed in the notes?', ['Prevent all stress','Prepare us for action','Guarantee correct decisions','Replace thinking'],1,'Emotions prepare us for action, shape future behavior, and help social interaction.']
 ];
-var testChapter=0;
+// Additional questions written from the uploaded lecture slides.
+T=T.concat([
+[1,'Which subfield studies consistency in behavior over time and traits that distinguish people?', ['Cognitive psychology','Personality psychology','Forensic psychology','Health psychology'],1,'Personality psychology examines consistency over time and traits that differentiate people.'],
+[1,'Which subfield focuses on how biological, psychological, and sociocultural factors affect health?', ['Health psychology','Sport psychology','Forensic psychology','Evolutionary psychology'],0,'Health psychology studies the interaction of biological, psychological, and sociocultural factors in health.'],
+[1,'A psychologist studying how people are affected by friends and groups is working in…', ['Cross-cultural psychology','Social psychology','Clinical neuropsychology','Industrial-organizational psychology'],1,'Social psychology studies how people are affected by others.'],
+[1,'Which subfield applies psychology to the workplace?', ['Developmental psychology','Forensic psychology','Industrial-organizational psychology','Clinical psychology'],2,'Industrial-organizational psychology applies psychological principles in the workplace.'],
+[1,'Which field focuses on motivation, performance anxiety, and mental wellbeing in sports?', ['Sport and exercise psychology','Behavioral genetics','Health psychology','Cognitive psychology'],0,'Sport and exercise psychology studies psychological aspects of sports and exercise.'],
+[1,'Behavioral genetics studies how…', ['People remember facts','Genes and environment influence traits','Courts make decisions','People form surveys'],1,'Behavioral genetics examines inheritance and how the environment influences whether traits are displayed.'],
+[1,'Clinical psychology mainly investigates…', ['Diagnosis and treatment of psychological disorders','Workplace leadership only','Cultural differences only','The aging body only'],0,'Clinical psychology investigates diagnosis and treatment of psychological disorders.'],
+[1,'Which perspective focuses on the brain and nervous system as bases of behavior?', ['Humanistic','Cognitive','Neuroscience','Psychodynamic'],2,'The neuroscience perspective focuses on biological bases of behavior, including the brain and nervous system.'],
+[1,'Which perspective focuses on inner forces and ideas such as Freudian slips?', ['Psychodynamic','Behavioral','Humanistic','Cognitive'],0,'The psychodynamic perspective emphasizes inner forces.'],
+[1,'Which perspective asks how people think, understand, and know about the world?', ['Behavioral','Cognitive','Neuroscience','Humanistic'],1,'The cognitive perspective focuses on thinking and knowing.'],
+[1,'Nature versus nurture asks about the influence of…', ['Memory versus intelligence','Heredity versus environment','Emotion versus motivation','Childhood versus adulthood'],1,'Nature refers to heredity; nurture refers to environment.'],
+[1,'Conscious versus unconscious asks whether behavior comes from…', ['Only culture','Only genetics','Awareness or forces outside awareness','Only observable actions'],2,'This issue asks how much behavior comes from forces we are aware of versus unaware of.'],
+[1,'Which degree is typically a four-year degree in the slide deck?', ['Bachelor’s','Master’s','Doctoral','Postdoctoral'],0,'The slides list a bachelor’s degree as a four-year degree.'],
+[2,'Which step of the scientific method comes after identifying a question?', ['Communicate findings','Formulate an explanation','Replicate findings','Publish a survey'],1,'After identifying a question, researchers formulate an explanation, theory, or hypothesis.'],
+[2,'A broad explanation and prediction about a phenomenon is a…', ['Hypothesis','Variable','Theory','Sample'],2,'A theory is a broad explanation and prediction concerning a phenomenon.'],
+[2,'A researcher predicts that students who sleep more will remember more. This is a…', ['Hypothesis','Case study','Replication','Correlation coefficient'],0,'A hypothesis is a prediction stated so it can be tested.'],
+[2,'A researcher defines “success” as the score on a specific exam. This is an example of…', ['Random assignment','Operationalization','Replication','Archival research'],1,'Operationalization translates a hypothesis into specific measurable procedures.'],
+[2,'A researcher watches children play at a park without joining in or changing their behavior. This is…', ['Survey research','Case study','Naturalistic observation','Experimental research'],2,'Naturalistic observation records naturally occurring behavior without intervention.'],
+[2,'A researcher asks a sample of students questions to represent the larger student population. This is…', ['Survey research','Archival research','Naturalistic observation','An experiment'],0,'Survey research asks a sample questions about behavior, thoughts, or attitudes to represent a larger population.'],
+[2,'An intensive investigation of one person or a small group is a…', ['Survey','Case study','Correlation','Random assignment'],1,'A case study is an in-depth investigation of an individual or small group.'],
+[2,'Which method uses data that already exists?', ['Archival research','Experimental research','Random assignment','Naturalistic observation'],0,'Archival research uses existing data to test a hypothesis.'],
+[2,'A correlation of -1 indicates…', ['No relationship at all','A perfect negative relationship','A perfect positive relationship','Proof of causation'],1,'The slides show correlation values ranging from +1 to -1; -1 is a perfect negative correlation.'],
+[2,'Why does correlation not prove causation?', ['Correlations cannot be measured','An association alone does not show that one variable caused the other','Experiments never use variables','All correlations are negative'],1,'A correlation shows association, but does not establish that one variable caused another.'],
+[2,'In an experiment testing whether music affects memory, the researcher changes whether music plays. Music is the…', ['Dependent variable','Independent variable','Conclusion','Sample'],1,'The independent variable is the variable deliberately manipulated.'],
+[2,'In that music-and-memory experiment, the memory score is the…', ['Independent variable','Dependent variable','Theory','Random assignment'],1,'The dependent variable is measured and expected to change in response to the independent variable.'],
+[2,'Participants are placed into groups by chance alone. This is…', ['Operationalization','Random assignment','Archival research','Replication'],1,'Random assignment places participants into conditions using chance.'],
+[2,'Repeating findings using other procedures or in other settings is called…', ['Replication','Operationalization','A hypothesis','A case study'],0,'Replication means repeating findings using other procedures in other settings.'],
+[2,'Researchers use statistics to decide whether differences between groups are large enough to count as significant. This is a…', ['Significant outcome','Case study','Theory','Survey'],0,'The slides describe statistical procedures for deciding whether group differences are significant.'],
+[7,'Spearman’s g refers to…', ['A general factor for mental ability','A parenting style','A stage of development','A type of attachment'],0,'The slides describe g as a general factor for mental ability.'],
+[7,'Which theorist is associated with eight intelligences in the notes?', ['Piaget','Gardner','Erikson','Ainsworth'],1,'The study notes associate Howard Gardner with eight intelligences.'],
+[7,'Sternberg’s three types of intelligence are…', ['Fluid, crystallized, and emotional','Analytical, creative, and practical','Secure, avoidant, and ambivalent','Nature, nurture, and culture'],1,'The notes list Sternberg’s analytical, creative, and practical intelligences.'],
+[7,'Crystallized intelligence is most closely related to…', ['Knowledge gained through experience','Only quick processing speed','A child’s attachment','Aging theories'],0,'The notes describe crystallized intelligence as accumulated knowledge and experience.'],
+[7,'Functional fixedness makes it harder to…', ['Use an object in a new way','Remember a familiar fact','Measure a test consistently','Learn a language'],0,'Functional fixedness means being stuck on an object’s usual function.'],
+[7,'A mental set is when a person…', ['Keeps using a familiar strategy even when another may work','Changes their answer randomly','Measures a trait accurately','Learns only through genetics'],0,'A mental set is a tendency to keep using a strategy that worked before.'],
+[7,'Confirmation bias means a person tends to…', ['Seek information that supports what they already believe','Forget every old memory','Use random assignment','Change their mind every time'],0,'Confirmation bias favors information that supports existing beliefs.'],
+[7,'Anchoring occurs when a person…', ['Relies too heavily on the first information they receive','Uses only abstract thinking','Repeats an experiment','Studies naturally occurring behavior'],0,'Anchoring means the first piece of information strongly influences judgment.'],
+[7,'An achievement test measures…', ['What someone has learned in a subject','Only future potential','Attachment security','The rate of physical aging'],0,'Achievement tests measure knowledge or skills already acquired in a specific area.'],
+[7,'Aptitude tests are mainly intended to estimate…', ['Potential to learn or perform in the future','What a person ate yesterday','How securely a child is attached','Whether a study was replicated'],0,'Aptitude tests estimate potential or readiness for future learning or performance.'],
+[7,'Intellectual disability in the study notes includes low IQ and…', ['Adaptive-functioning limitations','High crystallized intelligence','A specific attachment style','Abstract reasoning only'],0,'The notes describe intellectual disability as IQ around 70 or below plus adaptive-functioning limits.'],
+[7,'A test has validity when it…', ['Measures what it is supposed to measure','Always gives different scores','Uses a large font','Is easy for everyone'],0,'Validity is about whether a test measures what it is intended to measure.'],
+[9,'Developmental psychologists usually take what position on nature and nurture?', ['Only nature matters','Only nurture matters','An interactionist position','Neither affects development'],2,'The slides say developmental psychologists typically take an interactionist position.'],
+[9,'Imprinting is associated in the slides with…', ['Lorenz','Sternberg','Spearman','Maslow'],0,'The attachment slide specifically names Lorenz and imprinting.'],
+[9,'Mary Ainsworth is associated with assessing attachment using the…', ['Strange Situation','IQ scale','Scientific method','Midlife transition'],0,'The slides name Mary Ainsworth and the Strange Situation.'],
+[9,'A child who understands that an object still exists when hidden shows…', ['Object permanence','Egocentric thought','Conservation','Personal fable'],0,'Object permanence is listed under Piaget’s sensorimotor stage.'],
+[9,'Egocentric thought is listed under which Piaget stage?', ['Sensorimotor','Preoperational','Concrete operational','Formal operational'],1,'The preoperational stage (ages 2–7) includes egocentric thought.'],
+[9,'Understanding that an amount stays the same even when its appearance changes is…', ['Conservation','Imprinting','Role confusion','Life review'],0,'The slides list conservation under the concrete operational stage.'],
+[9,'Reversibility is associated with which Piaget stage in the slides?', ['Sensorimotor','Preoperational','Concrete operational','Formal operational'],2,'Reversibility is listed in the concrete operational stage, ages 7–12.'],
+[9,'Formal operational thinking includes…', ['Only learning through the senses','Abstract, formal, and logical thinking','No understanding of objects','Only imitation'],1,'The formal operational stage begins around age 12 and includes abstract, formal, logical thinking.'],
+[9,'Adolescence is defined as the stage between…', ['Infancy and toddlerhood','Childhood and adulthood','Adulthood and old age','Birth and age two'],1,'The slides define adolescence as the developmental stage between childhood and adulthood.'],
+[9,'Adolescent egocentrism means a teenager may…', ['View the world mainly from their own point of view','Understand every perspective equally','Lose all memory of childhood','Stop developing identity'],0,'The slides define adolescent egocentrism as self-absorption and seeing the world from one’s own point of view.'],
+[9,'A personal fable is the belief that…', ['Your experience is unique and no one else shares it','All people think exactly alike','Objects disappear when hidden','Aging is caused only by wear and tear'],0,'The slides define personal fables as believing one’s experience is unique and shared by no one else.'],
+[9,'Erikson’s identity-versus-role-confusion stage is especially associated with…', ['Finding a sense of identity','Learning object permanence','Maintaining homeostasis','Taking surveys'],0,'The slides connect adolescence with the search for identity.'],
+[9,'The intimacy-versus-isolation stage focuses on…', ['Developing close relationships','Learning conservation','Physical puberty only','Using existing records'],0,'The slides associate early adulthood with developing close relationships.'],
+[9,'A midlife transition is a period when people may…', ['Question their lives','First learn object permanence','Stop all social contact','Take an aptitude test'],0,'The slides define midlife transition as a period when people may begin to question their lives.'],
+[9,'Genetic preprogramming theories suggest that cells…', ['Have a built-in limit to reproduction','Wear out only from exercise','Never change with age','Become more intelligent over time'],0,'These theories suggest human cells have a built-in time limit to their reproduction.'],
+[9,'Wear-and-tear theories explain aging as the body…', ['Becoming less efficient in its mechanical functions','Following a fixed cell timer only','Gaining unlimited fluid intelligence','Stopping all development at adolescence'],0,'Wear-and-tear theories say the body’s mechanical functions work less efficiently with age.'],
+[9,'According to the slides, fluid intelligence generally…', ['Declines over time','Always increases','Never changes','Is the same as attachment'],0,'The slides say fluid intelligence declines over time.'],
+[9,'According to the slides, crystallized intelligence tends to…', ['Remain steady and sometimes improve','Always disappear in adulthood','Decline faster than every other ability','Describe physical coordination'],0,'The slides say crystallized intelligence remains steady and can sometimes improve.'],
+[9,'Disengagement theory says aging involves…', ['Gradual withdrawal from physical, psychological, and social life','Continuing every earlier activity','Only an increase in memory','A built-in limit to cell reproduction'],0,'Disengagement theory describes gradual withdrawal from the world.'],
+[9,'Activity theory suggests older adults should…', ['Continue earlier-life activities as much as possible','Withdraw from every social role','Stop reviewing their lives','Focus only on abstract reasoning'],0,'Activity theory favors continuing activities from earlier life as much as possible.']
+]);
+
+var testChapter=0, testSet=[], testPos=0, checkedMap={}, testOrder=[], testCorrect=0;
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function buildTestSet(){testSet=shuffle(T.filter(function(q){return !testChapter||q[0]===testChapter;}));testPos=0;checkedMap={};testOrder=testSet.map(function(_,i){return i;});testCorrect=0;renderTest();}
 function renderTest(){
-  var qs=T.filter(function(q){return !testChapter||q[0]===testChapter;});
-  var h='';
-  qs.forEach(function(q,i){h+='<div class="testq" data-index="'+T.indexOf(q)+'"><b>'+(i+1)+'. '+q[1]+'</b>';q[2].forEach(function(opt,j){h+='<label><input type="radio" name="t'+T.indexOf(q)+'" value="'+j+'">'+String.fromCharCode(65+j)+'. '+opt+'</label>'});h+='<div class="fix" hidden></div></div>'});
-  $('testquestions').innerHTML=h;$('testresult').textContent='';
+  var q=testSet[testPos];
   document.querySelectorAll('[id^="test-ch"],#test-all').forEach(function(b){b.setAttribute('aria-pressed',String((b.id==='test-all'&&testChapter===0)||(b.id==='test-ch1'&&testChapter===1)||(b.id==='test-ch2'&&testChapter===2)||(b.id==='test-ch7'&&testChapter===7)||(b.id==='test-ch9'&&testChapter===9)||(b.id==='test-ch10'&&testChapter===10)))});
+  if(!q){$('testquestions').innerHTML='';return;}
+  var idx=testPos, prior=checkedMap[idx], h='<div class="testq"><b>'+q[1]+'</b><div class="test-options">';
+  q[2].forEach(function(opt,j){h+='<label><input type="radio" name="currentAnswer" value="'+j+'" '+(prior&&prior.chosen===j?'checked':'')+' '+(prior?'disabled':'')+'>'+String.fromCharCode(65+j)+'. '+opt+'</label>';});
+  h+='</div></div>';$('testquestions').innerHTML=h;
+  $('testprogress').textContent='Question '+(testPos+1)+' of '+testSet.length+' · Chapter '+q[0];
+  var checked=Object.keys(checkedMap).length;$('testscore').textContent='Checked: '+checked+' · Correct: '+testCorrect;
+  $('testfeedback').textContent=prior?((prior.right?'Correct! ':'Not quite. Correct answer: ')+q[2][q[3]]+'. '+q[4]):'Choose an answer, then check it to see feedback for this question.';
+  $('testfeedback').className='test-result'+(prior?(prior.right?' correct':' wrong'):'');
+  $('checkone').disabled=!!prior;$('checkone').textContent=prior?'Answer checked':'Check answer';
+  $('testprev').disabled=testPos===0;$('testnext').textContent=testPos===testSet.length-1?'Cycle to next question':'Next question';
+  $('testresult').textContent=checked===testSet.length?'Round complete: '+testCorrect+' / '+testSet.length+' correct ('+Math.round(testCorrect/testSet.length*100)+'%). Shuffle/restart for another round.':'';
 }
-[['test-all',0],['test-ch1',1],['test-ch2',2],['test-ch7',7],['test-ch9',9],['test-ch10',10]].forEach(function(x){$(x[0]).onclick=function(){testChapter=x[1];renderTest()}});
-$('testform').onsubmit=function(e){e.preventDefault();var qs=T.filter(function(q){return !testChapter||q[0]===testChapter}),score=0;qs.forEach(function(q){var idx=T.indexOf(q),chosen=document.querySelector('input[name="t'+idx+'"]:checked'),box=document.querySelector('.testq[data-index="'+idx+'"] .fix'),right=chosen&&+chosen.value===q[3];if(right)score++;box.hidden=false;box.className='fix '+(right?'correct':'wrong');box.textContent=(right?'Correct. ':'Not quite. Correct answer: '+q[2][q[3]]+'. ')+q[4]});$('testresult').textContent='Score: '+score+' / '+qs.length+' ('+Math.round(score/qs.length*100)+'%)';return false};
-$('testreset').onclick=function(){renderTest()};renderTest();
+function checkCurrent(){var q=testSet[testPos];if(checkedMap[testPos])return;var selected=document.querySelector('input[name="currentAnswer"]:checked');if(!selected){$('testfeedback').textContent='Pick an answer first, then check it.';return;}var chosen=+selected.value,right=chosen===q[3];checkedMap[testPos]={chosen:chosen,right:right};if(right)testCorrect++;renderTest();}
+[['test-all',0],['test-ch1',1],['test-ch2',2],['test-ch7',7],['test-ch9',9],['test-ch10',10]].forEach(function(x){$(x[0]).onclick=function(){testChapter=x[1];buildTestSet();}});
+$('checkone').onclick=checkCurrent;
+$('testprev').onclick=function(){if(testPos>0){testPos--;renderTest();}};
+$('testnext').onclick=function(){testPos=(testPos+1)%testSet.length;renderTest();};
+$('testreset').onclick=buildTestSet;
+buildTestSet();
 
 showTab("cards");
 

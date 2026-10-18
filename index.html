@@ -67,6 +67,7 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 .gl label{display:flex;gap:10px;padding:10px 12px;cursor:pointer}
 .gl input{margin-top:5px;width:18px;height:18px;flex:none;accent-color:var(--accent)}
 .gbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;margin-top:4px}
+.testbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}.testq{padding:12px 0;border-bottom:1px solid var(--line)}.testq:last-child{border-bottom:0}.testq label{display:block;padding:5px 0;cursor:pointer}.testq input{margin-right:8px;accent-color:var(--accent)}.test-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.test-result{font-weight:700;margin:12px 0}.correct{color:#15803d}.wrong{color:var(--warn)}
 #gprog{font-weight:600}
 </style>
 </head>
@@ -78,6 +79,7 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 <button role="tab" data-tab="notes" aria-selected="false">Notes</button>
 <button role="tab" data-tab="learn" aria-selected="false">Plain English</button>
 <button role="tab" data-tab="guide" aria-selected="false">Study guide</button>
+<button role="tab" data-tab="test" aria-selected="false">Practice test</button>
 </nav>
 <section id="tab-cards">
 <p class="sub"><span id="nc"></span> cards. Tap a card or press Space to flip it. Arrow keys move between cards.</p>
@@ -114,6 +116,11 @@ h2{font:600 1.15rem/1.3 Georgia,"Times New Roman",serif;margin:28px 0 8px}
 <section id="tab-guide" hidden>
 <p class="sub">Every topic on your Exam 1 study guide. Check a topic off once you can explain it without looking. <span id="gprog"></span></p>
 <div id="glist"></div>
+</section>
+<section id="tab-test" hidden>
+<p class="sub">Practice with multiple-choice questions from the Exam 1 study guide and starred lecture notes. Submit to see your score and explanations, then try again.</p>
+<div class="chips"><button class="chip" id="test-all" aria-pressed="true">All chapters</button><button class="chip" id="test-ch1" aria-pressed="false">Ch 1</button><button class="chip" id="test-ch2" aria-pressed="false">Ch 2</button><button class="chip" id="test-ch7" aria-pressed="false">Ch 7</button><button class="chip" id="test-ch9" aria-pressed="false">Ch 9</button><button class="chip" id="test-ch10" aria-pressed="false">Ch 10</button></div>
+<form id="testform"><div id="testquestions"></div><div class="test-actions"><button type="submit" class="btn go">Submit answers</button><button type="button" class="btn" id="testreset">Try again</button></div></form><div id="testresult" class="test-result" aria-live="polite"></div>
 </section>
 <section id="tab-learn" hidden>
 <p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
@@ -202,16 +209,44 @@ var C=[
 [3,"Disengagement vs. activity theory (Ch 9)","Disengagement: gradual withdrawal from the world with age. Activity: keep up earlier-life activities as much as possible."],
 [3,"Midlife transition (Ch 9)","Period in adulthood when people may begin to question their lives (a “midlife crisis” in some)."],
 [3,"Erikson: identity vs. role confusion; intimacy vs. isolation (Ch 9)","Adolescence: searching for identity. Early adulthood: developing close relationships."]
+
+,[1,"★ Ch 1: What does developmental psychology study?","Changes in behavior across the life span.",null,true]
+,[1,"★ Ch 1: What is the difference between behavioral and cognitive perspectives?","Behavioral focuses on observable events; cognitive focuses on thinking and knowing.",null,true]
+,[1,"★ Ch 1: What does the neuroscience perspective focus on?","The biological bases of behavior, including the brain and nervous system.",null,true]
+,[1,"★ Ch 1: What is the difference between behavioral genetics and evolutionary psychology?","Behavioral genetics studies genes and environment; evolutionary psychology studies genetic heritage and behavior.",null,true]
+,[1,"★ Ch 1: What are psychology’s five key issues?","Nature/nurture; observable/internal; conscious/unconscious; free will/determinism; individual differences/universal principles.",null,true]
+,[2,"★ Ch 2: What are the four steps of the scientific method?","Identify a question, formulate an explanation, carry out research, and communicate findings.",null,true]
+,[2,"★ Ch 2: Theory vs. hypothesis?","A theory broadly explains; a hypothesis is a specific testable prediction.",null,true]
+,[2,"★ Ch 2: What is operationalization?","Turning a hypothesis into specific procedures that can be measured and observed.",null,true]
+,[2,"★ Ch 2: Which research method can show cause and effect?","Experimental research, because the researcher deliberately changes a variable.",null,true]
+,[2,"★ Ch 2: Independent vs. dependent variable?","The independent variable is manipulated; the dependent variable is measured.",null,true]
+,[3,"★ Ch 7: Fluid vs. crystallized intelligence?","Fluid is reasoning and information processing; crystallized is knowledge and skills gained through experience.",null,true]
+,[3,"★ Ch 7: Reliability vs. validity?","Reliability means consistent results; validity means measuring what the test is supposed to measure.",null,true]
+,[3,"★ Ch 7: Achievement vs. aptitude test?","Achievement measures learned knowledge; aptitude predicts ability in a particular area.",null,true]
+,[3,"★ Ch 7: What is a culture-fair IQ test?","A test designed not to discriminate against members of minority groups.",null,true]
+,[3,"★ Ch 7: What IQ score describes the intellectually gifted in the slides?","An IQ score greater than 130.",null,true]
+,[3,"★ Ch 9: What is attachment?","A positive emotional bond between a child and a particular individual.",null,true]
+,[3,"★ Ch 9: What are the four attachment styles?","Secure, avoidant, ambivalent, and disorganized-disoriented.",null,true]
+,[3,"★ Ch 9: What is object permanence?","Understanding that something still exists when it is out of sight.",null,true]
+,[3,"★ Ch 9: Which Piaget stage includes abstract, logical thinking?","Formal operational stage, beginning around age 12.",null,true]
+,[3,"★ Ch 9: What is adolescent egocentrism?","Self-absorption in which a teen views the world from their own point of view.",null,true]
+,[3,"★ Ch 9: Disengagement vs. activity theory?","Disengagement predicts gradual withdrawal; activity theory favors continuing earlier-life activities.",null,true]
+,[3,"★ Ch 10: What are the motivation approaches listed in the notes?","Instinct, drive-reduction, arousal, incentive, and cognitive approaches.",null,true]
+,[3,"★ Ch 10: What is homeostasis?","The body’s tendency to maintain a steady internal state.",null,true]
+,[3,"★ Ch 10: List Maslow’s needs from bottom to top.","Physiological, safety, love and belongingness, esteem, self-actualization.",null,true]
+,[3,"★ Ch 10: James-Lange vs. Cannon-Bard?","James-Lange: physical arousal first, then emotion. Cannon-Bard: both happen at the same time.",null,true]
+,[3,"★ Ch 10: Intrinsic vs. extrinsic motivation?","Intrinsic comes from internal enjoyment; extrinsic comes from outside rewards.",null,true]
 ];
-var NAMES={0:"All",1:"Ch 1",2:"Ch 2",3:"Ch 7, 9, 10",4:"My notes"};
-var st={ch:0,mode:"all",i:0,flip:false,order:C.map(function(_,k){return k}),known:{}};
+var NAMES={0:"All",1:"Ch 1",2:"Ch 2",3:"Ch 7, 9, 10",4:"My notes",5:"★ Starred sections"};
+var st={ch:0,mode:"all",starOnly:false,i:0,flip:false,order:C.map(function(_,k){return k}),known:{}};
 try{st.known=JSON.parse(localStorage.getItem("psych2-known")||"{}")}catch(e){}
 function save(){try{localStorage.setItem("psych2-known",JSON.stringify(st.known))}catch(e){}}
 var $=function(id){return document.getElementById(id)};
-function deck(){return st.order.filter(function(k){return (st.ch===0||C[k][0]===st.ch)&&(st.mode==="all"||!st.known[k])})}
+function deck(){return st.order.filter(function(k){return (st.starOnly?!!C[k][4]:(st.ch===0||C[k][0]===st.ch))&&(st.mode==="all"||!st.known[k])})}
 function chips(){
   var h="";
-  [0,1,2,3,4].forEach(function(c){h+='<button class="chip" data-ch="'+c+'" aria-pressed="'+(st.ch===c)+'">'+NAMES[c]+'</button>'});
+  [0,1,2,3,4].forEach(function(c){h+='<button class="chip" data-ch="'+c+'" aria-pressed="'+(!st.starOnly&&st.ch===c)+'">'+NAMES[c]+'</button>'});
+  h+='<button class="chip" data-star="1" aria-pressed="'+st.starOnly+'">★ Starred sections</button>';
   h+='<button class="chip" data-m="1" aria-pressed="'+(st.mode==="learn")+'">Only unlearned</button>';
   $("chips").innerHTML=h;
 }
@@ -552,7 +587,7 @@ function gcount(){var t=0,d=0;G.forEach(function(g,gi){g[3].forEach(function(_,t
 })();
 $("glist").onchange=function(e){var k=e.target.dataset.k;if(!k)return;if(e.target.checked)gs[k]=1;else delete gs[k];try{localStorage.setItem("psych2-guide",JSON.stringify(gs))}catch(x){}gcount()};
 $("glist").onclick=function(e){var b=e.target.closest(".gbtn");if(!b)return;st.ch=+b.dataset.ch;st.mode="all";st.i=0;st.flip=false;chips();render();showTab("cards")};
-function showTab(n){["cards","notes","learn","guide"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});window.scrollTo(0,0)}
+function showTab(n){["cards","notes","learn","guide","test"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});window.scrollTo(0,0)}
 document.querySelector(".tabs").onclick=function(e){var b=e.target.closest("button");if(b)showTab(b.dataset.tab)};
 var L=[
 ["Chapter 1",[
@@ -592,8 +627,64 @@ var L=[
 ["Basic emotions and culture","Six basic emotions: happiness, sadness, fear, anger, surprise, disgust. Their facial expressions look similar worldwide, but display rules (cultural rules about when to show feelings) differ. Emotions help us act, think, and communicate.","Mad, sad, glad, scared, plus surprise and disgust."]
 ]]
 ];
-(function(){var h="";L.forEach(function(g){h+="<h2>"+g[0]+"</h2>";g[1].forEach(function(x){h+='<details><summary>'+x[0]+'</summary><div class="body"><p style="margin:6px 0"><b>In plain words:</b> '+x[1]+'</p><p style="margin:6px 0"><b>Memory trick:</b> '+x[2]+'</p></div></details>'})});$("llist").innerHTML=h})();
+(function(){$("llist").innerHTML=""})();
 $("ltog").onclick=function(){var ds=$("llist").querySelectorAll("details"),o=!ds[0].open;ds.forEach(function(d){d.open=o});this.textContent=o?"Close all":"Open all"};
+
+// Keep Plain English aligned with every starred section in the main Notes tab.
+(function(){
+  var h='<h2>Plain-English versions of the starred notes</h2><p class="sub">These sections follow the same starred chapter topics as the Notes tab. The key terms stay the same, with the explanation written in simpler language.</p>';
+  DN.forEach(function(section){
+    h+='<details class="star"><summary>'+section[0]+'</summary><div class="body"><ul>';
+    section[1].forEach(function(line){
+      var plain=line.replace(/<span class="ex">/g,'').replace(/<\/span>/g,'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+      plain=plain.replace(/\(Textbook knowledge, not on your slides\. Check your lecture\.\)/g,'(extra textbook information; check your lecture notes)');
+      if(plain)h+='<li>'+plain+'</li>';
+    });
+    h+='</ul></div></details>';
+  });
+  $('llist').insertAdjacentHTML('afterbegin',h);
+})();
+
+// Practice test: questions are based on the uploaded study guide and lecture notes.
+var T=[
+[1,'What is psychology?', ['The study of dreams only','The scientific study of mind and behavior','The study of the brain only','The study of personality only'],1,'The slides define psychology as the scientific study of mind and behavior.'],
+[1,'Which subfield studies changes in behavior across the life span?', ['Forensic psychology','Personality psychology','Developmental psychology','Industrial-organizational psychology'],2,'Developmental psychology studies changes across the life span.'],
+[1,'Which perspective focuses on observable events?', ['Behavioral','Humanistic','Cognitive','Psychodynamic'],0,'The behavioral perspective focuses on observable events.'],
+[1,'What does the humanistic perspective emphasize?', ['Unconscious forces','Free will and control of our lives','Only observable actions','Genetic inheritance only'],1,'The slides connect humanistic psychology with free will.'],
+[1,'What is a hypothesis?', ['A broad explanation','A testable prediction','A type of survey','A test score average'],1,'A hypothesis is stated so it can be tested.'],
+[2,'What comes first in the scientific method?', ['Communicate findings','Analyze the data','Identify questions of interest','Replicate the study'],2,'The first step is identifying a question of interest.'],
+[2,'What is operationalization?', ['Repeating a study','Assigning participants by chance','Turning a hypothesis into measurable procedures','Comparing scores with norms'],2,'Operationalization defines specific, measurable procedures.'],
+[2,'Which is an example of archival research?', ['Watching a class without interfering','Reviewing existing school records','Interviewing one person in depth','Changing sleep hours in an experiment'],1,'Archival research uses existing data.'],
+[2,'A correlation tells researchers that two variables…', ['Must have a cause-and-effect link','Are associated','Are exactly the same','Cannot be measured'],1,'Correlational research examines whether variables are associated, not causation.'],
+[2,'In an experiment, what is the independent variable?', ['The variable measured','The variable manipulated','The final conclusion','The group average'],1,'The researcher manipulates the independent variable.'],
+[7,'Which statement best defines fluid intelligence?', ['Knowledge collected through experience','Information processing, reasoning, and memory','Emotional expression','A test of learned facts'],1,'Fluid intelligence involves processing information, reasoning, and memory.'],
+[7,'A test that gives consistent results has…', ['Validity','Norms','Reliability','Heritability'],2,'Reliability means the test measures consistently.'],
+[7,'An achievement test measures…', ['Knowledge in a specific subject','Future ability in a job','Attachment style','Genetic inheritance'],0,'Achievement tests measure a person’s current knowledge in a subject.'],
+[7,'What is the IQ threshold for giftedness in the slides?', ['Above 90','Above 100','Above 115','Above 130'],3,'The slides describe intellectually gifted people as having IQ scores greater than 130.'],
+[7,'What does heritability measure?', ['How accurate a test is','The degree a trait can be attributed to inherited factors','A person’s learned knowledge','A child’s attachment'],1,'Heritability concerns the degree a characteristic can be attributed to genetic factors.'],
+[9,'What is attachment?', ['A child’s memory ability','A positive emotional bond with a particular individual','A parenting rule','A stage of abstract thought'],1,'Attachment is a positive emotional bond between a child and an individual.'],
+[9,'Which Piaget stage is linked to object permanence?', ['Sensorimotor','Preoperational','Concrete operational','Formal operational'],0,'Object permanence is a key idea in the sensorimotor stage, birth to age 2.'],
+[9,'Which Piaget stage includes abstract and logical thinking?', ['Sensorimotor','Preoperational','Concrete operational','Formal operational'],3,'Formal operational thinking begins around age 12 and includes abstract reasoning.'],
+[9,'What is a personal fable?', ['Belief that your experience is unique and shared by no one','A child understanding conservation','A type of attachment','A theory of aging'],0,'A personal fable is the belief that one’s experience is unique and exceptional.'],
+[9,'Which aging theory favors continuing earlier-life activities?', ['Disengagement theory','Activity theory','Wear-and-tear theory','Genetic preprogramming theory'],1,'Activity theory says late adulthood should continue earlier activities as much as possible.'],
+[10,'Which motivation is driven by enjoyment of the activity itself?', ['Extrinsic','Intrinsic','Incentive','Secondary'],1,'Intrinsic motivation comes from within, such as enjoyment.'],
+[10,'What is homeostasis?', ['A test of intelligence','The body maintaining a steady internal state','A type of emotion','A parenting style'],1,'Homeostasis is the body’s tendency to maintain a steady internal state.'],
+[10,'What is at the top of Maslow’s hierarchy?', ['Safety','Esteem','Love and belongingness','Self-actualization'],3,'Self-actualization is the top level in the notes.'],
+[10,'Which emotion theory says arousal and emotion occur at the same time?', ['James-Lange','Cannon-Bard','Schachter-Singer','Drive-reduction'],1,'Cannon-Bard proposes that physiological arousal and emotion happen simultaneously.'],
+[10,'What is one function of emotions listed in the notes?', ['Prevent all stress','Prepare us for action','Guarantee correct decisions','Replace thinking'],1,'Emotions prepare us for action, shape future behavior, and help social interaction.']
+];
+var testChapter=0;
+function renderTest(){
+  var qs=T.filter(function(q){return !testChapter||q[0]===testChapter;});
+  var h='';
+  qs.forEach(function(q,i){h+='<div class="testq" data-index="'+T.indexOf(q)+'"><b>'+(i+1)+'. '+q[1]+'</b>';q[2].forEach(function(opt,j){h+='<label><input type="radio" name="t'+T.indexOf(q)+'" value="'+j+'">'+String.fromCharCode(65+j)+'. '+opt+'</label>'});h+='<div class="fix" hidden></div></div>'});
+  $('testquestions').innerHTML=h;$('testresult').textContent='';
+  document.querySelectorAll('[id^="test-ch"],#test-all').forEach(function(b){b.setAttribute('aria-pressed',String((b.id==='test-all'&&testChapter===0)||(b.id==='test-ch1'&&testChapter===1)||(b.id==='test-ch2'&&testChapter===2)||(b.id==='test-ch7'&&testChapter===7)||(b.id==='test-ch9'&&testChapter===9)||(b.id==='test-ch10'&&testChapter===10)))});
+}
+[['test-all',0],['test-ch1',1],['test-ch2',2],['test-ch7',7],['test-ch9',9],['test-ch10',10]].forEach(function(x){$(x[0]).onclick=function(){testChapter=x[1];renderTest()}});
+$('testform').onsubmit=function(e){e.preventDefault();var qs=T.filter(function(q){return !testChapter||q[0]===testChapter}),score=0;qs.forEach(function(q){var idx=T.indexOf(q),chosen=document.querySelector('input[name="t'+idx+'"]:checked'),box=document.querySelector('.testq[data-index="'+idx+'"] .fix'),right=chosen&&+chosen.value===q[3];if(right)score++;box.hidden=false;box.className='fix '+(right?'correct':'wrong');box.textContent=(right?'Correct. ':'Not quite. Correct answer: '+q[2][q[3]]+'. ')+q[4]});$('testresult').textContent='Score: '+score+' / '+qs.length+' ('+Math.round(score/qs.length*100)+'%)';return false};
+$('testreset').onclick=function(){renderTest()};renderTest();
+
 showTab("cards");
 
 </script>

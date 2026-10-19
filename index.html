@@ -167,6 +167,17 @@ body.dark-theme .classes button[aria-selected="true"]{background:#3d3650;color:#
 h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%0A%3Cg fill='%23e8798f' stroke='%23c75a75' stroke-width='1'%3E%0A%3Cpath id='p' d='M0 0 C-22 -8 -26 -36 -4 -46 C4 -48 14 -44 14 -36 C20 -22 8 -6 0 0Z'/%3E%0A%3Cuse href='%23p' transform='rotate%2872%29'/%3E%3Cuse href='%23p' transform='rotate%28144%29'/%3E%3Cuse href='%23p' transform='rotate%28216%29'/%3E%3Cuse href='%23p' transform='rotate%28288%29'/%3E%3C/g%3E%0A%3Ccircle r='8' fill='%23b8405f'/%3E%3Cpath d='M0 0 L4 -34' stroke='%23f6d36b' stroke-width='3' stroke-linecap='round'/%3E%0A%3Cg fill='%23f6d36b'%3E%3Ccircle cx='4' cy='-34' r='2.6'/%3E%3Ccircle cx='-2' cy='-30' r='2'/%3E%3Ccircle cx='8' cy='-30' r='2'/%3E%3C/g%3E%3C/svg%3E") center/78% no-repeat !important}
 
 .byline:after{content:" ❀"; color:#d78aa0}
+.exs{margin:10px 0 2px;padding:10px 14px;border-radius:12px;background:var(--lavender);border:1px solid var(--line)}.exs ul{margin:6px 0 0}.exs li{margin:5px 0}.exs>b{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+/* Longer examples: a second purple box beneath the quick examples */
+.exlong{margin:8px 0 4px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--lavender) 68%,#ffffff);border:1px solid #cfc1ec;border-left:4px solid #a58bd8;line-height:1.55}.exlong>b{display:block;margin-bottom:5px;font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:#69528f}.exlong p{margin:5px 0 0}body.dark-theme .exlong{background:#302940;border-color:#62517f}body.dark-theme .exlong>b{color:#d7c5ff}
+.sp-wrap{overflow-x:auto;margin:6px 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.sp-table{border-collapse:collapse;width:100%;min-width:480px;font-size:.88rem}
+.sp-table th,.sp-table td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.sp-table thead th{background:var(--sage);color:var(--ink)}
+.sp-table tbody th{background:var(--panel);font-weight:700;color:var(--ink);white-space:nowrap}
+.sp-table tr:last-child>*{border-bottom:0}
+.sp-cover td{filter:blur(6px);cursor:pointer;transition:filter .2s}
+.sp-cover td.rev{filter:none}
 </style>
 </head>
 <body>
@@ -183,6 +194,7 @@ h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns
 <button role="tab" data-tab="cards" aria-selected="true">Flashcards</button>
 <button role="tab" data-tab="notes" aria-selected="false">Notes</button>
 <button role="tab" data-tab="learn" aria-selected="false">Plain English</button>
+<button role="tab" data-tab="path" aria-selected="false">Learn step by step</button>
 <button role="tab" data-tab="guide" aria-selected="false">Study guide</button>
 <button role="tab" data-tab="test" aria-selected="false">Practice test</button>
 </nav>
@@ -232,6 +244,14 @@ h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns
 <p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
 <button class="gbtn" id="ltog">Open all</button>
 <div id="llist"></div>
+</section>
+<section id="tab-path" hidden>
+<div class="learn-hero"><h2>Learn it, use it, remember it</h2><p>Short lessons that explain one idea, show a real example, point out a common mix-up, and let you check yourself. Your progress saves in this browser.</p></div>
+<div class="meta"><span id="lp-count">0 of 5 lessons mastered</span><span id="lp-step">Lesson 1 of 5</span></div>
+<div class="lesson-progress"><span id="lp-fill"></span></div>
+<div class="lesson-picker" id="lp-picker" aria-label="Choose a lesson"></div>
+<div id="lp-content"></div>
+<div class="lesson-footer"><button class="btn" id="lp-prev">Previous lesson</button><button class="btn go" id="lp-next">Next lesson</button></div>
 </section>
 </div>
 <div id="class-ph" hidden>
@@ -732,13 +752,86 @@ N=DN.concat(N);
   if(added){var count=document.getElementById("nc");if(count)count.textContent=C.length;chips();render();}
 })();
 var list=document.getElementById("list");
+var EX=[
+["<b>Ph.D. vs. Psy.D.:</b> a university researcher studying memory is likely a Ph.D.; a therapist who mostly sees clients may hold a Psy.D.","<b>Degrees:</b> a bachelor’s alone might lead to a case-aide job; a master’s is a common route into counseling."],
+["<b>Developmental:</b> following kids from age 5 to 25 to see how shyness changes. <b>Cognitive:</b> testing how background noise affects reading. <b>Social:</b> studying how friends pressure you to join a group.","<b>Clinical:</b> treating panic attacks. <b>I-O:</b> redesigning how managers run teams. <b>Behavioral genetics:</b> comparing twins raised apart."],
+["<b>One behavior, five views (a student crams for an exam):</b> neuroscience = stress hormones and brain arousal; psychodynamic = unconscious fear of failure; behavioral = past studying earned good grades; cognitive = expects studying will raise the score; humanistic = wants to reach their potential."],
+["<b>Nature vs. nurture:</b> a musical child, from musical parents’ genes or from years of lessons? <b>Free will vs. determinism:</b> picking a major vs. being steered by upbringing. <b>Conscious vs. unconscious:</b> a slip of the tongue. <b>Universal vs. individual:</b> every baby bonds, yet temperaments differ."],
+["<b>Scientific method:</b> Question: why do I forget names? Theory: attention drives memory. Hypothesis: people who repeat a name aloud recall more. Operationalize: names recalled after 10 minutes. Then run it and report."],
+["<b>Archival:</b> hospital records linking sleep and grades. <b>Naturalistic:</b> watching a playground without interfering. <b>Survey:</b> a questionnaire on social media use. <b>Case study:</b> one patient with a brain injury. <b>Correlation:</b> study hours and GPA rise together (not proof of cause). <b>Experiment:</b> caffeine vs. placebo."],
+["<b>Does music affect exam scores?</b> IV = music vs. silence; DV = exam score; random assignment by coin flip; significant = the gap is too large for chance; replication = another lab finds it too."],
+["<b>g-factor:</b> someone who does well across verbal and math tasks. <b>Fluid:</b> solving a brand-new puzzle. <b>Crystallized:</b> vocabulary built over years. <b>Practical:</b> fixing a problem with limited tools. <b>Emotional:</b> sensing a friend’s mood and calming them. <b>Gardner:</b> a dancer shows bodily-kinesthetic intelligence."],
+["<b>Reliable but not valid:</b> a scale that always reads 5 lb heavy. <b>Valid:</b> a math test that really measures math. <b>Achievement:</b> a final exam. <b>Adaptive test:</b> the computer gives a harder question after you answer correctly."],
+["<b>Gifted:</b> a child with IQ 135 gets enrichment classes. <b>Mild intellectual disability (IQ 55–69):</b> many people work and live independently with support. <b>Biological cause:</b> fetal alcohol syndrome."],
+["<b>Heritability:</b> twin studies estimate how much of a trait comes from genes. <b>Culture-fair test:</b> using pictures instead of language-specific words. <b>Functional fixedness:</b> not using a coin as a screwdriver. <b>Mental set:</b> reusing the method that worked last time."],
+["<b>Lorenz:</b> goslings follow the first moving object they see. <b>Harlow:</b> monkeys cling to a soft cloth “mother.” <b>Strange Situation:</b> secure = upset when the parent leaves, calms on return; avoidant = ignores the parent; ambivalent = clings but angry; disorganized = confused."],
+["<b>Authoritative:</b> “No phones at dinner. Here is why. What do you think?” <b>Authoritarian:</b> “Because I said so.” <b>Permissive:</b> no bedtime and no rules. <b>Uninvolved:</b> rarely knows where the child is. <b>Good childcare:</b> responsive caregivers and small groups."],
+["<b>Object permanence:</b> a baby searches for a hidden toy. <b>Egocentric:</b> a child thinks you see what they see. <b>Conservation:</b> knowing water poured into a taller glass is the same amount. <b>Formal operational:</b> reasoning “if X, then Y” about hypotheticals."],
+["<b>Adolescent egocentrism:</b> “Everyone is staring at my pimple.” <b>Identity vs. role confusion:</b> trying clubs and styles to find who you are. <b>Intimacy vs. isolation:</b> committing to a close relationship. <b>Midlife transition:</b> reassessing a career at 45."],
+["<b>Wear and tear:</b> knees stiffen with years of use. <b>Fluid vs. crystallized:</b> an older adult is slower at a new puzzle but strong in vocabulary. <b>Disengagement:</b> retiring and withdrawing. <b>Activity:</b> volunteering and staying busy. <b>Continuity:</b> a lifelong reader keeps reading. <b>Life review:</b> telling one’s life story."],
+["<b>Instinct:</b> birds migrating. <b>Drive reduction:</b> thirsty, so you drink. <b>Homeostasis:</b> shivering to warm up. <b>Arousal:</b> a skydiver vs. a quiet reader. <b>Incentive:</b> studying for a scholarship. <b>Cognitive:</b> playing guitar for joy (intrinsic) vs. for pay (extrinsic)."],
+["<b>Maslow:</b> a starving person can’t focus on painting. <b>Achievement:</b> setting hard goals. <b>Affiliation:</b> joining clubs to stay connected. <b>Power:</b> running for class president."],
+["<b>James-Lange:</b> your heart pounds, so you feel afraid. <b>Cannon-Bard:</b> heart pounding and fear happen together. <b>Facial feedback:</b> smiling can make you feel happier. <b>Display rules:</b> some cultures expect stoic faces at funerals. <b>Facial-affect program:</b> babies everywhere smile."],
+["<b>Predict:</b> students who sleep more do better. <b>Change:</b> therapy to reduce anxiety. <b>Explain:</b> why people procrastinate."],
+["A developmental-clinical psychologist treating anxiety in teens combines two subfields."],
+["Following the same people from preschool to adulthood to see how their friendships change."],
+["A personality test checking whether an applicant is consistently outgoing at work."],
+["<b>Schema:</b> you expect a restaurant to have menus and waiters. <b>Forensic:</b> studying how biased lineups sway eyewitnesses."],
+["An MRI shows brain activity during a stressful task; conscientious people tend to live longer."],
+["<b>Social:</b> feeling pressured to join a group chat. <b>Cross-cultural:</b> collectivist vs. individualist norms about family."],
+["Seeing a stranger in traffic and realizing they have a whole life as busy as yours."],
+["<b>Clinical:</b> seeing a psychologist for panic attacks. <b>I-O:</b> a company retraining its managers. <b>Sport:</b> mental skills for a free-throw shooter."],
+["<b>Clinical neuropsychology:</b> a patient with frontal lobe damage whose behavior changed. <b>Behavioral genetics:</b> twins. <b>Evolutionary:</b> an inherited fear of snakes."],
+["Match each question to a subfield: “Why do toddlers learn language so fast?” = developmental; “How does stress affect health?” = health psychology."],
+["A therapist trained mainly for practice = Psy.D.; a lab researcher = Ph.D. A habit explained by past rewards = behavioral perspective."],
+["Hypothesis: more sleep improves memory; operationalized as 8 vs. 4 hours of sleep and a word-recall score."],
+["Ch 7: a scale always 5 lb off is reliable, not valid. Ch 9: a baby who clings, then is angry, on reunion = ambivalent. Ch 10: a hungry student can’t study (Maslow)."]
+];
+function exHtml(si){var e=EX[si];return e&&e.length?'<div class="exs"><b>Quick examples</b><ul>'+e.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>':""}
+/* Expanded, student-friendly examples paired with the short examples above. */
+var EX_LONG=[
+["Imagine two people with psychology degrees. One works at a university designing memory experiments and analyzing data; the other spends most of the day helping clients manage anxiety. The first role often fits a research-focused Ph.D., while the second may fit a practice-focused Psy.D. There is overlap, but the main difference is the kind of work each program emphasizes."],
+["A developmental psychologist might test the same children at ages 5, 10, 15, and 20 to see how confidence changes as they grow. A cognitive psychologist could compare reading scores when students work in silence versus with background noise. A social psychologist might observe whether students are more likely to join a club when their friends join too. Each studies behavior, but asks a different kind of question."],
+["A student is cramming for a test. A neuroscience researcher looks at stress responses in the brain and body. A psychodynamic psychologist asks whether an unrecognized fear of failure is affecting the student. A behavioral psychologist focuses on how past rewards shaped the habit. A cognitive psychologist studies the student’s belief that cramming will work, while a humanistic psychologist focuses on the student’s personal goals and choices."],
+["A child who is good at music may have inherited some musical abilities, but practice, lessons, and access to instruments also matter. That is nature and nurture working together. A student’s choice of college major can feel personal, yet family expectations and money may limit the options they consider. These questions help psychologists examine how biology, experience, awareness, and culture shape behavior."],
+["Suppose a teacher wonders whether saying a new classmate’s name aloud helps students remember it. The teacher first asks the question, then proposes a theory about attention and memory. The testable hypothesis might be that students who repeat the name will remember more names after ten minutes. The researcher gives both groups the same number of names, measures how many they recall, compares the results, and shares the findings so others can repeat the study."],
+["A researcher using school archives might compare attendance records with grades that already exist. For naturalistic observation, the researcher watches children play at recess without changing what happens. A survey asks many students how often they use social media. A case study closely examines one person after a brain injury. A correlation might show that students who study more often have higher grades, but that alone does not prove studying caused the higher grades; an experiment is needed to test cause and effect."],
+["A researcher wants to know whether music improves memory. One randomly assigned group studies a word list while listening to instrumental music; another studies in silence. The independent variable is the study condition, and the dependent variable is the number of words recalled. Random assignment helps make the groups comparable. If the difference is unlikely to be due to chance, it may be statistically significant; repeating the study with new participants checks whether the result holds up."],
+["A person who performs well on vocabulary, math, and reasoning tasks may show a broad general ability often called g. Someone solving a completely unfamiliar puzzle uses fluid intelligence, while someone using years of vocabulary knowledge uses crystallized intelligence. A mechanic finding a practical fix with limited tools shows practical problem-solving. These examples show why intelligence can involve several related abilities rather than just one classroom skill."],
+["If a bathroom scale reads five pounds too high every single time, it is reliable because its readings are consistent, but it is not valid for measuring actual weight. A well-designed math test has validity if it measures math skills rather than reading ability. An achievement test measures what someone has learned, while an adaptive test changes question difficulty based on earlier answers."],
+["A student identified as gifted may receive more challenging work so they can keep learning. A person with an intellectual disability may need support with certain everyday tasks, but their abilities and independence vary widely. Psychologists consider both test scores and adaptive functioning, such as communication, daily living, and social skills, rather than relying on an IQ score alone."],
+["Heritability estimates describe how much differences within a particular group are associated with genetic differences; they do not tell you that a person’s trait is fixed. A culture-fair test tries to reduce the advantage of language or cultural knowledge unrelated to the skill being measured. Functional fixedness can make someone overlook using a coin to tighten a screw, while a mental set can make someone repeat an old solution even when a new problem needs a different approach."],
+["In an attachment study, a securely attached child may be upset when a caregiver leaves but seek comfort and settle when the caregiver returns. An avoidant child may show little outward reaction, while an ambivalent child may cling and still resist comfort. These patterns describe how children respond in a particular situation; they are not labels that determine a child’s entire future."],
+["An authoritative parent sets a clear bedtime, explains why sleep matters, and listens when the child asks for a reasonable change. An authoritarian parent may insist on the same rule without discussion. A permissive parent may avoid setting a bedtime, while an uninvolved parent may rarely check whether the child is getting enough rest. Parenting styles are patterns, and real families can show a mix depending on the situation."],
+["A baby who looks for a toy after it is hidden is showing object permanence. A young child who assumes everyone can see the toy from the same angle may be showing egocentric thinking. If the same amount of juice is poured from a short wide cup into a tall narrow glass, a child who understands conservation knows the amount has not changed. An older child may use formal operational thinking to reason through a hypothetical question."],
+["A teenager may feel that everyone noticed a small mistake in class, even though most classmates barely noticed; this is adolescent egocentrism. During identity development, a teen might try different activities and interests to learn what fits them. Later, a person may work on building close relationships, contributing to younger generations, or reflecting on the meaning of their life. Erikson’s stages describe these changing social and emotional challenges across life."],
+["An older adult may take longer to solve a brand-new puzzle but still have a strong vocabulary built over decades. Activity theory would emphasize that staying socially involved, such as volunteering or joining a walking group, can support well-being. Continuity theory highlights keeping familiar interests and routines, such as continuing to read every evening after retirement. These are different ways of understanding adjustment to aging."],
+["When someone is thirsty, drinking reduces the body’s drive and helps restore balance, or homeostasis. A bird’s seasonal migration is often used as an example of instinctive behavior. A student may work hard because a scholarship is an incentive. If a person plays guitar because it feels enjoyable, that is intrinsic motivation; if they play only to earn money, that is extrinsic motivation. More than one motive can operate at once."],
+["A hungry student may struggle to concentrate on a creative project because basic physical needs are not met. Once food and safety are secure, belonging, respect, and personal growth may become more important. Someone might set a challenging grade goal to meet an achievement motive, join a club to build friendships, or run for class president to influence decisions. Maslow’s hierarchy is a model for thinking about needs, not a strict rule that every person follows in the same order."],
+["In the James-Lange theory, a person notices a racing heart and trembling and interprets those bodily changes as fear. Cannon-Bard proposes that bodily arousal and the feeling of fear happen at the same time. In the Schachter-Singer theory, the person experiences arousal and uses the situation to label it: the same racing heart might be called fear before a test or excitement before a performance."],
+["A school psychologist might predict that students who sleep enough will perform better, help change behavior by teaching a strategy for managing test anxiety, and explain procrastination by studying how avoidance temporarily reduces stress. These goals work together: describing a pattern can lead to predictions, explanations, and interventions that are tested for effectiveness."],
+["A psychologist might study both child development and clinical psychology when helping a young person manage anxiety, because age affects how anxiety is expressed and which treatments are appropriate. Combining subfields lets researchers consider the person’s developmental stage as well as their symptoms and treatment needs."],
+["Researchers could follow the same group of children from preschool through high school and into adulthood, checking in every few years about friendships. This long-term design can reveal how relationships change within the same people, though it takes time and some participants may stop taking part."],
+["A company might use a personality questionnaire when hiring for a role that requires frequent teamwork. Psychologists would need to check that the test measures the relevant trait consistently and actually predicts job behavior, rather than using a score as the only reason to hire or reject someone."],
+["A schema is a mental framework built from experience. If you have visited restaurants before, you may expect to see a menu, order food, eat, and pay even in a new restaurant. In forensic psychology, researchers might test whether a leading question or a lineup that subtly suggests one suspect changes an eyewitness’s memory or choice."],
+["A neuroscience study might use brain imaging to examine which areas are active during a stressful task, while also measuring behavior. A separate long-term study could examine whether conscientiousness, such as planning ahead and following routines, is associated with health outcomes. An association does not mean conscientiousness alone determines how long someone lives; many biological and social factors affect health."],
+["Social psychologists might study whether a student joins a group chat because friends are already in it or because they fear being left out. Cross-cultural psychologists might compare how families in different cultures balance individual preferences with family responsibilities. They look for patterns without assuming every person in a culture thinks the same way."],
+["You see someone waiting at a bus stop and imagine that they may be late for work, worried about a family member, or heading toward an important event. The feeling of sonder is recognizing that strangers have complex lives of their own, even though you know very little about them."],
+["A clinical psychologist may help a client practice coping strategies for panic attacks. An industrial-organizational psychologist might help a workplace improve manager training and teamwork. A sport psychologist could teach a basketball player a consistent breathing and attention routine before free throws. All apply psychological research to practical goals in different settings."],
+["Clinical neuropsychologists may assess how a brain injury affects memory, planning, or impulse control. Behavioral geneticists compare relatives or twins to study how genes and environments contribute to differences. Evolutionary psychologists ask how behaviors may have been shaped over generations. These perspectives can offer different explanations, and each explanation needs evidence rather than assumptions about a person."],
+["If the question asks why toddlers’ language changes quickly, developmental psychology is the best fit. If it asks how stress affects blood pressure or sleep, health psychology is relevant. If it asks how a witness’s memory might be influenced during an investigation, forensic psychology fits. Focus on the question being asked, not just a keyword in the scenario."],
+["A researcher designing a memory experiment may need doctoral training and may choose a Ph.D. because research is central to the role. A practitioner focused on providing psychological services may choose a Psy.D. A behaviorist explaining why a student studies after receiving praise would focus on reinforcement and observable behavior."],
+["To test whether sleep improves memory, a researcher could assign participants to different sleep-duration conditions when it is safe and ethical, then give everyone the same word-recall test. The study must define how sleep is measured, keep other conditions as similar as possible, and avoid claiming that sleep caused a difference unless the design supports that conclusion."],
+["If a scale always gives the same reading but is consistently off, it is reliable but not valid. If a child seeks comfort and then shows mixed anger when a caregiver returns, that behavior may resemble an ambivalent attachment pattern in the study context. If a student is too hungry to focus on a difficult assignment, Maslow’s model helps explain how unmet physiological needs can compete with higher-level goals."]
+];
+function exLongHtml(si){var e=EX_LONG[si];return e&&e.length?'<div class="exlong"><b>Longer examples</b>'+e.map(function(x){return'<p>'+x+'</p>'}).join('')+'</div>':""}
 function draw(t){
   var h="",n=0;
-  N.forEach(function(s){
+  N.forEach(function(s,si){
     var items=s[1].filter(function(x){return !t||(s[0]+" "+x).toLowerCase().indexOf(t)>-1});
     if(!items.length)return;
     n++;
-    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div></details>';
+    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul>'+exHtml(si)+exLongHtml(si)+'</div></details>';
   });
   list.innerHTML=h||'<p class="sub">No notes match that search.</p>';
 }
@@ -776,7 +869,7 @@ function gcount(){var t=0,d=0;G.forEach(function(g,gi){g[3].forEach(function(_,t
 })();
 $("glist").onchange=function(e){var k=e.target.dataset.k;if(!k)return;if(e.target.checked)gs[k]=1;else delete gs[k];try{localStorage.setItem("psych2-guide",JSON.stringify(gs))}catch(x){}gcount()};
 $("glist").onclick=function(e){var b=e.target.closest(".gbtn");if(!b)return;st.ch=+b.dataset.ch;st.mode="all";st.i=0;st.flip=false;chips();render();showTab("cards")};
-function showTab(n){["cards","notes","learn","guide","test"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});window.scrollTo(0,0)}
+function showTab(n){["cards","notes","learn","path","guide","test"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});if(n==="path")renderPath();window.scrollTo(0,0)}
 document.querySelector(".tabs").onclick=function(e){var b=e.target.closest("button");if(b)showTab(b.dataset.tab)};
 var L=[
 ["Chapter 1",[
@@ -1337,12 +1430,31 @@ chips();render();
 
 /* ---------- Notes ---------- */
 var list=$("list");
+var EXP=[
+["<b>Handwashing campaigns</b> and <b>fluoridated water</b> reach everyone. <b>Health in all policies:</b> a city adds sidewalks and bike lanes to cut obesity. <b>Primordial prevention:</b> minimum-wage or paid-leave laws. <b>Primary:</b> seat belt laws. <b>Secondary:</b> a mammogram. <b>Tertiary:</b> stroke rehab."],
+["<b>Protection:</b> quarantine during plague. <b>Hygiene:</b> Snow removing the cholera pump; sewers. <b>Contagion:</b> the diphtheria vaccine. <b>Holes:</b> Medicare in 1965. <b>Promotion:</b> HIV risk-reduction campaigns, mammograms. <b>Population health:</b> One Health and climate planning."],
+["<b>Health care:</b> a flu shot at a clinic. <b>Traditional public health:</b> the health department tracking a measles outbreak. <b>Social:</b> affordable housing reducing asthma. <b>Impact pyramid:</b> a tobacco tax beats counseling one smoker. <b>High-risk:</b> screening people with very high cholesterol. <b>Improving the average:</b> less salt in packaged food."],
+["<b>Determinant:</b> poverty and targeted tobacco ads lead to smoking, which leads to cancer. <b>BIG GEMS for a child with asthma:</b> cockroaches (Environment), skipped inhaler (Behavior), no insurance (Medical care), low income (Socioeconomic)."],
+["<b>Demographic transition:</b> Nigeria’s population grows when deaths fall before births. <b>Aging:</b> Japan’s inverted pyramid. <b>Epidemiological:</b> a country shifts from diarrheal deaths to heart disease. <b>Nutritional:</b> fast food replaces traditional diets. <b>Frailty:</b> an older adult who lost 10 lb, walks slowly, and has weak grip."],
+["<b>P.E.R.I.E. for childhood obesity:</b> Problem = rates at one school; Etiology = sugary drinks and inactivity; Recommendation = a school policy; Implementation = new lunches and recess; Evaluation = BMI after a year.","<b>Incidence:</b> 50 new flu cases in 10,000 at-risk people = 500 per 100,000. <b>Case-fatality:</b> 8 deaths among 40 cases = 20%."],
+["<b>Artifact:</b> autism diagnoses rise after the definition widens. <b>Age adjustment:</b> comparing cancer in a retiree-heavy state vs. a young state. <b>Ecologic fallacy:</b> counties with more doctors have more deaths because they have more elderly people."],
+["<b>Case-control:</b> ill vs. well picnic guests compared on what they ate. <b>Cohort:</b> smokers vs. nonsmokers followed for 20 years. <b>RCT:</b> vaccine vs. placebo. <b>Natural experiment:</b> physicians who quit smoking after 1964. <b>RR:</b> 20% vs. 2% risk = 10. <b>Dose-response:</b> more cigarettes a day, higher risk. <b>Necessary, not sufficient:</b> TB bacteria."],
+["<b>Grade A:</b> tobacco taxes. <b>Grade D:</b> chest X-ray screening for lung cancer. <b>When–Who–How:</b> a smoke-free law = primary, population, obligation; a clinician advising quitting = secondary, individual, information; lower premiums = motivation. <b>Efficacy vs. effectiveness:</b> a vaccine trial vs. a mass campaign. <b>RE-AIM Reach:</b> how many smokers actually use the quit line."],
+["<b>Single case:</b> the first AIDS report in 1981. <b>Vital statistics:</b> death certificates. <b>Survey:</b> BRFSS. <b>Sentinel:</b> clinics reporting flu. <b>Syndromic:</b> a spike in cold-medicine sales. <b>Infant mortality:</b> 12 deaths among 3,000 births = 4 per 1,000. <b>HALE:</b> 78 × 0.85 = 66.3."],
+["<b>Misleading graph:</b> cutting the axis at 350 makes a small rise look huge. <b>Website check:</b> a health site sponsored by a supplement seller. <b>Dread:</b> fearing plane crashes over car crashes. <b>SUCCESs:</b> “Back to Sleep.” <b>Expected utility:</b> 80% cure (1.0) + 20% death (0) = 0.8. <b>Decision styles:</b> “you need this” (inform), recommend and sign (consent), “here are your options” (shared)."],
+["<b>Assessment:</b> counting reportable disease cases. <b>Policy development:</b> a tobacco education campaign. <b>Assurance:</b> restaurant inspections and nurse licensing. <b>Mobilize partnerships:</b> a coalition for lead control. <b>Disaster response:</b> a health department after a flood."],
+["<b>Local:</b> county restaurant inspections and TB follow-up. <b>State:</b> the public health lab and vital records. <b>CDC:</b> its disease detectives investigate an outbreak. <b>FDA:</b> approves a vaccine. <b>NIH:</b> funds cancer research. <b>IHS:</b> tribal clinics. <b>WHO:</b> declares a global emergency such as Ebola."],
+["<b>Non-health agencies:</b> EPA and HUD both work on lead paint. <b>NGOs:</b> Red Cross blood drives; the Gates Foundation funds vaccines. <b>COPC:</b> a health center surveys its neighborhood and starts a diabetes program. <b>COPH:</b> a health department partners with schools for dental sealants. <b>CBPR:</b> residents help design an air-quality study."],
+["<b>Social model then:</b> reformers pushed for sewers and safer factories. <b>Today:</b> arguing for paid sick leave or stable housing as health policy. <b>Underfunding:</b> a county health department with too few staff in a pandemic."],
+["<b>Map to hypothesis:</b> Snow plotted cholera deaths around the Broad Street pump and suspected water, not miasma. <b>Today:</b> contact-tracing maps. The map is a group pattern; interviews gave the individual-level evidence."]
+];
+function exHtmlP(si){var e=EXP[si];return e&&e.length?'<div class="exs"><b>Examples</b><ul>'+e.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>':""}
 function draw(t){
   var h="";
-  N.forEach(function(s){
+  N.forEach(function(s,si){
     var items=s[1].filter(function(x){return !t||(s[0]+" "+x).toLowerCase().indexOf(t)>-1});
     if(!items.length)return;
-    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div></details>';
+    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul>'+exHtmlP(si)+'</div></details>';
   });
   list.innerHTML=h||'<p class="sub">'+(N.length?"No notes match that search.":"No Public Health notes yet. Send your material and it will be organized here.")+'</p>';
 }
@@ -1459,6 +1571,7 @@ $("testnext").onclick=function(){if(testSet.length){testPos=(testPos+1)%testSet.
 $("testreset").onclick=buildTestSet;
 buildTestSet();
 
+window.PH_API={C:C,T:T,cur:function(){return{q:testSet[testPos],r:checkedMap[testPos]}}};
 showTab("cards");
 window.scrollTo(0,0);
 })();
@@ -1478,6 +1591,242 @@ window.scrollTo(0,0);
   var saved="psych";try{saved=localStorage.getItem("study-class")||"psych"}catch(e){}
   setClass(panels[saved]?saved:"psych",false);
   window.scrollTo(0,0);
+})();
+</script>
+<script>
+var SPD={
+psych:{
+compare:[
+{t:"Reliability vs. validity",h:["","Reliability","Validity"],r:[["Asks","Is it consistent?","Does it measure what it should?"],["Example","Same score on Monday and Friday","A math test that really measures math"],["Can it fail alone?","Yes: reliable but not valid (a scale always 5 lb heavy)","A test cannot be valid if it is not reliable"]]},
+{t:"Fluid vs. crystallized intelligence",h:["","Fluid","Crystallized"],r:[["What it is","Reasoning, memory, processing new information","Knowledge and skills built up over time"],["With age","Declines","Stays steady"],["Example","A brand-new puzzle","Vocabulary, general knowledge"],["Memory cue","Fluid flows to new problems","Crystals build up over years"]]},
+{t:"Five perspectives (one behavior: cramming for an exam)",h:["Perspective","Focus","Explains cramming as…"],r:[["Neuroscience","Brain and nervous system","Stress hormones and brain arousal"],["Psychodynamic","Unconscious inner forces","A hidden fear of failure"],["Behavioral","Observable behavior only","Past studying earned rewards"],["Cognitive","How people think","Expecting studying to raise the score"],["Humanistic","Free will, growth","Choosing to reach their potential"]]},
+{t:"Research methods",h:["Method","What you do","Shows cause?","Example"],r:[["Archival","Use existing records","No","Hospital records on sleep and grades"],["Naturalistic observation","Watch without interfering","No","Kids on a playground"],["Survey","Ask a sample questions","No","Social media questionnaire"],["Case study","Study one person in depth","No","One patient with a brain injury"],["Correlational","Measure whether variables go together","No","Study hours and GPA"],["Experiment","Change one variable, measure another","Yes","Caffeine vs. placebo"]]},
+{t:"Piaget’s stages",h:["Stage","Ages","Key idea","Example"],r:[["Sensorimotor","0–2","Object permanence","Baby searches for a hidden toy"],["Preoperational","2–7","Symbols, pretend play, egocentric thought","Child assumes you see what they see"],["Concrete operational","7–12","Logic with real things, conservation","Same water in a taller glass"],["Formal operational","12+","Abstract and hypothetical thinking","Reasoning “if X, then Y”"]]},
+{t:"Attachment styles (Strange Situation)",h:["Style","When caregiver leaves/returns","Memory cue"],r:[["Secure","Upset on leaving, greets and calms on return","Safe base"],["Avoidant","Ignores caregiver on return","Away"],["Ambivalent","Clings but is angry","Both clingy and mad"],["Disorganized","Confused, contradictory behavior","Disorganized"]]},
+{t:"Parenting styles",h:["Style","Warmth","Rules and demands","Sounds like"],r:[["Authoritative","High","High, with reasons","“Here is why, let’s talk”"],["Authoritarian","Low","High, strict","“Because I said so”"],["Permissive","High","Few","“Do whatever you want”"],["Uninvolved","Low","Few","Neglectful, absent"]]},
+{t:"Theories of aging",h:["Theory","Says","Example"],r:[["Genetic preprogramming","Cells have a built-in limit on reproduction","Cells stop dividing"],["Wear and tear","Body works less efficiently with use","Stiff joints"],["Disengagement","Gradual withdrawal from the world","Retire and step back"],["Activity","Stay as active as possible","Volunteering and clubs"],["Continuity","Keep long-standing habits and personality","Lifelong reader keeps reading"]]},
+{t:"Motivation approaches",h:["Approach","Core idea","Example"],r:[["Instinct","Inborn, unlearned patterns","Bird migration"],["Drive-reduction","Need creates a drive to reduce it","Thirst, so drink"],["Arousal","Seek optimal excitement","Skydiver vs. quiet reader"],["Incentive","Pulled by external goals","Studying for a scholarship"],["Cognitive","Thoughts, expectations, goals","Playing guitar for joy (intrinsic)"]]},
+{t:"Emotion theories",h:["Theory","Order","Example"],r:[["James-Lange","Arousal first, then emotion","Heart pounds, so you feel afraid"],["Cannon-Bard","Arousal and emotion together","Fear and racing heart at once"],["Facial-feedback","Expression helps create the feeling","Smiling lifts mood"]]}
+],
+scen:[
+[1,"A therapist says a patient’s lateness hides an unconscious fear of success. Which perspective?",["Behavioral","Psychodynamic","Cognitive","Neuroscience"],1,"Unconscious inner forces = psychodynamic."],
+[1,"A researcher links a brain chemical imbalance to depressed mood. Which perspective?",["Humanistic","Cognitive","Neuroscience","Behavioral"],2,"Biological bases of behavior = neuroscience."],
+[1,"A coach says, “You choose your response and you can grow.” Which perspective?",["Humanistic","Psychodynamic","Behavioral","Neuroscience"],0,"Free will and growth = humanistic."],
+[1,"A study asks whether shyness comes from genes or from home life. Which key issue?",["Free will vs. determinism","Nature vs. nurture","Conscious vs. unconscious","Individual vs. universal"],1,"Heredity vs. environment is nature vs. nurture."],
+[2,"Researchers watch shoppers in a mall without interfering. Which method?",["Survey","Case study","Naturalistic observation","Experiment"],2,"No intervention, natural setting."],
+[2,"Students who use social media more report lower grades. Can we say social media causes lower grades?",["Yes, it is proven","No, correlation does not show cause","Yes, because it is large","Only for freshmen"],1,"Correlation alone cannot show cause; a third variable may explain it."],
+[2,"People are randomly assigned to 4 or 8 hours of sleep, then take a recall test. What is the DV?",["Hours of sleep","Recall score","Random assignment","The participants"],1,"The measured outcome is the DV; hours of sleep is the IV."],
+[2,"One patient who lost memory after surgery is studied in depth. Which method?",["Archival","Survey","Case study","Correlational"],2,"Intensive study of one individual."],
+[7,"A person scores IQ 100 on Monday and 140 a week later. What is the main problem?",["Low reliability","Low validity only","High heritability","Culture-fair test"],0,"Inconsistent scores mean low reliability."],
+[7,"A 70-year-old struggles with a new puzzle but wins a vocabulary quiz. This shows…",["Crystallized declines, fluid stays","Fluid declines, crystallized stays steady","Both rise","Neither changes"],1,"Fluid declines with age; crystallized stays steady."],
+[7,"A man can’t think of using a coin as a screwdriver. This is…",["Functional fixedness","Mental set","Emotional intelligence","g-factor"],0,"Seeing objects only for their usual use."],
+[9,"A toddler cries when mom leaves but calms quickly and greets her on return. Which attachment?",["Avoidant","Secure","Ambivalent","Disorganized"],1,"Upset, then comforted on reunion = secure."],
+[9,"A parent says “Because I said so” with little warmth. Which style?",["Authoritative","Authoritarian","Permissive","Uninvolved"],1,"High control, low warmth = authoritarian."],
+[9,"A 5-year-old says a tall thin glass holds more juice than a short wide one with the same amount. Which stage?",["Sensorimotor","Preoperational","Concrete operational","Formal operational"],1,"Lack of conservation fits the preoperational stage."],
+[9,"A retired man volunteers and joins clubs to stay busy. Which theory?",["Disengagement","Activity","Wear and tear","Genetic preprogramming"],1,"Staying active is activity theory."],
+[10,"A student studies hard for a promised scholarship. Which approach?",["Instinct","Drive-reduction","Incentive","Arousal"],2,"External goals pull behavior."],
+[10,"A person is too hungry to care about making friends. Which idea?",["Maslow: basic needs come first","Need for power","James-Lange","Cognitive dissonance"],0,"Physiological needs must be met before higher ones."],
+[10,"Your heart pounds, then you realize you are afraid. Which theory?",["James-Lange","Cannon-Bard","Facial-feedback","Drive-reduction"],0,"Arousal first, then emotion."]
+]},
+ph:{
+compare:[
+{t:"Incidence, prevalence, mortality, case-fatality",h:["Measure","Counts","Answers","Example"],r:[["Incidence","New cases ÷ people at risk","How likely to get it?","6,131 new cases / 2,418,185 = 254 per 100,000"],["Prevalence","All current cases ÷ population","How many have it now?","510,767 / 2,418,185 = 21,122 per 100,000"],["Mortality rate","Deaths from disease ÷ population","Burden of death","10% in Funkytown"],["Case-fatality","Mortality ÷ incidence","Chance of dying once sick (severity)","Margaritaville 80%"]]},
+{t:"Study designs for causation",h:["Design","Start with","Direction","Establishes","Weakness"],r:[["Case-control","Cases and controls","Looks back","Association","Recall and control-group bias"],["Cohort","Exposed and unexposed","Forward","Cause precedes effect","Slow, costly, selection bias"],["RCT","Random assignment","Forward","Altering the cause alters the effect","Ethics, cost, external validity"]]},
+{t:"Efficacy vs. effectiveness",h:["","Efficacy","Effectiveness"],r:[["Conditions","Ideal, controlled","Real world"],["Question","Did it work where studied?","Does it work where used?"],["Example","Vaccine RCT","Mass vaccination campaign"]]},
+{t:"Levels of prevention",h:["Level","Target","Example"],r:[["Primordial","Social and economic conditions","Labor laws, unemployment insurance"],["Primary","Before disease","Seat belts, vaccines"],["Secondary","Early, before symptoms","Screening, Paxlovid"],["Tertiary","After symptoms, prevent disability","Diabetes management, rehab"]]},
+{t:"Three approaches to population health",h:["Approach","Aim","Example"],r:[["Health care","One-on-one services","Flu shot, screening"],["Traditional public health","Group and community prevention","Disease monitoring, food safety"],["Social interventions","Non-health goals with health effects","Housing, education, economic growth"]]},
+{t:"High-risk vs. improving the average",h:["","High-risk","Improving the average"],r:[["Focus","Those most likely to get disease","Whole population"],["Aim","Bring their risk down to the rest","Shift everyone’s risk down"],["Example","Screen very high cholesterol","Less salt in packaged food"]]},
+{t:"Information, motivation, obligation",h:["How","What it is","Example","Watch out for"],r:[["Information","Education","Warning labels, campaigns","Often weak alone"],["Motivation","Incentives","Cigarette taxes","Victim blaming"],["Obligation","Laws and rules","Smoke-free law","Removes freedom"]]},
+{t:"Perception effects",h:["Effect","Meaning","Example"],r:[["Dread","Vivid, catastrophic harms feel bigger","Sharks vs. pool drowning"],["Unfamiliarity","Unknown risks feel bigger","Irradiated food vs. sun"],["Uncontrollability","Risks out of our control feel bigger","Planes vs. cars"]]},
+{t:"Population measures",h:["Measure","What it captures","Note"],r:[["Infant mortality","Deaths in first year ÷ live births","Older standard"],["Under-5 mortality","Child deaths before 5","WHO standard for children"],["Life expectancy","Death only","Not a personal prediction"],["HALE","Life expectancy × quality of health","80 × 0.90 = 72"],["DALY","Healthy years lost","Lower is better"]]},
+{t:"Decision-making styles",h:["Style","Clinician’s role","Patient’s role"],r:[["Inform of decision","Decides and tells","Follows"],["Informed consent","Recommends","Accepts or rejects"],["Shared decision-making","Provides information and options","Weighs and decides"]]},
+{t:"COPC vs. COPH",h:["","COPC","COPH"],r:[["Starts from","Health care sites (health centers)","Governmental public health"],["Reaches out to","The community and public health","Health care and other agencies"],["Example","Health center starts a diabetes program","Health department partners with schools for sealants"]]}
+],
+scen:[
+[1,"A city adds crosswalks mainly for traffic flow and injuries fall. Which approach?",["Health care","Traditional public health","Social intervention","Tertiary prevention"],2,"A non-health aim with health effects is a social intervention."],
+[1,"A state raises tobacco taxes. Which level of the Health Impact Pyramid?",["Counseling","Clinical","Changing the context","Long-lasting protective"],2,"Taxes and smoke-free laws change the default context."],
+[1,"A clinic screens only patients with very high cholesterol. Which approach?",["High-risk","Improving the average","Primordial","Social"],0,"Targeting those with highest risk."],
+[1,"Sewers are built because of cholera in 1850s London. Which era?",["Health protection","Hygiene movement","Contagion control","Population health"],1,"Community-wide sanitation is the hygiene movement."],
+[1,"A country’s main deaths shift from diarrhea to heart disease. Which transition?",["Demographic","Epidemiological","Nutritional","Genetic"],1,"Communicable to chronic disease is the epidemiological transition."],
+[2,"A county of 200,000 at risk has 40 new cases this year. Incidence per 100,000?",["20","40","200","0.2"],0,"40 ÷ 200,000 × 100,000 = 20."],
+[2,"A disease has 50 cases and 10 deaths. Case-fatality?",["10%","20%","50%","5%"],1,"10 ÷ 50 = 20%."],
+[2,"Investigators compare outbreak patients with well guests on what they ate. Which design?",["Cohort","RCT","Case-control","Ecological"],2,"Starting from cases and looking back = case-control."],
+[2,"5,000 smokers and 5,000 nonsmokers are followed for 20 years. Which design?",["Case-control","Cohort","RCT","Survey"],1,"Following exposed and unexposed forward = cohort."],
+[2,"Counties with more doctors have more deaths, so doctors cause death. This is…",["Dose-response","Ecologic fallacy","Efficacy","Reverse causality only"],1,"Group data can mislead; older age is a confounder."],
+[2,"A vaccine works in a trial but less in the community. This is a gap between…",["Efficacy and effectiveness","Incidence and prevalence","Primary and secondary","Reach and adoption only"],0,"Ideal conditions vs. real-world conditions."],
+[2,"A smoke-free law in bars is which When–Who–How?",["Secondary, individual, information","Primary, population, obligation","Tertiary, group, motivation","Primary, individual, information"],1,"Before disease, everyone, required by law."],
+[2,"Good-quality evidence with substantial net benefit earns which grade?",["A","C","D","I"],0,"Good evidence plus substantial benefit = A."],
+[3,"A graph’s y-axis starts at 350 so a small rise looks steep. This is…",["Extrapolation","A cut-off axis","A pie chart","Discounting"],1,"Cutting off the axis magnifies change."],
+[3,"Someone fears flying but not driving. Which effect?",["Dread","Unfamiliarity","Uncontrollability","Certainty"],2,"Feeling out of control inflates perceived risk."],
+[3,"A surgery has a 90% chance of full health (1.0) and 10% death (0). Expected utility?",["0.9","0.1","1.0","0.5"],0,"0.9 × 1.0 + 0.1 × 0 = 0.9."],
+[3,"The doctor lays out options and the patient chooses. Which approach?",["Inform of decision","Informed consent","Shared decision-making","Heuristic"],2,"Clinician informs, patient decides."],
+[12,"A health department inspects restaurants and enforces sanitary codes. Which service?",["Monitor health status","Enforce laws and regulations","Research","Mobilize partnerships"],1,"Enforcement is an assurance service."],
+[12,"A health center surveys its neighborhood, picks diabetes, and builds a program. Which model?",["COPH","COPC","CBPR only","Branch office"],1,"Health care site reaching out to the community = COPC."],
+[12,"Disease detectives investigate an outbreak. Which agency?",["FDA","NIH","CDC","HRSA"],2,"CDC’s Epidemic Intelligence Service."],
+[20,"Snow’s map of deaths around the Broad Street pump is best seen as…",["An RCT","A pattern that generated a hypothesis","A cohort study","Proof of miasma"],1,"The map showed a group pattern that suggested contaminated water."]
+]}};
+window.SPD=SPD;
+(function(){
+var INTV=[0,1,3,7,14,30,60],NEWCAP=10;
+function today(){var d=new Date();d.setHours(0,0,0,0);return Math.round(d/864e5)}
+function load(k,def){try{var v=JSON.parse(localStorage.getItem(k));return v==null?def:v}catch(e){return def}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function strip(h){var d=document.createElement("div");d.innerHTML=h;return(d.textContent||"").trim()}
+function mount(cfg){
+  var root=document.getElementById(cfg.root),nav=root.querySelector(".tabs"),P="sp-"+cfg.id+"-";
+  var K=cfg.K;
+  function $(id){return document.getElementById(P+id)}
+  var tabs=[["review","Review"],["compare","Compare"],["apply","Apply"]];
+  tabs.forEach(function(t){var b=document.createElement("button");b.setAttribute("role","tab");b.dataset.sp=t[0];b.setAttribute("aria-selected","false");b.textContent=t[1];nav.appendChild(b)});
+  function sec(id,html){var s=document.createElement("section");s.id=P+id;s.hidden=true;s.innerHTML=html;root.appendChild(s)}
+  sec("review",'<p class="sub">Spaced review: cards you miss come back soon, cards you know come back after longer gaps (1, 3, 7, 14, 30 days). Try to answer in your head before you flip.</p><div class="meta"><span id="'+P+'counts"></span><span id="'+P+'learned"></span></div><div class="scene"><button class="card" id="'+P+'card"></button></div><div class="row" id="'+P+'grades" hidden><button class="btn again" data-g="0">Again</button><button class="btn" data-g="1">Hard</button><button class="btn go" data-g="2">Good</button><button class="btn go" data-g="3">Easy</button></div><div class="row"><button class="btn" id="'+P+'rst">Reset schedule</button></div>');
+  sec("compare",'<p class="sub">Look-alike ideas side by side. Press <b>Test myself</b> to blur the answers, then tap a cell to reveal it after you try to recall it.</p><div class="row"><button class="btn" id="'+P+'cover">Test myself</button><button class="btn" id="'+P+'reveal">Reveal all</button></div><div id="'+P+'tables"></div>');
+  sec("apply",'<p class="sub">Scenario questions test whether you can use an idea, not just repeat it. Anything you miss here or on the practice test goes into <b>My misses</b> so you can retry it.</p><div class="chips" id="'+P+'modes"></div><div class="testbox"><div class="meta"><span id="'+P+'prog"></span><span id="'+P+'score"></span></div><div id="'+P+'q"></div><div id="'+P+'fb" class="test-result" aria-live="polite"></div><div class="test-actions"><button type="button" class="btn go" id="'+P+'check">Check answer</button><button type="button" class="btn" id="'+P+'prev">Previous</button><button type="button" class="btn" id="'+P+'next">Next question</button><button type="button" class="btn" id="'+P+'shuf">Shuffle</button></div></div>');
+  var secs=function(){return root.querySelectorAll(":scope > section")};
+  nav.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    var mine=b.dataset.sp;
+    nav.querySelectorAll("[data-sp]").forEach(function(x){x.setAttribute("aria-selected",String(x===b))});
+    if(mine){
+      secs().forEach(function(s){s.hidden=s.id!==P+mine});
+      nav.querySelectorAll("button:not([data-sp])").forEach(function(x){x.setAttribute("aria-selected","false")});
+      if(mine==="review")buildQueue();
+      if(mine==="apply")renderMode();
+      window.scrollTo(0,0);
+    }
+  });
+  /* ---------- Spaced review ---------- */
+  var S=load(K+"-srs",{}),NEW=load(K+"-srs-new",{d:0,n:0}),queue=[],cur=null,flip=false,cards=cfg.cards;
+  function key(x){return x[1]}
+  function tag(x){return x[0]>0?(cfg.names&&cfg.names[x[0]]||"Ch "+x[0]):"General"}
+  function buildQueue(){
+    var t=today(),all=cards(),due=[],fresh=[];
+    if(NEW.d!==t){NEW={d:t,n:0};save(K+"-srs-new",NEW)}
+    all.forEach(function(x){var s=S[key(x)];if(!s)fresh.push(x);else if(s.due<=t)due.push(x)});
+    due.sort(function(a,b){return S[key(a)].due-S[key(b)].due});
+    queue=due.concat(fresh.slice(0,Math.max(0,NEWCAP-NEW.n)));
+    flip=false;next();
+  }
+  function next(){cur=queue.shift()||null;flip=false;renderCard()}
+  function renderCard(){
+    var all=cards(),t=today(),learned=all.filter(function(x){return S[key(x)]&&S[key(x)].box>=3}).length;
+    var dueN=all.filter(function(x){return S[key(x)]&&S[key(x)].due<=t}).length,newN=Math.max(0,Math.min(all.filter(function(x){return !S[key(x)]}).length,NEWCAP-NEW.n));
+    $("counts").textContent="Left now: "+(queue.length+(cur?1:0))+" · Due: "+dueN+" · New today: "+newN;
+    $("learned").textContent="Learned (3+ boxes): "+learned+" of "+all.length;
+    var c=$("card");$("grades").hidden=!(cur&&flip);
+    if(!cur){
+      var upcoming=all.filter(function(x){return S[key(x)]&&S[key(x)].due>t}).map(function(x){return S[key(x)].due}).sort(function(a,b){return a-b})[0];
+      c.className="card";c.innerHTML='<div class="face empty">'+(all.length?"All caught up for now."+(upcoming?" Next review in "+(upcoming-t)+" day"+(upcoming-t===1?"":"s")+".":"")+" Come back tomorrow.":"No cards yet.")+'</div>';return;
+    }
+    c.className="card"+(flip?" flip":"");
+    c.innerHTML='<div class="face"><span class="tag">'+tag(cur)+'</span><div class="q">'+cur[1]+'</div><span class="hint">Tap to reveal</span></div><div class="face back"><span class="tag">'+tag(cur)+'</span><div class="a">'+cur[2]+'</div>'+(cur[3]?'<div class="note">'+cur[3]+'</div>':'')+'</div>';
+  }
+  $("card").onclick=function(){if(cur){flip=!flip;renderCard()}};
+  $("grades").onclick=function(e){
+    var b=e.target.closest("button");if(!b||!cur)return;
+    var g=+b.dataset.g,k=key(cur),t=today(),s=S[k];
+    if(!s){s={box:0,due:t};NEW.n++;save(K+"-srs-new",NEW)}
+    if(g===0){s.box=1;s.due=t+1;queue.push(cur)}
+    else if(g===1){s.box=Math.max(1,s.box);s.due=t+1}
+    else{s.box=Math.min(6,s.box+(g===3?2:1));s.due=t+INTV[s.box]}
+    S[k]=s;save(K+"-srs",S);next();
+  };
+  $("rst").onclick=function(){if(confirm("Reset your review schedule?")){S={};NEW={d:0,n:0};save(K+"-srs",S);save(K+"-srs-new",NEW);buildQueue()}};
+  /* ---------- Compare ---------- */
+  (function(){
+    var h="";
+    cfg.compare.forEach(function(t){
+      h+='<h2>'+t.t+'</h2><div class="sp-wrap"><table class="sp-table"><thead><tr>'+t.h.map(function(x){return"<th>"+x+"</th>"}).join("")+'</tr></thead><tbody>'+
+        t.r.map(function(r){return"<tr>"+r.map(function(c,i){return i?"<td>"+c+"</td>":"<th scope='row'>"+c+"</th>"}).join("")+"</tr>"}).join("")+'</tbody></table></div>';
+    });
+    $("tables").innerHTML=h;
+  })();
+  $("cover").onclick=function(){var s=document.getElementById(P+"compare"),on=s.classList.toggle("sp-cover");this.textContent=on?"Stop testing":"Test myself";if(!on)s.querySelectorAll("td.rev").forEach(function(x){x.classList.remove("rev")})};
+  $("reveal").onclick=function(){document.getElementById(P+"compare").querySelectorAll("td").forEach(function(x){x.classList.add("rev")})};
+  $("tables").onclick=function(e){var td=e.target.closest("td");if(td)td.classList.toggle("rev")};
+  /* ---------- Apply + misses ---------- */
+  var M=load(K+"-misses",[]),mode="scen",qs=[],qi=0,done={},right=0;
+  function addMiss(q){if(M.indexOf(q[1])<0){M.push(q[1]);save(K+"-misses",M)}}
+  function allQ(){return cfg.scen.concat(cfg.T())}
+  var chk=document.getElementById(cfg.checkBtn);
+  if(chk)chk.addEventListener("click",function(){var c=cfg.cur();if(c&&c.q&&c.r&&!c.r.right)addMiss(c.q)});
+  function modes(){
+    $("modes").innerHTML='<button class="chip" data-m="scen" aria-pressed="'+(mode==="scen")+'">Scenarios ('+cfg.scen.length+')</button><button class="chip" data-m="miss" aria-pressed="'+(mode==="miss")+'">My misses ('+M.length+')</button>';
+  }
+  function build(){
+    if(mode==="miss"){var bank=allQ();qs=M.map(function(k){return bank.filter(function(q){return q[1]===k})[0]}).filter(Boolean)}
+    else qs=cfg.scen.slice();
+    for(var i=qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=qs[i];qs[i]=qs[j];qs[j]=t}
+    qi=0;done={};right=0;renderQ();
+  }
+  function renderMode(){modes();build()}
+  function renderQ(){
+    modes();var q=qs[qi];
+    if(!q){$("q").innerHTML='<div class="empty">'+(mode==="miss"?"No misses saved. Questions you get wrong will appear here.":"No questions yet.")+'</div>';$("prog").textContent="";$("score").textContent="";$("fb").textContent="";$("fb").className="test-result";$("check").disabled=true;$("prev").disabled=true;$("next").disabled=true;return}
+    $("next").disabled=false;var d=done[qi];
+    var h='<div class="testq"><b>'+q[1]+'</b><div class="test-options">';
+    q[2].forEach(function(o,j){h+='<label><input type="radio" name="'+P+'a" value="'+j+'" '+(d&&d.c===j?"checked":"")+" "+(d?"disabled":"")+'>'+String.fromCharCode(65+j)+". "+o+"</label>"});
+    $("q").innerHTML=h+"</div></div>";
+    $("prog").textContent="Question "+(qi+1)+" of "+qs.length;
+    $("score").textContent="Checked: "+Object.keys(done).length+" · Correct: "+right;
+    $("fb").textContent=d?((d.r?"Correct! ":"Not quite. Correct answer: ")+q[2][q[3]]+". "+q[4]):"Choose an answer, then check it.";
+    $("fb").className="test-result"+(d?(d.r?" correct":" wrong"):"");
+    $("check").disabled=!!d;$("check").textContent=d?"Answer checked":"Check answer";$("prev").disabled=qi===0;
+  }
+  $("modes").onclick=function(e){var b=e.target.closest("button");if(b){mode=b.dataset.m;build()}};
+  $("check").onclick=function(){
+    var q=qs[qi];if(!q||done[qi])return;
+    var s=document.querySelector('input[name="'+P+'a"]:checked');if(!s){$("fb").textContent="Pick an answer first.";return}
+    var c=+s.value,r=c===q[3];done[qi]={c:c,r:r};
+    if(r){right++;if(mode==="miss"){M=M.filter(function(k){return k!==q[1]});save(K+"-misses",M)}}else addMiss(q);
+    renderQ();
+  };
+  $("prev").onclick=function(){if(qi>0){qi--;renderQ()}};
+  $("next").onclick=function(){if(qs.length){qi=(qi+1)%qs.length;renderQ()}};
+  $("shuf").onclick=build;
+}
+
+/* ---------- Guided learning path ---------- */
+(function(){
+ var lessons=[
+  {title:"Scientific method",chapter:"Chapter 2",idea:"Psychologists use a planned process to answer questions with evidence instead of guessing.",example:"A teacher wonders whether a short review before class improves quiz scores. She asks a question, predicts what will happen, decides how to measure review time and quiz scores, tests the idea, then shares the results.",trap:"A hypothesis is not the same as a theory. A theory is a broad explanation; a hypothesis is a specific prediction that can be tested.",q:"Which is the best example of a testable hypothesis?",opts:["Students who sleep better will score higher on a quiz.","Sleep is an interesting topic.","Learning is important."],correct:0,why:"The first statement predicts a relationship that researchers can measure. The other statements are broad opinions, not specific testable predictions.",hook:"Ask → Explain → Test → Tell."},
+  {title:"Research methods",chapter:"Chapter 2",idea:"Choose the research method based on what the researcher actually does.",example:"Watching students study in the library without changing their behavior is naturalistic observation. Asking 500 students how often they study is a survey. Studying one student in depth is a case study.",trap:"Descriptive methods can describe behavior, but they do not prove that one variable causes another.",q:"A researcher watches children on a playground without interfering. Which method is this?",opts:["Survey research","Naturalistic observation","Archival research"],correct:1,why:"The researcher observes behavior as it naturally happens and does not intervene. A survey asks questions, while archival research uses existing records.",hook:"Naturalistic = watch nature as it happens."},
+  {title:"Correlation vs. causation",chapter:"Chapter 2",idea:"Correlation means two variables are related. It does not prove that one variable causes the other.",example:"Ice cream sales and sunburns may both increase in summer. Ice cream does not cause sunburn; sunny weather helps explain why both rise.",trap:"If two things change together, do not immediately say one caused the other. A third variable may explain the relationship.",q:"Students who spend more time studying often earn higher grades. What can you conclude from correlation alone?",opts:["Studying definitely causes every higher grade.","The two variables are related, but this alone does not prove cause and effect.","There is no relationship."],correct:1,why:"Correlation shows an association. Other factors, such as prior knowledge or access to help, could affect both studying and grades.",hook:"Related does not mean caused."},
+  {title:"Independent vs. dependent variables",chapter:"Chapter 2",idea:"In an experiment, the independent variable is changed by the researcher; the dependent variable is measured.",example:"A researcher gives one group a quiet study room and another group a noisy room, then compares test scores. Room condition is the independent variable; test score is the dependent variable.",trap:"Ask two questions: What did the researcher change? That is the independent variable. What outcome did they measure? That is the dependent variable.",q:"A researcher changes how much caffeine participants drink and measures their reaction time. What is the dependent variable?",opts:["Amount of caffeine","Reaction time","The participants"],correct:1,why:"Reaction time is the measured outcome. Caffeine amount is what the researcher changes, so it is the independent variable.",hook:"I change the IV; the DV depends on it."},
+  {title:"Reliability vs. validity",chapter:"Chapter 7",idea:"Reliability means consistency. Validity means measuring what the test is supposed to measure.",example:"A scale that shows the same weight every time is reliable. If it is always 10 pounds too high, it is not accurate, so it may be reliable without being valid.",trap:"A test can be reliable without being valid. Consistency alone does not prove that a test measures the right thing.",q:"A personality test gives nearly the same result each time, but it does not actually measure personality. What is true?",opts:["It is reliable but not valid.","It is valid but not reliable.","It is both reliable and valid."],correct:0,why:"The results are consistent, which suggests reliability. But the test does not measure what it claims to measure, so it lacks validity.",hook:"Reliable = repeats. Valid = measures the right thing."}
+ ];
+ var current=0, answers={}, mastered={};
+ try{answers=JSON.parse(localStorage.getItem("psych2-path-answers")||"{}");mastered=JSON.parse(localStorage.getItem("psych2-path-mastered")||"{}")}catch(e){answers={};mastered={}}
+ function save(){try{localStorage.setItem("psych2-path-answers",JSON.stringify(answers));localStorage.setItem("psych2-path-mastered",JSON.stringify(mastered))}catch(e){}}
+ function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+ function renderPath(){
+  var l=lessons[current],a=answers[current],done=Object.keys(mastered).filter(function(k){return mastered[k]}).length;
+  $("lp-count").textContent=done+" of "+lessons.length+" lessons mastered";$("lp-step").textContent="Lesson "+(current+1)+" of "+lessons.length;$("lp-fill").style.width=(done/lessons.length*100)+"%";
+  $("lp-picker").innerHTML=lessons.map(function(x,i){return '<button type="button" data-lesson="'+i+'" aria-pressed="'+(i===current)+'"><b>'+(i+1)+'. '+esc(x.title)+'</b><br><small>'+esc(x.chapter)+(mastered[i]?' · ✓ mastered':'')+'</small></button>'}).join("");
+  var h='<div class="lesson-card"><div class="lesson-kicker">Step 1 · Understand · '+esc(l.chapter)+'</div><h3>'+esc(l.title)+'</h3><p>'+esc(l.idea)+'</p><div class="lesson-example"><b>Step 2 · See it in action</b><br>'+esc(l.example)+'</div><div class="lesson-trap"><b>Step 3 · Watch for this mix-up</b><br>'+esc(l.trap)+'</div><div class="lesson-example"><b>Memory hook</b><br>'+esc(l.hook)+'</div><div class="lesson-kicker" style="margin-top:20px">Step 4 · Try it yourself</div><p><b>'+esc(l.q)+'</b></p>';
+  l.opts.forEach(function(o,i){h+='<label class="lesson-option"><input type="radio" name="lp-answer" value="'+i+'" '+(a&&a.choice===i?'checked':'')+' '+(a&&a.checked?'disabled':'')+'>'+esc(o)+'</label>'});
+  h+='<div class="row"><button type="button" class="btn go" id="lp-check" '+(a&&a.checked?'disabled':'')+'>Check my answer</button><button type="button" class="btn" id="lp-reset-answer">Try again</button></div>';
+  if(a&&a.checked)h+='<div class="lesson-feedback '+(a.correct?'good':'bad')+'" role="status"><b>'+(a.correct?'That’s right!':'Not quite yet.')+'</b> '+esc(l.why)+'</div>';
+  if(mastered[current])h+='<p class="mastery-pill">✓ Marked as mastered. You can revisit this lesson anytime.</p>';
+  h+='</div>';$('lp-content').innerHTML=h;
+  $('lp-prev').disabled=current===0;$('lp-next').textContent=current===lessons.length-1?'Back to first lesson':'Next lesson';
+ }
+ $("lp-picker").addEventListener("click",function(e){var b=e.target.closest("button[data-lesson]");if(!b)return;current=+b.dataset.lesson;renderPath()});
+ $("lp-content").addEventListener("click",function(e){
+  if(e.target.id==="lp-check"){
+   var l=lessons[current],sel=document.querySelector('input[name="lp-answer"]:checked');if(!sel){alert("Choose an answer first, then check it.");return}var c=+sel.value,correct=c===l.correct;answers[current]={choice:c,checked:true,correct:correct};if(correct)mastered[current]=true;else delete mastered[current];save();renderPath();
+  }
+  if(e.target.id==="lp-reset-answer"){delete answers[current];delete mastered[current];save();renderPath()}
+ });
+ $("lp-prev").onclick=function(){if(current>0){current--;renderPath()}};
+ $("lp-next").onclick=function(){current=current===lessons.length-1?0:current+1;renderPath()};
+ window.renderPath=renderPath;
+})();
+
+var D=window.SPD;
+mount({id:"psych",root:"class-psych",K:"psych2",names:{4:"My notes"},cards:function(){return C},T:function(){return T},checkBtn:"checkone",cur:function(){return{q:testSet[testPos],r:checkedMap[testPos]}},compare:D.psych.compare,scen:D.psych.scen});
+var A=window.PH_API;
+mount({id:"ph",root:"class-ph",K:"publichealth",names:{1:"Ch 1",2:"Ch 2",3:"Ch 3",12:"Ch 12",20:"Article & video"},cards:function(){return A.C},T:function(){return A.T},checkBtn:"ph-checkone",cur:A.cur,compare:D.ph.compare,scen:D.ph.scen});
 })();
 </script>
 </body>

@@ -152,6 +152,16 @@ body.dark-theme #themeToggle{box-shadow:0 3px 12px rgba(0,0,0,.15)}
 
 .byline{margin:7px 0 20px 55px;font-size:.82rem;letter-spacing:.02em;color:var(--muted)}
 body.dark-theme .byline{color:var(--muted)}
+
+/* Class switcher */
+.classes{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.classes button{border:1px solid var(--line);background:rgba(255,255,255,.78);color:#62746d;border-radius:14px;padding:10px 20px;font-weight:700;transition:all .18s}
+.classes button:hover{background:#edf2ed;color:#405f51}
+.classes button[aria-selected="true"]{background:var(--lavender);color:#5a4a7a;border-color:#d9d0ec;box-shadow:0 2px 8px rgba(110,90,150,.10)}
+body.dark-theme .classes button{background:#252f2a;color:#c1d0c7;border-color:#435149}
+body.dark-theme .classes button[aria-selected="true"]{background:#3d3650;color:#e6def5;border-color:#5b5075}
+#ph-st{color:var(--muted);font-size:.85rem}
+#ph-gprog{font-weight:600}
 </style>
 </head>
 <body>
@@ -159,6 +169,11 @@ body.dark-theme .byline{color:var(--muted)}
 <h1>Rachel's Study Website</h1>
 <p class="byline">designed by her husband cesar</p>
 <div class="theme-row"><button id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode"><span id="themeIcon" aria-hidden="true">☾</span><span id="themeLabel">Dark mode</span></button></div>
+<div class="classes" id="classes" role="tablist" aria-label="Classes">
+<button role="tab" data-class="psych" aria-selected="true">Psych 2</button>
+<button role="tab" data-class="ph" aria-selected="false">Public Health</button>
+</div>
+<div id="class-psych">
 <nav class="tabs" role="tablist" aria-label="Study sections">
 <button role="tab" data-tab="cards" aria-selected="true">Flashcards</button>
 <button role="tab" data-tab="notes" aria-selected="false">Notes</button>
@@ -213,6 +228,61 @@ body.dark-theme .byline{color:var(--muted)}
 <button class="gbtn" id="ltog">Open all</button>
 <div id="llist"></div>
 </section>
+</div>
+<div id="class-ph" hidden>
+<nav class="tabs" id="ph-nav" role="tablist" aria-label="Public Health study sections">
+<button role="tab" data-phtab="cards" aria-selected="true">Flashcards</button>
+<button role="tab" data-phtab="notes" aria-selected="false">Notes</button>
+<button role="tab" data-phtab="learn" aria-selected="false">Plain English</button>
+<button role="tab" data-phtab="guide" aria-selected="false">Study guide</button>
+<button role="tab" data-phtab="test" aria-selected="false">Practice test</button>
+</nav>
+<section id="ph-tab-cards">
+<p class="sub">Use <b>Notes-linked</b> to study cards made directly from every bullet in the Notes tab. The wording and key details come from those notes.</p>
+<p class="sub"><span id="ph-nc">0</span> cards. Tap a card or press Space to flip it. Arrow keys move between cards.</p>
+<div class="chips" id="ph-chips"></div>
+<div class="bar"><i id="ph-fill"></i></div>
+<div class="meta"><span id="ph-pos"></span><span id="ph-score"></span></div>
+<div class="scene"><button class="card" id="ph-card" aria-live="polite"></button></div>
+<div class="row">
+<button class="btn again" id="ph-again">Still learning</button>
+<button class="btn go" id="ph-got">Got it</button>
+</div>
+<div class="row">
+<button class="btn" id="ph-prev">Back</button>
+<button class="btn" id="ph-next">Next</button>
+<button class="btn" id="ph-shuf">Shuffle</button>
+<button class="btn" id="ph-reset">Reset progress</button>
+</div>
+</section>
+<section id="ph-tab-notes" hidden>
+<p class="sub">Your Public Health notes, organized by topic. Search to find anything fast.</p>
+<input type="search" id="ph-q" placeholder="Search your notes" aria-label="Search Public Health notes">
+<div id="ph-list"></div>
+
+<h2>My new notes</h2>
+<textarea id="ph-ta" aria-label="My new Public Health notes" placeholder="Type anything you want to remember. It saves in this browser as you type."></textarea>
+<div class="nrow">
+<button class="go" id="ph-copy">Copy notes</button>
+<button id="ph-clr">Clear</button>
+<span id="ph-st"></span>
+</div>
+</section>
+<section id="ph-tab-guide" hidden>
+<p class="sub">Every topic on your Public Health study guide. Check a topic off once you can explain it without looking. <span id="ph-gprog"></span></p>
+<div id="ph-glist"></div>
+</section>
+<section id="ph-tab-test" hidden>
+<p class="sub">A randomized question bank built from your Public Health material. Answer one question at a time, check it immediately, then move on. The bank reshuffles so you can practice again.</p>
+<div class="chips" id="ph-testchips"></div>
+<div class="testbox"><div class="meta"><span id="ph-testprogress">Question 1</span><span id="ph-testscore">Checked: 0 · Correct: 0</span></div><div id="ph-testquestions"></div><div id="ph-testfeedback" class="test-result" aria-live="polite"></div><div class="test-actions"><button type="button" class="btn go" id="ph-checkone">Check answer</button><button type="button" class="btn" id="ph-testprev">Previous</button><button type="button" class="btn" id="ph-testnext">Next question</button><button type="button" class="btn" id="ph-testreset">Shuffle / restart</button></div></div><p class="sub" id="ph-testresult" aria-live="polite"></p>
+</section>
+<section id="ph-tab-learn" hidden>
+<p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
+<button class="gbtn" id="ph-ltog">Open all</button>
+<div id="ph-llist"></div>
+</section>
+</div>
 </main>
 <script>
 
@@ -380,7 +450,7 @@ $("chips").onclick=function(e){
   st.i=0;st.flip=false;chips();render()
 };
 document.addEventListener("keydown",function(e){
-  if($("tab-cards").hidden)return;
+  if($("class-psych").hidden||$("tab-cards").hidden)return;
   if(e.key==="ArrowRight")go(1);
   else if(e.key==="ArrowLeft")go(-1);
   else if(e.key===" "&&document.activeElement.tagName!=="BUTTON"){e.preventDefault();st.flip=!st.flip;render()}
@@ -901,6 +971,509 @@ buildTestSet();
 
 showTab("cards");
 
+</script>
+<script>
+(function(){
+var $=function(id){return document.getElementById("ph-"+id)};
+
+/* =====================================================================
+   PUBLIC HEALTH DATA  (completely separate from Psych)
+   Everything for this class lives in the arrays below.
+
+   NAMES  chapter number -> chip label            NAMES[1]="Ch 1";
+   C      flashcards   [chapter, front, back, optionalNote, starred]
+   N      notes        [title, [bullet, bullet, ...], starred]
+   G      guide        [title, chapter, subtitle, [[topic, detail], ...]]
+   L      plain English[title, [[topic, meaning, memoryHook], ...]]
+   T      practice test[chapter, question, [4 options], correctIndex, explanation]
+   ===================================================================== */
+var NAMES={0:"All",1:"Ch 1",2:"Ch 2",3:"Ch 3",12:"Ch 12",20:"Article & video"};
+var N=[
+["★ Ch 1 · What is public health?",[
+"<b>Winslow (1920):</b> “the science and the art of preventing disease, prolonging life, and promoting health through organized community efforts.” The efforts: sanitation of the environment; control of community infections; education in personal hygiene; organizing medical and nursing services for early diagnosis and preventive treatment; and the “social machinery” to ensure everyone a standard of living adequate for health.",
+"<b>Riegelman & Kirkwood (2019):</b> “the totality of all evidence-based public and private efforts throughout the life cycle that preserve and promote health and prevent disease, disability, and death.” It widens the scope to environmental, social, and economic determinants and to policies that affect health even when health is not their goal (<b>health in all policies</b>).",
+"<b>Two everyday answers, both right:</b> “health care for the poor” (vulnerable populations) and “washing your hands” (risks and interventions that apply to everyone).",
+"<b>21st-century changes:</b> quality of life along with prolonging life; protecting existing health and promoting health when at risk; the Internet redefining “community”; more intervention options with harms and costs, so an evidence-based approach; public health working with clinical care and private partners; viewing problems as part of larger health and social systems; and a full life-cycle focus, including disability among the elderly.",
+"<b>Interdisciplinary core areas:</b> epidemiology, (bio)statistics, biomedical sciences, environmental sciences, social and behavioral sciences, health policy and management; also ethics, law, humanities, engineering.",
+"<b>Big wins:</b> life expectancy rose almost 30 years in most developed countries in the 1900s; coronary artery disease deaths fell about 50% in the last half century (blood pressure and cholesterol control, smoking reduction, aspirin, exercise, defibrillators). Obesity threatens to slow or reverse progress.",
+"<b>Prevention levels (pyramid):</b> primordial = social and economic policies that shape health; primary = risk factors before disease (seat belt laws, vaccines); secondary = early, preclinical stage after exposure; tertiary = rehabilitating people with injury or disease to reduce complications."
+],true],
+["★ Ch 1 · Six eras of public health",[
+"<b>1. Health protection (antiquity–1830s):</b> authority-based control of individual and community behavior through religious and cultural practice; quarantine, sexual prohibitions, dietary restrictions; body-balance ideas (yin-yang, Tridosha, four humors). Lind (1740s): citrus prevents scurvy. Jenner (late 1700s): cowpox protects against smallpox (vaccine from <i>vacca</i>, cow). Misguided example: barring outsiders during plague while rats and fleas spread it.",
+"<b>2. Hygiene movement (1840–1870s):</b> sanitary conditions as the foundation of health; community-wide environmental action distinct from health care. Disease seen as a result of social inequality, giving rise to <b>social justice</b>. Snow and cholera (water and sewage), Semmelweis and puerperal fever (handwashing), vital statistics, public health departments. <b>Chadwick</b> argued death should be assigned to specific diseases; <b>Farr</b> argued for underlying social causes.",
+"<b>3. Contagion control (1880–1940s):</b> germ theory (Pasteur); environmental control of communicable disease, vaccination (tetanus, diphtheria), TB sanatoriums, outbreak investigation. APHA formed 1872. Goldberger showed pellagra is a nutritional (niacin) deficiency, not an infection. The 1923 diphtheria toxoid vaccine is followed by a steep fall in cases.",
+"<b>4. Filling holes in the medical care system (1950s–mid-1980s):</b> public system for specific communicable diseases and vulnerable people, separate from private insurance; integrating prevention into medical care. Antibiotics (1941), RCTs (1948), Framingham (1948), polio vaccine (1955), Surgeon General’s smoking report (1964), Medicare and Medicaid (1965), community health centers (1965). Polio eradication was wrongly seen as only a medical victory.",
+"<b>5. Health promotion and disease prevention (mid-1980s–2000):</b> focus on individual behavior and disease detection; “individual control” of decisions. AIDS and behavior change, coronary heart disease reductions, mammography and Pap smears, newborn screening, the environmental movement (lead in gas and paint, radon, ozone hole, air quality).",
+"<b>6. Population health (2000s):</b> coordination of public health and health care using evidence-based systems thinking; weighing harms, costs, and benefits; globalization and <b>One Health</b> (human, animal, ecosystem health); information technology; re-emerging infections, antibiotic resistance, climate change.",
+"<b>Order trick:</b> Protect, Hygiene, Contagion, Holes, Promotion, Population."
+],true],
+["★ Ch 1 · Population health and the three approaches",[
+"<b>Population health</b> is a broader concept of public health: collaboration among traditional public health, healthcare delivery, and other professions that affect health; an “intellectual umbrella” for the many factors affecting health, plus strategies for a broad range of interventions. Always ask “which population?”",
+"<b>Intervention</b> = the full range of strategies to protect health and prevent disease, disability, and death (preventive, curative, rehabilitative).",
+"<b>Traditional public health:</b> group and community-based interventions for health promotion and disease prevention (communicable disease monitoring and control, environmental hazards, food and drug safety).",
+"<b>Health care:</b> systems for delivering one-on-one services (screening, vaccination, counseling, preventive medication, treatment).",
+"<b>Social policy/interventions:</b> aimed at non-health goals (housing, economic growth, education, social justice, global trade) but with big, sometimes unplanned, health effects.",
+"<b>CDC Health Impact Pyramid (Frieden 2010), largest to smallest impact:</b> socioeconomic factors (poverty, education, housing, inequality) → changing the context so default choices are healthy (fluoridation, no trans fat, iodization, smoke-free laws, tobacco tax) → long-lasting protective interventions (immunizations, cessation treatment, colonoscopy) → clinical interventions (medications for blood pressure, cholesterol, diabetes) → counseling and education (eat healthy, be active).",
+"<b>Four components of population health:</b> (1) <b>health issues</b>: physical and mental health and behaviors, expanding to genetic and cosmetic issues; (2) <b>populations</b>: from geographic (city, state, nation) to global and non-geographic communities; (3) <b>shared concerns</b>: communicable disease → chronic disease, emerging infections, climate change, toxic exposures, transportation safety, health care costs, inequities; (4) <b>vulnerable groups</b>: mothers and children and high-risk workers → also disabled, frail elderly, uninsured, people with HIV/AIDS, genetic vulnerability, marginalized groups.",
+"<b>High-risk approach:</b> target those with the highest probability of disease to bring their risk near everyone else’s. <b>Improving-the-average approach:</b> shift the whole population’s risk down (most cases come from the many with modest risk). Both are needed. A third option is narrowing disparities between the lowest and highest risk.",
+"<b>Life cycle:</b> risks run prenatal to postmortem (Ebola spread from the recently deceased). Age is the single most important factor in causes of death and disability: unintentional injury leads in childhood, injuries/homicide/suicide in youth, cancer and heart disease in working ages, then Alzheimer’s and stroke in old age."
+],true],
+["★ Ch 1 · Determinants of health and BIG GEMS",[
+"<b>Contributory (proximal) causes</b> are immediate causes (cigarettes, HIV, COVID-19, trans fats). <b>Determinants</b> are the “causes of causes”: upstream or distal factors that decide who is exposed and how disease turns out (example: X factors → smoking → cancer).",
+"<b>BIG GEMS:</b> <b>B</b>ehavior (smoking, diet, exercise, seat belts); <b>I</b>nfection (also early exposures and the microbiome); <b>G</b>enetics; <b>G</b>eography (malaria, Lyme, radon, altitude); <b>E</b>nvironment (natural, built, workplace); <b>M</b>edical care (access and quality, herd protection); <b>S</b>ocioeconomic-cultural (education, income, occupation, beliefs, policies).",
+"<b>Asthma example:</b> pollution, cockroaches and mold in poor housing, smoking, poor medication adherence, infection, genetics, and medical care all interact. No single determinant explains the disease, which opens room for health care, public health, and social interventions.",
+"Understanding determinants has often allowed prevention before mechanisms were known: scurvy and citrus, malaria and swamp clearing, hepatitis B and HIV and clean needles and blood standards, TB and less crowded housing and nutrition.",
+"Health Canada lists 12 determinants (income, employment, education, social and physical environments, child development, health practices, health services, social support, biology and genetics, gender, culture); most fold into the socioeconomic-cultural part of BIG GEMS."
+],true],
+["★ Ch 1 · Population changes that affect health",[
+"<b>Demographic transition:</b> falling death rates, then falling birth rates, change the size and age structure of populations. Lecture stages: 1 high stationary, 2 early expanding, 3 late expanding, 4 low stationary, 5 declining (?). Birth rates stay high for years after death rates fall, causing rapid growth (Nigeria).",
+"<b>Aging:</b> Japan has an inverted pyramid (over 25% are 65+, vs about 15% in the U.S.). The U.S. share over 65 was projected near 25% by 2030. Dementia: under 4% at ages 65–69, nearly 25% at 85–90, over 35% at 90+. <b>Frailty</b> = 3 of 5: unintentional weight loss (10 lb in a year), exhaustion, weakness (grip), slow walking, low activity.",
+"<b>Epidemiological (public health) transition:</b> as societies develop, deaths shift from epidemic infections and malnutrition to chronic noncommunicable disease (heart disease). Lecture graphs: England and Wales, Japan, Chile, Ceylon.",
+"<b>Nutritional transition:</b> from poorly balanced, deficient diets to highly processed food high in fat, sugar, and salt.",
+"<b>CDC’s 10 great U.S. achievements of the 20th century (not ranked):</b> vaccination; motor-vehicle safety; safer workplaces; control of infectious diseases; decline in coronary heart disease and stroke deaths; safer and healthier foods; healthier mothers and babies; family planning; fluoridation; recognition of tobacco as a health hazard."
+],true],
+["★ Ch 2 · The P.E.R.I.E. process and describing the problem",[
+"<b>P.E.R.I.E.</b> (circular, repeat if evaluation says more is needed): <b>P</b>roblem (what is it?), <b>E</b>tiology (what are the contributory causes?), <b>R</b>ecommendations (what works?), <b>I</b>mplementation (how do we get it done?), <b>E</b>valuation (how well does it work in practice?).",
+"<b>Epidemiology:</b> the study of the distribution and determinants of disease frequency in human populations (epi = upon, demos = people). <b>Epidemic:</b> frequency above the usual, expected (<b>endemic</b>) rate. What rate society will accept is a political question.",
+"<b>Describe a problem with 3 elements:</b> burden (morbidity = disability and any departure from well-being; mortality = death), course (how often it occurs, how likely it is present now, what happens after, acute or chronic), and distribution (person, place, time).",
+"<b>Incidence:</b> new cases during a period ÷ people at risk, usually per 100,000. Lecture example: 6,131 new COVID cases in Riverside County (pop. 2,418,185) = about 254 per 100,000.",
+"<b>Prevalence:</b> all cases at a point in time ÷ population. Lecture example: 510,767 cumulative cases = about 21,122 per 100,000. Approximately prevalence ≈ incidence × average duration. Prevalence trails incidence; better diagnosis makes both appear to rise.",
+"<b>Case-fatality</b> = mortality rate ÷ incidence rate (× 100%): the chance of dying once you have the disease; an indicator of severity. Example: Funkytown mortality 10% but case-fatality 50%; Margaritaville mortality 4% but case-fatality 80%, so it is more severe.",
+"<b>Mortality rate</b> is a special incidence rate for death. For lung cancer, mortality and incidence are close, so mortality can stand in for incidence. Lung cancer has high incidence but low prevalence because patients do not live long; asthma and COPD have high prevalence.",
+"<b>Rates:</b> numerator is a subset of the denominator; use the at-risk population (only women for cervical cancer). Epidemiology is an “approximation science.”"
+],true],
+["★ Ch 2 · Distribution, artifacts, and group associations",[
+"<b>Person, place, time</b> patterns suggest hypotheses. Person = age, sex, race, income, behaviors. Place = location and non-physical connections (a university, a website). Examples: chimney sweeps and scrotal cancer, mad hatters and mercury, shipyard workers and asbestos, PVC workers and angiosarcoma, Colorado Springs teeth, fluoride, and cavities.",
+"<b>Risk indicator/marker</b> = group-level association. <b>Risk factor</b> = association at the individual level (a candidate cause).",
+"<b>Real or artifactual?</b> Rate changes may be artifacts of 3 things: changed interest in finding the disease, changed ability to identify it, or changed definition of it (all happened with HIV/AIDS; autism prevalence was also shown in the lecture).",
+"<b>Age adjustment:</b> combine age-specific rates using a standard population (the 2000 U.S. population) so an aging population does not explain a rise. Lung cancer’s rise stayed large after adjustment.",
+"<b>Group (ecological) association:</b> a hypothesis built from group data with no information about individuals. It can mislead (<b>ecologic fallacy</b>) when a confounder is at work. Ice cream sales and drowning both rise in hot places; swimming is the confounder."
+],true],
+["★ Ch 2 · Etiology: establishing contributory cause",[
+"<b>3 definitive requirements, 3 designs:</b> (1) cause is associated with effect at the individual level → <b>case-control</b>; (2) cause precedes effect → <b>cohort</b>; (3) altering the cause alters the effect → <b>randomized controlled trial (RCT)</b>. The same requirements establish an intervention’s <b>efficacy</b>.",
+"<b>Case-control:</b> retrospective; choose cases with the disease and similar controls without it, ask about earlier exposure, estimate the association (odds ratio approximates relative risk). Good for rare disease and building theory, fast, good after an outbreak (“shoe-leather epidemiology”). Weaknesses: recall bias, bias from the control group.",
+"<b>Cohort (panel):</b> exposed and unexposed people followed over time to compare incidence; used when an RCT is unethical (toxic dumps). Next best to an experiment but people choose exposures (selection bias). Slow, expensive, loss to follow-up, needs a big sample for rare outcomes. Examples: Framingham, Nurses’ Health Study, Stirling County.",
+"<b>RCT:</b> random assignment to treatment or control (placebo or standard care), then follow-up. Strong internal validity and causal ordering; limited by ethics, compliance, loss to follow-up, external validity, cost.",
+"<b>Natural experiment:</b> change from outside forces: after the 1964 report about 100,000 physicians quit smoking and their lung cancer rates fell; weaker than an RCT. <b>Reverse causality:</b> recent quitters get more lung cancer because early symptoms made them quit.",
+"<b>Supportive (ancillary) criteria:</b> strength (relative risk), dose-response (gradient), consistency across studies and groups, biological plausibility (“how it gets under the skin”: stress, behaviors, lack of care).",
+"<b>Relative risk</b> = risk with factor ÷ risk without. Above 1.0 = risk; 1.0 = none; below 1.0 = protective. Smoking and lung cancer RR is about 10. RR is not absolute risk (10× of 1 in 1,000 is very different from 10× of 1 in 100).",
+"<b>Necessary</b> = must be present; <b>sufficient</b> = always causes the outcome; <b>component cause</b> = contributes. HIV is necessary but not sufficient for AIDS. Smoking is neither necessary nor sufficient for lung cancer (nonsmokers get it; many smokers do not). These concepts are rarely useful because so few diseases meet them.",
+"<b>Words that imply causation</b> without evidence: due to, blamed on, result from, attributable to, produced by, responsible for, contributed to, explained by."
+],true],
+["★ Ch 2 · Recommendations, implementation, evaluation",[
+"<b>Evidence-based vs eminence-based:</b> recommendations rest on research evidence, not just an authority’s opinion (expert opinion fills gaps). Score = <b>quality of evidence</b> (good, fair, poor) × <b>magnitude of net benefit</b> (benefit minus harm: substantial, moderate, small, zero/negative).",
+"<b>Grades:</b> A = must; B = should; C = may (use judgment); D = don’t; I = insufficient evidence. Good evidence with substantial benefit = A. Chest X-ray screening for lung cancer was graded D. Task-force model (USPSTF, CDC Community Guide) balances conflicts of interest.",
+"<b>Community Guide recommended for tobacco:</b> clean indoor air laws, higher taxes, sustained mass media campaigns, quit lines, reduced copays for cessation therapy, provider reminders, limiting youth access.",
+"<b>When–Who–How:</b> <b>When</b> = primary (before disease), secondary (after disease or exposure but before symptoms; Paxlovid is a lecture example), tertiary (after symptoms, before irreversible disability; diabetes management); primordial addresses what puts people at risk (labor laws, unemployment insurance). <b>Who</b> = individual, at-risk group, whole population. <b>How</b> = information (education), motivation (incentives, taxes), obligation (laws); an extra option is innovation (technical fixes).",
+"<b>Trade-offs:</b> information preserves choice but often works poorly alone; motivation can cause <b>victim blaming</b>; obligation works with simple clear behaviors but removes freedom and can breed disrespect for the law. Consider harms vs benefits and monetary cost.",
+"<b>Efficacy</b> = performance under ideal, controlled conditions (a vaccine RCT). <b>Effectiveness</b> = performance in real-world conditions (a mass vaccination campaign).",
+"<b>RE-AIM evaluation:</b> Reach, Effectiveness, Adoption, Implementation, Maintenance. Smoking fell about 50% from the mid-1960s to late 1990s, but adolescent smoking (about 90% of adult smokers started as teens) led to a new P.E.R.I.E. cycle; e-cigarettes require another.",
+"<b>Qualitative data</b> (focus groups, interviews) generate hypotheses, explain why interventions succeed or fail, and explain quantitative findings; it complements, not competes with, quantitative work."
+],true],
+["★ Ch 3 · Public health data and population measures",[
+"<b>Public health surveillance</b> data are collected without identifying individuals. The <b>“7 S’s”</b> of sources: <b>S</b>ingle case or small series (alerts to new disease), <b>S</b>tatistics/vital statistics (births, deaths, reportable diseases; legally required), <b>S</b>urveys (NHANES, BRFSS, registries like SEER), <b>S</b>elf-reporting (adverse drug and vaccine events; incomplete), <b>S</b>entinel monitoring (influenza sites; real-time), <b>S</b>yndromic surveillance (symptom patterns, OTC sales; early warning, false positives), <b>S</b>ocial media. Integrated databases raise privacy concerns. (The learning objective says six types but the table lists seven.)",
+"<b>Notifiable diseases:</b> about 90 at the federal level (SARS-CoV-2, measles, HIV, anthrax, cholera); state lists vary (STIs, gunshot wounds, some cancers, birth defects).",
+"<b>Infant mortality rate:</b> deaths in the first year ÷ live births; once above 100 per 1,000 in early 1900s, now below 10 in many countries. <b>Under-5 mortality</b> is now the WHO standard for child health because many deaths occur after age 1.",
+"<b>Life expectancy:</b> a snapshot combining age-specific death probabilities in one year; compares countries and groups but cannot predict an individual’s lifespan. It counts death, not disability. Life expectancy at older ages is higher than expected because survivors escaped early death.",
+"<b>HALE</b> (health-adjusted life expectancy) = life expectancy × quality-of-health score (mobility, cognition, self-care, pain, mood, senses). Example: 80 × 0.90 = 72. 90% means the average person loses 10% of full health to disability. Table: Nigeria 54.5 / 47.4; U.S. 79.3 / 69.1; Japan 83.7 / 74.9. The U.S. also uses HRQOL (unhealthy days in the last 30).",
+"<b>DALY</b> (disability-adjusted life year): healthy years lost to death and disability, compared with the country with the longest life expectancy (Japan, about 83). Higher = worse; reported per 1,000. Categories: communicable/maternal/neonatal/nutritional, noncommunicable, injuries. Nigeria 847 vs U.S. 289 DALYs per 1,000. GBD findings: depression is a major and growing contributor; injuries and obesity weigh heavily in DALYs."
+],true],
+["★ Ch 3 · Presenting, perceiving, and using information",[
+"<b>Graphs:</b> X–Y (line) graphs show associations but mislead by extrapolating beyond the data or cutting off the axis (use “~” to flag); column/bar charts are least misleading; pie charts show percentages of a whole, not size of the problem. Judge websites by purpose, sponsors, authorship and credentials, source quality, relevance, timeliness, links, and privacy. <b>Health literacy</b> = capacity to obtain, process, and understand health information to make decisions.",
+"<b>Perception effects:</b> <b>dread</b> (vivid, catastrophic harms feel bigger: shark attacks vs pool drownings), <b>unfamiliarity</b> (unknown risks feel bigger: irradiated food vs sun), <b>uncontrollability</b> (cars feel safer than planes). Very small probabilities (1 in 10,000 vs 1 in 100,000) are hard to grasp.",
+"<b>SUCCESs (Heath & Heath):</b> Simplicity, Unexpectedness, Concreteness, Credibility, Emotions, Stories (example: “Back to Sleep”).",
+"<b>Decision analysis combines:</b> <b>how likely</b> (probability 0–1; ask over what time), <b>how important</b> (<b>utility</b>: 1 = full health, 0 = immediate death; blindness averages about 0.5, range roughly 0.2–0.8, and best asked of the individual), and <b>how soon</b> (timing; <b>discounting</b> weights near-term outcomes more).",
+"<b>Expected utility</b> = probability × utility, summed across outcomes. <b>Decision trees:</b> square <b>choice nodes</b>, round <b>chance nodes</b>; probabilities at a node sum to 1. When changing one input flips the best choice, the analysis is <b>sensitive</b> to it (blindness at 0.8 vs 0.2 favored different interventions). QALYs combine life expectancy with utility.",
+"<b>Risk attitudes:</b> <b>certainty effect</b> (when health is tolerable, avoid gambles) and <b>long-shot effect</b> (when intolerable, take the chance). <b>Risk takers</b> choose the gamble both times; <b>risk avoiders</b> never do. The information alone does not decide; attitude does.",
+"<b>Three clinical decision styles:</b> <b>inform of decision</b> (clinician decides and tells), <b>informed consent</b> (clinician recommends, patient accepts or rejects), <b>shared decision-making</b> (clinician provides information and options; patient carries more responsibility). Each has advantages and disadvantages."
+],true],
+["★ Ch 12 · Goals, core functions, and the 10 essential services",[
+"<b>Six goals (Public Health in America, 1994):</b> prevent epidemics and the spread of disease; protect against environmental hazards; prevent injuries; promote healthy behaviors; respond to disasters and assist recovery; ensure quality and accessibility of health services.",
+"<b>3 core functions (1988 report):</b> <b>assessment</b> (data on health and new problems), <b>policy development</b> (evidence-based recommendations, mobilizing partnerships), <b>assurance</b> (oversee that needed services exist even when others deliver them). They cannot be delegated away; no single agency does everything.",
+"<b>10 essential services by function.</b> <i>Assessment:</i> monitor health status; diagnose and investigate problems and hazards. <i>Policy development:</i> inform, educate, empower; mobilize community partnerships; develop policies and plans. <i>Assurance:</i> enforce laws and regulations; link people to needed personal health services; ensure a competent workforce; evaluate effectiveness, accessibility, and quality. <i>All three:</i> research for new insights.",
+"<b>2020 CDC update (lecture):</b> a wheel with <b>Equity at the center</b>. Assessment: assess and monitor population health; investigate, diagnose, and address hazards and root causes. Policy development: communicate effectively; strengthen and mobilize communities and partnerships; create, champion, and implement policies, plans, and laws. Assurance: utilize legal and regulatory actions; enable equitable access; build a diverse skilled workforce; improve and innovate through evaluation, research, and quality improvement; build a strong organizational infrastructure.",
+"<b>Foundational Public Health Services:</b> <i>capabilities</i> (cross-cutting skills such as leadership, quality management, health equity, emergency response, assessment) and <i>areas</i> (communicable disease control, chronic disease and injury prevention, environmental health). Used with the essential services for accreditation (voluntary; health departments serving over 75% of Americans are accredited or in process)."
+],true],
+["★ Ch 12 · Local, state, federal, and global agencies",[
+"<b>States:</b> the Constitution does not mention public health, so it is first a state responsibility, delegated to local agencies. <b>Home rule/local autonomy</b> model vs <b>branch office</b> model. Local duties: immunizations, disease surveillance and outbreak investigation, TB and syphilis control, restaurant inspection, environmental surveillance, newborn and lead screening, tobacco control, disaster preparedness. States: vital statistics, public health lab, licensing, nutrition programs, nursing home regulation.",
+"<b>History:</b> early municipal boards of health (port-city epidemics; 1793 Philadelphia); PHS (1798); Shattuck report (1850); Rockefeller Foundation funded early local departments; FDA (1906, after muckraking); 16th Amendment; Social Security Act (1935); CDC (1946, malaria control in war areas; EIS “disease detectives,” surveillance under Langmuir); Medicare and Medicaid; post-9/11 preparedness. Federal authority rests mainly on the Interstate Commerce clause and funding conditions.",
+"<b>HHS agencies:</b> <b>CDC/ATSDR</b> (prevention, data, epidemic investigation; about half its $10B+ budget goes to states and localities), <b>NIH</b> (largest research agency, 17 institutes), <b>FDA</b> (food, drug, vaccine safety), <b>HRSA</b> (equitable access, community health centers), <b>AHRQ</b> (quality, USPSTF), <b>SAMHSA</b> (substance abuse and mental health), <b>IHS</b> (health care plus public health for about 550 tribes).",
+"<b>Reality check:</b> under 5% of U.S. health spending goes to governmental public health, and less than half of that to prevention. Social attitudes and constitutional limits constrain authority. CDC controversies: Tuskegee, the 1976 swine flu vaccine campaign.",
+"<b>Global:</b> <b>WHO</b> (1948, UN; policy, coordination, data; can declare a public health emergency of global concern; limited power to enforce); UNICEF and UNAIDS (focused agendas); <b>World Bank</b> (largest funder, mostly loans); bilateral aid such as USAID. <b>SARS 2003</b> showed WHO and CDC collaboration (isolation, travel limits, monitoring) can control a disease without a cure."
+],true],
+["★ Ch 12 · Collaboration, NGOs, and linking to health care",[
+"<b>Non-health agencies:</b> EPA (environment), OSHA/Labor (workplace), Homeland Security (disasters), USDA (food with FDA), HUD (built environment), Energy (radiation standards). Needed for lead, food safety, asthma. Matches <b>health in all policies</b>.",
+"<b>NGOs:</b> Red Cross, disease groups (American Heart, Cancer, Lung Associations, March of Dimes), advocacy (MADD, HIV groups), global (CARE, Oxfam, Doctors without Borders), public–private (Global Fund to Fight AIDS, TB, and Malaria), foundations (Rockefeller, Kellogg, Robert Wood Johnson, Gates) that start efforts but cannot sustain basic services.",
+"<b>National Vaccine Plan (1994)</b> goals: new and improved vaccines; safety and effectiveness; better education about benefits and risks. Shows NIH, FDA, CDC, and AAP/AMA working together; now more concern about vaccine safety and the number given to children.",
+"<b>COPC (community-oriented primary care)</b> steps: community definition, characterization, prioritization, detailed assessment of the problem, intervention, evaluation. Principles: assess the whole community, serve everyone in it, integrate prevention and cure and rehabilitation, community participates. <b>COPH</b> expands public health to collaborate with health care and others (child oral health: fluoridation reached under 66% of Americans). <b>CBPR</b> involves community members in every phase of research."
+],true],
+["★ Article · Ed Yong, “How Public Health Took Part in Its Own Downfall” (The Atlantic, Oct 23, 2021)",[
+"<span class='ex'>Note: The Atlantic blocks automated access, so these notes come from interviews, event descriptions, and summaries of the article plus your lecture slide. Check details against the article itself.</span>",
+"<b>Thesis (per lecture):</b> reviews the history of U.S. public health: its evolution from advocacy on societal issues toward a more personalized conception of health. Interviewees: three public health historians, a public health lawyer, and a former NYC health commissioner (a physician).",
+"<b>Old model:</b> in the late 1800s public health used a <b>social model of medicine</b>: epidemics tied to poverty, poor sanitation, hazardous working conditions, poor education, political inattention. It drove reforms in sanitation, workplace safety, and housing.",
+"<b>The “downfall”:</b> the field’s decline was partly self-inflicted: wrapping itself in the mantle of laboratory science and individual-level medicine instead of agitating for the social reforms behind healthy living conditions. This links to the lecture’s shift from the hygiene movement and contagion control to “filling holes” in medical care and then individual behavior.",
+"<b>Other problems:</b> chronic underfunding (not enough money for the basics of preventing disease in communities) and the field’s weak political voice.",
+"<b>Lecture discussion questions:</b> How might public health return to its former orientation, even in today’s political climate? If social conditions matter for health, how might we think of 21st-century social challenges as public health challenges? Ties to <b>primordial prevention</b>, <b>social policy</b>, and the Health Impact Pyramid’s base."
+],true],
+["★ Video · Vox Almanac, “The 1850s map that changed how we fight outbreaks” (6:57)",[
+"<span class='ex'>Note: no transcript was available, so the first bullets come from the video’s description. Items marked “background” are standard history, not confirmed as on screen.</span>",
+"<b>Setup:</b> 1854 cholera outbreak in London. Most doctors believed in <b>miasma</b> (disease carried in a cloud of bad air). Dr. John Snow suspected contaminated water and wanted to prove it in time to stop the outbreak.",
+"<b>Method:</b> personal interviews (“shoe-leather” detective work), data tables, and his famous <b>map</b> of cases around the Broad Street pump. Snow stopped the outbreak and eventually convinced officials cholera spreads through water, not miasma.",
+"<b>Why it matters:</b> an iconic example of detective work, analysis, and visual representation. Textbook: Snow is “the father of epidemiology”; his rates before and after an intervention evaluate effectiveness; closing the Broad Street pump ended the epidemic.",
+"<b>Course connections:</b> hygiene movement era; person, place, time and <b>group (ecological) associations</b> that generate hypotheses (the map); then individual-level data to test them; P.E.R.I.E. (problem, etiology, recommendation to remove the pump handle, evaluation). Determinants worked before the germ was known (like scurvy and citrus).",
+"<b>Background:</b> Snow also compared deaths among customers of two water companies (Southwark & Vauxhall vs Lambeth), a natural experiment like the one in Ch 2."
+],true]
+];
+var C=[
+[1,"Ch 1: Winslow’s 1920 definition of public health?","The science and art of preventing disease, prolonging life, and promoting health through organized community efforts.",null,true],
+[1,"Ch 1: Riegelman & Kirkwood’s 21st-century definition?","The totality of all evidence-based public and private efforts throughout the life cycle that preserve and promote health and prevent disease, disability, and death.",null,true],
+[1,"Ch 1: Name the six eras of public health.","Health protection, hygiene movement, contagion control, filling holes in the medical care system, health promotion/disease prevention, population health.",null,true],
+[1,"Ch 1: Primordial, primary, secondary, tertiary prevention?","Primordial: social and economic policies. Primary: risk factors before disease (seat belts, vaccines). Secondary: early preclinical stage. Tertiary: rehabilitation to reduce complications.",null,true],
+[1,"Ch 1: What are the three approaches to population health?","Health care (one-on-one), traditional public health (group/community), and social interventions (non-health goals with health effects).",null,true],
+[1,"Ch 1: CDC Health Impact Pyramid, biggest to smallest impact?","Socioeconomic factors, changing the context, long-lasting protective interventions, clinical interventions, counseling and education.",null,true],
+[1,"Ch 1: High-risk vs improving-the-average approach?","High-risk targets those most likely to get disease; improving-the-average lowers risk for the whole population. Both are needed.",null,true],
+[1,"Ch 1: What does BIG GEMS stand for?","Behavior, Infection, Genetics, Geography, Environment, Medical care, Socioeconomic-cultural.",null,true],
+[1,"Ch 1: Contributory cause vs determinant?","Contributory causes are immediate (proximal); determinants are the upstream “causes of causes.”",null,true],
+[1,"Ch 1: Demographic vs epidemiological vs nutritional transition?","Demographic: falling death then birth rates change population size and age. Epidemiological: communicable disease gives way to chronic disease. Nutritional: deficient diets give way to processed, high-fat/sugar/salt diets.",null,true],
+[2,"Ch 2: What does P.E.R.I.E. stand for?","Problem, Etiology, Recommendations, Implementation, Evaluation (a circular process).",null,true],
+[2,"Ch 2: Incidence vs prevalence?","Incidence: new cases in a period among those at risk. Prevalence: all existing cases at a point in time.",null,true],
+[2,"Ch 2: How do you calculate case-fatality?","Mortality rate for the disease divided by its incidence rate (× 100%); it shows severity.",null,true],
+[2,"Ch 2: Three reasons a change in rates could be artifactual?","Changed interest in identifying the disease, ability to identify it, or definition of it.",null,true],
+[2,"Ch 2: What is the ecologic fallacy?","Inferring individual-level associations from group data; confounders (ice cream, swimming, drowning) may explain the group pattern.",null,true],
+[2,"Ch 2: Three requirements for contributory cause and the matching designs?","Association (case-control), cause precedes effect (cohort), altering the cause alters the effect (RCT).",null,true],
+[2,"Ch 2: Four supportive criteria for causation?","Strength of the relationship, dose-response, consistency, biological plausibility.",null,true],
+[2,"Ch 2: What does a relative risk of 1.0 mean? Above or below 1?","1.0 = no increased risk. Above 1 = increased risk. Below 1 = protective effect.",null,true],
+[2,"Ch 2: Necessary vs sufficient cause?","Necessary: must be present for disease. Sufficient: if present, disease always occurs. Smoking is neither for lung cancer; HIV is necessary but not sufficient for AIDS.",null,true],
+[2,"Ch 2: What do evidence-based grades A, B, C, D, and I mean?","A must, B should, C may, D don’t, I insufficient evidence. They combine quality of evidence and net benefit.",null,true],
+[2,"Ch 2: Explain the When–Who–How framework.","When: primary/secondary/tertiary. Who: individual, at-risk group, population. How: information, motivation, obligation.",null,true],
+[2,"Ch 2: Efficacy vs effectiveness?","Efficacy: works under ideal, controlled conditions. Effectiveness: works in the real world.",null,true],
+[2,"Ch 2: What does RE-AIM stand for?","Reach, Effectiveness, Adoption, Implementation, Maintenance.",null,true],
+[3,"Ch 3: What are the 7 S’s of surveillance data?","Single case, statistics, surveys, self-reporting, sentinel, syndromic, social media.",null,true],
+[3,"Ch 3: How is HALE calculated?","Life expectancy at birth × quality-of-health score (80 × 0.90 = 72).",null,true],
+[3,"Ch 3: What is a DALY?","A disability-adjusted life year: healthy years lost to death and disability, compared with the country with the longest life expectancy.",null,true],
+[3,"Ch 3: Dread, unfamiliarity, and uncontrollability effects?","Vivid/catastrophic harms feel bigger, unknown risks feel bigger, and risks we cannot control feel bigger.",null,true],
+[3,"Ch 3: What does SUCCESs stand for?","Simplicity, Unexpectedness, Concreteness, Credibility, Emotions, Stories.",null,true],
+[3,"Ch 3: How is expected utility calculated?","Probability × utility for each outcome, summed; compared across interventions in a decision tree.",null,true],
+[3,"Ch 3: Certainty effect vs long-shot effect?","Certainty effect: avoid gambles when health is tolerable. Long-shot effect: take chances when it is intolerable.",null,true],
+[3,"Ch 3: Name the three clinical decision approaches.","Inform of decision, informed consent, shared decision-making.",null,true],
+[12,"Ch 12: Three core functions of public health?","Assessment, policy development, assurance.",null,true],
+[12,"Ch 12: Which essential services fall under assessment?","Monitor health status; diagnose and investigate health problems and hazards.",null,true],
+[12,"Ch 12: Which essential services fall under assurance?","Enforce laws; link people to services; ensure a competent workforce; evaluate effectiveness, accessibility, and quality.",null,true],
+[12,"Ch 12: Home rule vs branch office model?","Home rule: local department has autonomy and funding. Branch office: local department is a branch of the state agency with little independent authority.",null,true],
+[12,"Ch 12: Name the HHS agencies and their jobs.","CDC/ATSDR (disease control), NIH (research), FDA (food and drug safety), HRSA (access), AHRQ (quality), SAMHSA (substance abuse and mental health), IHS (tribal care).",null,true],
+[12,"Ch 12: What is the WHO’s role and limit?","Policy, coordination, and data; can declare emergencies of global concern, but has limited ability to enforce and limited funding.",null,true],
+[12,"Ch 12: What are COPC’s six steps?","Community definition, characterization, prioritization, detailed assessment, intervention, evaluation.",null,true],
+[20,"Video: What did John Snow suspect in 1854 and what did most doctors believe?","Snow suspected contaminated water; most believed in miasma, a cloud of bad air.",null,true],
+[20,"Article: Yong’s core argument about public health’s decline?","It moved away from social reform toward lab science and individual medicine, and was underfunded and politically weak.",null,true]
+];
+var G=[
+["Chapter 1: Public Health, the Population Health Approach",1,"",[["Definitions","Winslow (1920) vs Riegelman & Kirkwood (2019); health in all policies."],["Six eras","Focus, action framework, and events for each era in order."],["Population health and three approaches","Health care, traditional public health, social interventions; Health Impact Pyramid."],["Four components","Health issues, populations, shared concerns, vulnerable groups (historical, current, emerging)."],["High-risk vs improving-the-average; life cycle","When to use each; age as the main factor in causes of death."],["Determinants and BIG GEMS","Contributory causes vs determinants; each BIG GEMS letter with an example."],["Transitions","Demographic, epidemiological, nutritional; aging, frailty, dementia numbers."],["Prevention levels and CDC achievements","Primordial through tertiary; the 10 achievements."]]],
+["Chapter 2: Evidence-Based Public Health",2,"",[["P.E.R.I.E.","Five steps and the question each answers."],["Burden, course, distribution","Morbidity, mortality, incidence, prevalence, case-fatality calculations."],["Hypotheses and artifacts","Person/place/time, artifactual change, age adjustment, ecologic fallacy, confounding."],["Establishing cause","Three requirements and designs; strengths and limits of each; natural experiment; reverse causality."],["Supportive criteria and relative risk","Strength, dose-response, consistency, plausibility; interpret RR; necessary vs sufficient."],["Grading recommendations","Quality of evidence × net benefit; grades A–D and I."],["When–Who–How","Primary/secondary/tertiary; individual/group/population; information/motivation/obligation."],["Evaluation","Efficacy vs effectiveness; RE-AIM; qualitative data."]]],
+["Chapter 3: Public Health Data and Communications",3,"",[["Sources of surveillance data","The 7 S’s; notifiable diseases; vital statistics."],["Population health status measures","Infant and under-5 mortality, life expectancy, HALE, HRQOL, DALY."],["Presenting information","Misleading graphs, web quality criteria, health literacy."],["Perception and messaging","Dread, unfamiliarity, uncontrollability; SUCCESs."],["Decision analysis","Probability, utility, timing and discounting; expected utility; decision trees; sensitivity."],["Risk attitudes and clinical decisions","Certainty and long-shot effects; three decision approaches."]]],
+["Chapter 12: Public Health Institutions and Systems",12,"",[["Goals, core functions, essential services","Six goals, three functions, ten services (1994 and 2020 versions)."],["Local and state agencies","Home rule vs branch office; duties; accreditation; foundational services."],["Federal agencies","HHS agencies; CDC history; limits on authority and funding."],["Global organizations","WHO, UNICEF, UNAIDS, World Bank, USAID; SARS lessons."],["Collaboration","Non-health agencies, NGOs, foundations, National Vaccine Plan."],["COPC, COPH, CBPR","Linking public health and health care with community involvement."]]],
+["Article and video",20,"",[["Yong article","Social model of public health, shift to lab science and individuals, underfunding; discussion questions."],["Snow video","Miasma vs water, map, interviews, and the course connections."]]]
+];
+var L=[
+["Chapter 1 · The big picture",[
+["What “public health” means","It is everything a community does to keep people healthy, like clean water, vaccines, safe roads, and food rules. Winslow’s 1920 version: prevent disease, extend life, promote health through organized community effort. The newer version adds evidence, the whole life cycle, and private partners.","Public health = the group project for staying healthy."],
+["Six eras","Rules and quarantine, then clean-up and sewers, then germ fighting, then fixing gaps in medical care, then personal behavior, and now teamwork across systems (population health).","Protect, Hygiene, Contagion, Holes, Promotion, Population."],
+["Prevention levels","Primordial: change society so risks are less likely (job laws). Primary: stop disease before it starts (seat belts, vaccines). Secondary: catch it early before symptoms. Tertiary: manage and rehabilitate to avoid permanent damage.","Primordial = policy, Primary = prevent, Secondary = screen, Tertiary = treat and rehab."],
+["BIG GEMS","A checklist of what shapes health: Behavior, Infection, Genetics, Geography, Environment, Medical care, Socioeconomic-cultural. Asthma shows how many can act at once.","Big Gems = seven things that determine who gets sick."],
+["High-risk vs improving the average","High-risk: help the people most likely to get sick. Average: nudge the whole population a bit (like lowering salt). Most cases come from the large moderate-risk group.","Spotlight vs floodlight."]
+]],
+["Chapter 2 · How we find causes",[
+["P.E.R.I.E.","A loop to tackle any health problem: what is it, why does it happen, what works, how do we do it, did it work? If not, loop again.","Please Explain, Really: Identify Everything."],
+["Incidence, prevalence, case-fatality","Incidence = new cases. Prevalence = everyone who has it now. Case-fatality = chance of dying if you get it. Quick disease that kills has high incidence but low prevalence.","Incidence = Introduced; Prevalence = Present."],
+["Three study designs","Case-control: start with sick people and look back at exposures. Cohort: follow exposed and unexposed people forward. RCT: flip a coin to decide who gets the exposure. Each proves a different piece of cause and effect.","Back, Forward, Randomize: Case-control, Cohort, RCT."],
+["Relative risk","Compare risk with and without the factor. 10 means ten times as likely; 1 means no difference; below 1 means protection. It is not the same as your actual chance.","RR above 1 = risk, 1 = nothing, below 1 = shield."],
+["Efficacy vs effectiveness","Efficacy: works in the perfect lab-like study. Effectiveness: works in real life with real people.","Efficacy = ideal; Effectiveness = everyday."]
+]],
+["Chapter 3 · Data and decisions",[
+["HALE and DALY","Life expectancy only counts years. HALE shrinks those years by time lost to disability. DALY counts healthy years lost, so lower is better.","HALE = Healthy years; DALY = Days (years) Lost."],
+["Why people misjudge risk","We fear dramatic, unfamiliar, uncontrollable things (sharks, irradiated food, airplanes) more than ordinary, bigger risks (pools, sun, cars).","Dread, Unfamiliar, Uncontrollable = DUU."],
+["Utility and decision trees","Utility is how much you value an outcome from 0 (death) to 1 (full health). Multiply by probability to compare choices. People with different utilities can reasonably choose differently.","Probability × Utility = expected utility."]
+]],
+["Chapter 12 · Who does public health",[
+["Core functions and essential services","Three jobs: assess (collect data), make policy, and assure (make sure services exist). The ten services spell out how.","Assess, Advise (policy), Assure."],
+["Government levels","States hold the main power; localities carry it out; the federal government funds and coordinates (CDC, FDA, NIH); WHO coordinates globally but cannot force countries.","Local does, State owns, Federal funds, WHO advises."],
+["COPC vs COPH","COPC: clinics reach out to the whole community. COPH: health departments reach out to clinics and others. Same goal, opposite starting points.","Clinic first = COPC; Public health first = COPH."]
+]]
+];
+var T=[
+[1,"Which definition adds that public health efforts are evidence-based and span the life cycle?",["Winslow (1920)","Riegelman & Kirkwood (2019)","Rosen (1993)","Institute of Medicine (1988)"],1,"Riegelman and Kirkwood define it as the totality of evidence-based public and private efforts throughout the life cycle."],
+[1,"The hygiene movement (1840–1870s) is best described as…",["Authority-based quarantine","Community-wide sanitation distinct from health care","Individual behavior change","Germ theory vaccines"],1,"The hygiene movement used environmental action on a community-wide basis, separate from health care."],
+[1,"Goldberger’s pellagra work showed that pellagra was…",["An infectious disease","A nutritional deficiency","A genetic condition","Caused by miasma"],1,"Pellagra is a niacin (vitamin B3) deficiency, not an infection."],
+[1,"Which era is associated with RCTs, Framingham, and Medicare/Medicaid?",["Health protection","Hygiene movement","Filling holes in the medical care system","Population health"],2,"These events come from 1950s–mid-1980s."],
+[1,"A tax that makes cigarettes costlier works at which level of the Health Impact Pyramid?",["Counseling and education","Clinical interventions","Changing the context","Long-lasting protective interventions"],2,"Tobacco taxes, smoke-free laws, and fluoridation change the context so default choices are healthy."],
+[1,"Which approach tries to lower risk for the whole population?",["High-risk approach","Improving-the-average approach","Tertiary prevention","Case-finding"],1,"Improving the average shifts risk down for everyone."],
+[1,"In BIG GEMS, a neighborhood with cockroaches, mold, and air pollution reflects which determinants?",["Genetics only","Environment and socioeconomic-cultural","Behavior only","Medical care only"],1,"Housing and pollution are environment, shaped by socioeconomic status."],
+[1,"Japan’s inverted population pyramid illustrates…",["Early expanding stage","Population aging after the demographic transition","The nutritional transition","High birth rates"],1,"Japan has a small young and large old population."],
+[1,"Primordial prevention targets…",["Early disease","Social and economic policies affecting health","Rehabilitation","Screening"],1,"Primordial prevention addresses what puts people at risk of risks, such as labor laws."],
+[2,"What is the second step of P.E.R.I.E.?",["Problem","Etiology","Recommendations","Evaluation"],1,"Problem, Etiology, Recommendations, Implementation, Evaluation."],
+[2,"A county has 6,131 new cases among 2,418,185 people. This is closest to…",["254 per 100,000 incidence","21,122 per 100,000 prevalence","6% mortality","50% case-fatality"],0,"New cases ÷ population × 100,000 ≈ 254 per 100,000: incidence."],
+[2,"Town A: 1,000 people, 200 sick, 100 die. Case-fatality is…",["10%","50%","20%","100%"],1,"100 deaths ÷ 200 cases = 50%."],
+[2,"Which is NOT a reason a rate change may be artifactual?",["Changed interest in the disease","Changed ability to identify it","Changed definition","Changed weather"],3,"The three are interest, ability, and definition."],
+[2,"Ice cream sales and drowning rise together by county. The likely confounder is…",["Temperature and swimming","Ice cream flavors","Lifeguards","Sunscreen"],0,"Hot weather increases both; this is an ecologic fallacy example."],
+[2,"Which design starts with people who already have the disease?",["Cohort","RCT","Case-control","Ecological"],2,"Case-control compares cases to controls looking back."],
+[2,"Which requirement does an RCT best establish?",["Association","Cause precedes effect","Altering the cause alters the effect","Biological plausibility"],2,"Randomization tests whether changing the exposure changes the outcome."],
+[2,"A relative risk of 0.5 indicates…",["Doubled risk","No effect","A protective effect","Absolute risk of 50%"],2,"Below 1.0 means decreased risk."],
+[2,"HIV for AIDS is best described as…",["Sufficient but not necessary","Necessary but not sufficient","Both","Neither"],1,"AIDS requires HIV, but HIV does not always lead to AIDS."],
+[2,"A grade D recommendation means…",["Strongly recommended","Insufficient evidence","Evidence recommends against it","May be used"],2,"D = don’t; I = insufficient evidence."],
+[2,"Offering lower insurance premiums for nonsmokers is which “How” strategy?",["Information","Motivation","Obligation","Innovation"],1,"Incentives are motivation."],
+[2,"Performance of an intervention in real-world conditions is…",["Efficacy","Effectiveness","Plausibility","Consistency"],1,"Effectiveness is real-world; efficacy is ideal."],
+[3,"Which is an example of sentinel surveillance?",["Birth certificates","Influenza monitoring sites","Social media key words","Single case reports"],1,"Sentinel monitoring provides real-time warnings from selected sites."],
+[3,"A country has life expectancy 80 and quality of health 0.90. HALE is…",["72","80","90","8"],0,"80 × 0.90 = 72."],
+[3,"The WHO now uses which measure as its standard for child health?",["Infant mortality only","Under-5 mortality","Life expectancy","DALYs per 1,000"],1,"Under-5 mortality is the WHO standard."],
+[3,"Fearing sharks more than pool drowning illustrates the…",["Uncontrollability effect","Dread effect","Certainty effect","Long-shot effect"],1,"Vivid, feared consequences produce the dread effect."],
+[3,"On the utility scale, 0 means…",["Full health","Immediate death","Average health","Unknown outcome"],1,"1 = full health; 0 = immediate death."],
+[3,"Expected utility is…",["Probability ÷ utility","Probability × utility","Utility − probability","Discount rate"],1,"Probabilities and utilities are multiplied then summed."],
+[3,"Choosing to avoid gambling when current health is tolerable shows the…",["Long-shot effect","Certainty effect","Dread effect","Unfamiliarity effect"],1,"Certainty effect: protect a tolerable state."],
+[3,"Which approach has the clinician make a recommendation that the patient accepts or rejects?",["Inform of decision","Informed consent","Shared decision-making","Heuristic"],1,"Informed consent: recommendation plus patient permission."],
+[12,"The three core public health functions are…",["Assessment, policy development, assurance","Prevention, treatment, rehab","Local, state, federal","Research, service, teaching"],0,"They come from the 1988 National Academy of Medicine report."],
+[12,"“Enforce laws and regulations that protect health” falls under…",["Assessment","Policy development","Assurance","Research"],2,"Enforcement is an assurance service."],
+[12,"A local health department that is essentially a state branch follows the…",["Home rule model","Branch office model","COPC model","Foundational model"],1,"Branch office model: little independent authority or funding."],
+[12,"Which HHS agency is the lead research agency?",["CDC","FDA","NIH","HRSA"],2,"NIH is the largest biomedical research agency."],
+[12,"Which federal agency has both health care and public health duties for a defined population?",["IHS","AHRQ","SAMHSA","ATSDR"],0,"IHS serves about 550 federally recognized tribes."],
+[12,"The WHO can…",["Enforce global policies by law","Declare a public health emergency of global concern","Fund all national programs","Replace national agencies"],1,"WHO’s director can declare such emergencies but cannot enforce."],
+[12,"COPC differs from COPH because COPC…",["Starts from healthcare sites reaching out to the community","Is run by the WHO","Ignores community input","Applies only to infectious disease"],0,"COPC expands health care to community needs; COPH expands public health to partner with health care."],
+[20,"In 1854 most doctors thought cholera spread by…",["Contaminated water","Miasma","Mosquitoes","Contact with animals"],1,"Miasma, a cloud of bad air; Snow suspected water."],
+[20,"Per the lecture, Ed Yong’s article describes public health’s evolution from…",["Individual care to community advocacy","Advocacy on societal issues to a more personalized view of health","Laboratory work to sanitation","Federal control to local control"],1,"The slide says it moved from advocacy and societal issues toward a personalized conception of health."]
+];
+/* ===================== END PUBLIC HEALTH DATA ====================== */
+
+var K_KNOWN="publichealth-known",K_NOTES="publichealth-notes",K_GUIDE="publichealth-guide";
+function chapterIds(){return Object.keys(NAMES).map(Number).filter(function(n){return n>0}).sort(function(a,b){return a-b})}
+function tagOf(x){return x[0]&&NAMES[x[0]]?NAMES[x[0]]:"General"}
+function plain(html){var el=document.createElement("div");el.innerHTML=html;return (el.textContent||el.innerText||"").replace(/\s+/g," ").trim()}
+
+/* Build a notes-linked flashcard for every note bullet */
+(function(){
+  N.forEach(function(section){
+    var title=plain(section[0]);
+    var m=title.match(/(?:chapter|ch\.?|unit|week)\s*(\d+)/i);
+    var ch=m&&NAMES[+m[1]]?+m[1]:0;
+    if(!m&&/^★?\s*(Article|Video)/.test(title))ch=20;
+    section[1].forEach(function(item){
+      var answer=plain(item);if(!answer)return;
+      var probe=item.match(/<b>(.*?)<\/b>/i),term=probe?plain(probe[1]):answer.split(/[.:;—–]/)[0];
+      term=term.replace(/^★\s*/,"").trim();
+      if(term.length>78)term=term.slice(0,75)+"…";
+      C.push([ch,"Notes · "+title+" — What should you know about "+term+"?",answer,"From Notes tab: "+title,false,true]);
+    });
+  });
+})();
+
+/* ---------- Flashcards ---------- */
+var st={ch:0,mode:"all",starOnly:false,notesOnly:false,i:0,flip:false,order:C.map(function(_,k){return k}),known:{}};
+try{st.known=JSON.parse(localStorage.getItem(K_KNOWN)||"{}")}catch(e){st.known={}}
+function save(){try{localStorage.setItem(K_KNOWN,JSON.stringify(st.known))}catch(e){}}
+function deck(){return st.order.filter(function(k){var x=C[k];var inSet=st.notesOnly?!!x[5]:(st.starOnly?!!x[4]:(st.ch===0||x[0]===st.ch));return inSet&&(st.mode==="all"||!st.known[x[1]])})}
+function chips(){
+  var h='<button class="chip" data-ch="0" aria-pressed="'+(!st.starOnly&&!st.notesOnly&&st.ch===0)+'">All</button>';
+  chapterIds().forEach(function(c){h+='<button class="chip" data-ch="'+c+'" aria-pressed="'+(!st.starOnly&&!st.notesOnly&&st.ch===c)+'">'+NAMES[c]+'</button>'});
+  h+='<button class="chip" data-star="1" aria-pressed="'+st.starOnly+'">★ Starred sections</button>';
+  h+='<button class="chip" data-linked="1" aria-pressed="'+st.notesOnly+'">Notes-linked</button>';
+  h+='<button class="chip" data-m="1" aria-pressed="'+(st.mode==="learn")+'">Only unlearned</button>';
+  $("chips").innerHTML=h;
+}
+function render(){
+  var d=deck();
+  if(st.i>=d.length)st.i=Math.max(0,d.length-1);
+  var kn=C.filter(function(x){return st.known[x[1]]}).length;
+  $("nc").textContent=C.length;
+  $("score").textContent=kn+" of "+C.length+" learned";
+  $("fill").style.width=(C.length?kn/C.length*100:0)+"%";
+  var c=$("card");
+  if(!d.length){
+    c.className="card";
+    c.innerHTML='<div class="face empty">'+(C.length?"No cards here. Switch the filter or reset progress.":"No Public Health flashcards yet. Send your material and they will show up here.")+'</div>';
+    $("pos").textContent="0 cards";return;
+  }
+  var x=C[d[st.i]];
+  $("pos").textContent="Card "+(st.i+1)+" of "+d.length;
+  c.className="card"+(st.flip?" flip":"");
+  c.setAttribute("aria-label",st.flip?"Answer. Press to see question.":"Question. Press to see answer.");
+  c.innerHTML='<div class="face"><span class="tag">'+tagOf(x)+'</span><div class="q">'+x[1]+'</div><span class="hint">Tap to flip</span></div>'+
+    '<div class="face back"><span class="tag">'+tagOf(x)+'</span><div class="a">'+x[2]+'</div>'+(x[3]?'<div class="note">'+x[3]+'</div>':'')+'</div>';
+}
+function go(n){var d=deck();if(!d.length)return;st.i=(st.i+n+d.length)%d.length;st.flip=false;render()}
+function mark(v){
+  var d=deck();if(!d.length)return;var key=C[d[st.i]][1];
+  if(v)st.known[key]=1;else delete st.known[key];
+  save();st.flip=false;
+  if(st.mode==="learn"&&v){render();return}
+  go(1);
+}
+$("card").onclick=function(){if(!deck().length)return;st.flip=!st.flip;render()};
+$("next").onclick=function(){go(1)};
+$("prev").onclick=function(){go(-1)};
+$("got").onclick=function(){mark(true)};
+$("again").onclick=function(){mark(false)};
+$("shuf").onclick=function(){
+  for(var j=st.order.length-1;j>0;j--){var r=Math.floor(Math.random()*(j+1)),t=st.order[j];st.order[j]=st.order[r];st.order[r]=t}
+  st.i=0;st.flip=false;render();
+};
+$("reset").onclick=function(){st.known={};save();st.i=0;st.flip=false;render()};
+$("chips").onclick=function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.ch!==undefined){st.ch=+b.dataset.ch;st.starOnly=false;st.notesOnly=false}
+  if(b.dataset.star){st.starOnly=!st.starOnly;st.notesOnly=false;st.ch=0}
+  if(b.dataset.linked){st.notesOnly=!st.notesOnly;st.starOnly=false;st.ch=0}
+  if(b.dataset.m)st.mode=st.mode==="learn"?"all":"learn";
+  st.i=0;st.flip=false;chips();render();
+};
+document.addEventListener("keydown",function(e){
+  if(document.getElementById("class-ph").hidden||$("tab-cards").hidden)return;
+  if(e.key==="ArrowRight")go(1);
+  else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key===" "&&document.activeElement.tagName!=="BUTTON"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"){e.preventDefault();if(deck().length){st.flip=!st.flip;render()}}
+});
+chips();render();
+
+/* ---------- Notes ---------- */
+var list=$("list");
+function draw(t){
+  var h="";
+  N.forEach(function(s){
+    var items=s[1].filter(function(x){return !t||(s[0]+" "+x).toLowerCase().indexOf(t)>-1});
+    if(!items.length)return;
+    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div></details>';
+  });
+  list.innerHTML=h||'<p class="sub">'+(N.length?"No notes match that search.":"No Public Health notes yet. Send your material and it will be organized here.")+'</p>';
+}
+$("q").oninput=function(){draw(this.value.trim().toLowerCase())};
+draw("");
+var ta=$("ta"),nst=$("st");
+try{ta.value=localStorage.getItem(K_NOTES)||""}catch(e){}
+ta.oninput=function(){try{localStorage.setItem(K_NOTES,ta.value);nst.textContent="Saved"}catch(e){nst.textContent="Not saved (storage unavailable)"}};
+$("copy").onclick=function(){
+  var all=N.map(function(s){return s[0]+"\n"+s[1].map(function(x){return"- "+x.replace(/<[^>]+>/g,"")}).join("\n")}).join("\n\n")+"\n\nMy new notes\n"+ta.value;
+  try{navigator.clipboard.writeText(all).then(function(){nst.textContent="Copied"},function(){nst.textContent="Copy blocked. Select the text manually."})}catch(e){nst.textContent="Copy blocked. Select the text manually."}
+};
+$("clr").onclick=function(){if(ta.value&&!confirm("Clear your new notes?"))return;ta.value="";ta.oninput()};
+
+/* ---------- Study guide ---------- */
+var gs={};
+try{gs=JSON.parse(localStorage.getItem(K_GUIDE)||"{}")}catch(e){gs={}}
+function gkey(gi,ti){return G[gi][0]+"|"+G[gi][3][ti][0]}
+function gcount(){var t=0,d=0;G.forEach(function(g,gi){g[3].forEach(function(_,ti){t++;if(gs[gkey(gi,ti)])d++})});$("gprog").textContent=d+" of "+t+" topics reviewed"}
+(function(){
+  var h="";
+  if(!G.length)h='<p class="empty">No Public Health study guide topics yet. Send your material and they will show up here.</p>';
+  G.forEach(function(g,gi){
+    h+="<h2>"+g[0]+"</h2>"+(g[2]?'<p class="sub">'+g[2]+"</p>":"")+'<ul class="gl">';
+    g[3].forEach(function(t,ti){h+='<li><label><input type="checkbox" data-gi="'+gi+'" data-ti="'+ti+'"'+(gs[gkey(gi,ti)]?" checked":"")+"><span><b>"+t[0]+".</b> "+t[1]+"</span></label></li>"});
+    h+='</ul><button class="gbtn" data-ch="'+(g[1]||0)+'">Practice these flashcards</button>';
+  });
+  $("glist").innerHTML=h;gcount();
+})();
+$("glist").onchange=function(e){
+  var d=e.target.dataset;if(d.gi===undefined)return;
+  var k=gkey(+d.gi,+d.ti);
+  if(e.target.checked)gs[k]=1;else delete gs[k];
+  try{localStorage.setItem(K_GUIDE,JSON.stringify(gs))}catch(x){}
+  gcount();
+};
+$("glist").onclick=function(e){var b=e.target.closest(".gbtn");if(!b)return;st.ch=+b.dataset.ch;st.starOnly=false;st.notesOnly=false;st.mode="all";st.i=0;st.flip=false;chips();render();showTab("cards")};
+
+/* ---------- Tabs ---------- */
+function showTab(n){
+  ["cards","notes","learn","guide","test"].forEach(function(t){
+    $("tab-"+t).hidden=t!==n;
+    document.querySelector('[data-phtab="'+t+'"]').setAttribute("aria-selected",String(t===n));
+  });
+  window.scrollTo(0,0);
+}
+$("nav").onclick=function(e){var b=e.target.closest("button");if(b)showTab(b.dataset.phtab)};
+
+/* ---------- Plain English ---------- */
+(function(){
+  var h='<h2>Make the notes stick</h2><p class="sub">Each topic gives you a plain-language meaning, a real-life example when useful, and a memory hook. Learn the course term first, then use the hook to recall what it means.</p>';
+  if(!L.length)h+='<p class="empty">No Plain English topics yet. Send your material and they will show up here.</p>';
+  L.forEach(function(section){
+    h+='<details class="star"><summary>'+section[0]+'</summary><div class="body">';
+    section[1].forEach(function(topic){
+      h+='<div class="memory-topic"><h3>'+topic[0]+'</h3><p>'+topic[1]+'</p><p class="memory-hook"><b>Remember it:</b> '+topic[2]+'</p></div>';
+    });
+    h+='</div></details>';
+  });
+  $("llist").innerHTML=h;
+})();
+$("ltog").onclick=function(){
+  var ds=$("llist").querySelectorAll("details");if(!ds.length)return;
+  var o=!ds[0].open;ds.forEach(function(d){d.open=o});this.textContent=o?"Close all":"Open all";
+};
+
+/* ---------- Practice test ---------- */
+var testChapter=0,testSet=[],testPos=0,checkedMap={},testCorrect=0;
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function testChips(){
+  var h='<button class="chip" data-tch="0" aria-pressed="'+(testChapter===0)+'">All chapters</button>';
+  chapterIds().forEach(function(n){
+    if(T.some(function(q){return q[0]===n}))h+='<button class="chip" data-tch="'+n+'" aria-pressed="'+(testChapter===n)+'">'+NAMES[n]+'</button>';
+  });
+  $("testchips").innerHTML=h;
+}
+function buildTestSet(){
+  testSet=shuffle(T.filter(function(q){return !testChapter||q[0]===testChapter}));
+  testPos=0;checkedMap={};testCorrect=0;renderTest();
+}
+function renderTest(){
+  testChips();
+  var q=testSet[testPos];
+  if(!q){
+    $("testquestions").innerHTML='<div class="empty">'+(T.length?"No questions in this set.":"No Public Health practice questions yet. Send your material and they will show up here.")+'</div>';
+    $("testprogress").textContent="No questions";$("testscore").textContent="";
+    $("testfeedback").textContent="";$("testfeedback").className="test-result";
+    $("checkone").disabled=true;$("testprev").disabled=true;$("testnext").disabled=true;$("testresult").textContent="";
+    return;
+  }
+  $("testnext").disabled=false;
+  var prior=checkedMap[testPos],h='<div class="testq"><b>'+q[1]+'</b><div class="test-options">';
+  q[2].forEach(function(opt,j){h+='<label><input type="radio" name="phAnswer" value="'+j+'" '+(prior&&prior.chosen===j?'checked':'')+' '+(prior?'disabled':'')+'>'+String.fromCharCode(65+j)+'. '+opt+'</label>'});
+  h+='</div></div>';$("testquestions").innerHTML=h;
+  $("testprogress").textContent="Question "+(testPos+1)+" of "+testSet.length+(q[0]&&NAMES[q[0]]?" · "+NAMES[q[0]]:"");
+  var checked=Object.keys(checkedMap).length;$("testscore").textContent="Checked: "+checked+" · Correct: "+testCorrect;
+  $("testfeedback").textContent=prior?((prior.right?"Correct! ":"Not quite. Correct answer: ")+q[2][q[3]]+". "+q[4]):"Choose an answer, then check it to see feedback for this question.";
+  $("testfeedback").className="test-result"+(prior?(prior.right?" correct":" wrong"):"");
+  $("checkone").disabled=!!prior;$("checkone").textContent=prior?"Answer checked":"Check answer";
+  $("testprev").disabled=testPos===0;$("testnext").textContent=testPos===testSet.length-1?"Cycle to next question":"Next question";
+  $("testresult").textContent=checked===testSet.length?"Round complete: "+testCorrect+" / "+testSet.length+" correct ("+Math.round(testCorrect/testSet.length*100)+"%). Shuffle/restart for another round.":"";
+}
+function checkCurrent(){
+  var q=testSet[testPos];if(!q||checkedMap[testPos])return;
+  var selected=$("testquestions").querySelector('input[name="phAnswer"]:checked');
+  if(!selected){$("testfeedback").textContent="Pick an answer first, then check it.";return}
+  var chosen=+selected.value,right=chosen===q[3];
+  checkedMap[testPos]={chosen:chosen,right:right};if(right)testCorrect++;renderTest();
+}
+$("testchips").onclick=function(e){var b=e.target.closest("button");if(!b)return;testChapter=+b.dataset.tch;buildTestSet()};
+$("checkone").onclick=checkCurrent;
+$("testprev").onclick=function(){if(testPos>0){testPos--;renderTest()}};
+$("testnext").onclick=function(){if(testSet.length){testPos=(testPos+1)%testSet.length;renderTest()}};
+$("testreset").onclick=buildTestSet;
+buildTestSet();
+
+showTab("cards");
+window.scrollTo(0,0);
+})();
+
+/* ---------- Class switcher (Psych 2 / Public Health) ---------- */
+(function(){
+  var panels={psych:"class-psych",ph:"class-ph"};
+  function setClass(c,scroll){
+    Object.keys(panels).forEach(function(k){
+      document.getElementById(panels[k]).hidden=k!==c;
+      document.querySelector('[data-class="'+k+'"]').setAttribute("aria-selected",String(k===c));
+    });
+    try{localStorage.setItem("study-class",c)}catch(e){}
+    if(scroll)window.scrollTo(0,0);
+  }
+  document.getElementById("classes").onclick=function(e){var b=e.target.closest("button");if(b)setClass(b.dataset.class,true)};
+  var saved="psych";try{saved=localStorage.getItem("study-class")||"psych"}catch(e){}
+  setClass(panels[saved]?saved:"psych",false);
+  window.scrollTo(0,0);
+})();
 </script>
 </body>
 </html>

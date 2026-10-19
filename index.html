@@ -168,8 +168,6 @@ h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns
 
 .byline:after{content:" ❀"; color:#d78aa0}
 .exs{margin:10px 0 2px;padding:10px 14px;border-radius:12px;background:var(--lavender);border:1px solid var(--line)}.exs ul{margin:6px 0 0}.exs li{margin:5px 0}.exs>b{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-/* Longer examples: a second purple box beneath the quick examples */
-.exlong{margin:8px 0 4px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--lavender) 68%,#ffffff);border:1px solid #cfc1ec;border-left:4px solid #a58bd8;line-height:1.55}.exlong>b{display:block;margin-bottom:5px;font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:#69528f}.exlong p{margin:5px 0 0}body.dark-theme .exlong{background:#302940;border-color:#62517f}body.dark-theme .exlong>b{color:#d7c5ff}
 .sp-wrap{overflow-x:auto;margin:6px 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .sp-table{border-collapse:collapse;width:100%;min-width:480px;font-size:.88rem}
 .sp-table th,.sp-table td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
@@ -194,7 +192,6 @@ h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns
 <button role="tab" data-tab="cards" aria-selected="true">Flashcards</button>
 <button role="tab" data-tab="notes" aria-selected="false">Notes</button>
 <button role="tab" data-tab="learn" aria-selected="false">Plain English</button>
-<button role="tab" data-tab="path" aria-selected="false">Learn step by step</button>
 <button role="tab" data-tab="guide" aria-selected="false">Study guide</button>
 <button role="tab" data-tab="test" aria-selected="false">Practice test</button>
 </nav>
@@ -244,14 +241,6 @@ h1:before{content:"";background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns
 <p class="sub">Each topic in everyday language, plus a trick to remember it. Tap a topic to open it.</p>
 <button class="gbtn" id="ltog">Open all</button>
 <div id="llist"></div>
-</section>
-<section id="tab-path" hidden>
-<div class="learn-hero"><h2>Learn it, use it, remember it</h2><p>Short lessons that explain one idea, show a real example, point out a common mix-up, and let you check yourself. Your progress saves in this browser.</p></div>
-<div class="meta"><span id="lp-count">0 of 5 lessons mastered</span><span id="lp-step">Lesson 1 of 5</span></div>
-<div class="lesson-progress"><span id="lp-fill"></span></div>
-<div class="lesson-picker" id="lp-picker" aria-label="Choose a lesson"></div>
-<div id="lp-content"></div>
-<div class="lesson-footer"><button class="btn" id="lp-prev">Previous lesson</button><button class="btn go" id="lp-next">Next lesson</button></div>
 </section>
 </div>
 <div id="class-ph" hidden>
@@ -787,51 +776,14 @@ var EX=[
 ["Hypothesis: more sleep improves memory; operationalized as 8 vs. 4 hours of sleep and a word-recall score."],
 ["Ch 7: a scale always 5 lb off is reliable, not valid. Ch 9: a baby who clings, then is angry, on reunion = ambivalent. Ch 10: a hungry student can’t study (Maslow)."]
 ];
-function exHtml(si){var e=EX[si];return e&&e.length?'<div class="exs"><b>Quick examples</b><ul>'+e.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>':""}
-/* Expanded, student-friendly examples paired with the short examples above. */
-var EX_LONG=[
-["Imagine two people with psychology degrees. One works at a university designing memory experiments and analyzing data; the other spends most of the day helping clients manage anxiety. The first role often fits a research-focused Ph.D., while the second may fit a practice-focused Psy.D. There is overlap, but the main difference is the kind of work each program emphasizes."],
-["A developmental psychologist might test the same children at ages 5, 10, 15, and 20 to see how confidence changes as they grow. A cognitive psychologist could compare reading scores when students work in silence versus with background noise. A social psychologist might observe whether students are more likely to join a club when their friends join too. Each studies behavior, but asks a different kind of question."],
-["A student is cramming for a test. A neuroscience researcher looks at stress responses in the brain and body. A psychodynamic psychologist asks whether an unrecognized fear of failure is affecting the student. A behavioral psychologist focuses on how past rewards shaped the habit. A cognitive psychologist studies the student’s belief that cramming will work, while a humanistic psychologist focuses on the student’s personal goals and choices."],
-["A child who is good at music may have inherited some musical abilities, but practice, lessons, and access to instruments also matter. That is nature and nurture working together. A student’s choice of college major can feel personal, yet family expectations and money may limit the options they consider. These questions help psychologists examine how biology, experience, awareness, and culture shape behavior."],
-["Suppose a teacher wonders whether saying a new classmate’s name aloud helps students remember it. The teacher first asks the question, then proposes a theory about attention and memory. The testable hypothesis might be that students who repeat the name will remember more names after ten minutes. The researcher gives both groups the same number of names, measures how many they recall, compares the results, and shares the findings so others can repeat the study."],
-["A researcher using school archives might compare attendance records with grades that already exist. For naturalistic observation, the researcher watches children play at recess without changing what happens. A survey asks many students how often they use social media. A case study closely examines one person after a brain injury. A correlation might show that students who study more often have higher grades, but that alone does not prove studying caused the higher grades; an experiment is needed to test cause and effect."],
-["A researcher wants to know whether music improves memory. One randomly assigned group studies a word list while listening to instrumental music; another studies in silence. The independent variable is the study condition, and the dependent variable is the number of words recalled. Random assignment helps make the groups comparable. If the difference is unlikely to be due to chance, it may be statistically significant; repeating the study with new participants checks whether the result holds up."],
-["A person who performs well on vocabulary, math, and reasoning tasks may show a broad general ability often called g. Someone solving a completely unfamiliar puzzle uses fluid intelligence, while someone using years of vocabulary knowledge uses crystallized intelligence. A mechanic finding a practical fix with limited tools shows practical problem-solving. These examples show why intelligence can involve several related abilities rather than just one classroom skill."],
-["If a bathroom scale reads five pounds too high every single time, it is reliable because its readings are consistent, but it is not valid for measuring actual weight. A well-designed math test has validity if it measures math skills rather than reading ability. An achievement test measures what someone has learned, while an adaptive test changes question difficulty based on earlier answers."],
-["A student identified as gifted may receive more challenging work so they can keep learning. A person with an intellectual disability may need support with certain everyday tasks, but their abilities and independence vary widely. Psychologists consider both test scores and adaptive functioning, such as communication, daily living, and social skills, rather than relying on an IQ score alone."],
-["Heritability estimates describe how much differences within a particular group are associated with genetic differences; they do not tell you that a person’s trait is fixed. A culture-fair test tries to reduce the advantage of language or cultural knowledge unrelated to the skill being measured. Functional fixedness can make someone overlook using a coin to tighten a screw, while a mental set can make someone repeat an old solution even when a new problem needs a different approach."],
-["In an attachment study, a securely attached child may be upset when a caregiver leaves but seek comfort and settle when the caregiver returns. An avoidant child may show little outward reaction, while an ambivalent child may cling and still resist comfort. These patterns describe how children respond in a particular situation; they are not labels that determine a child’s entire future."],
-["An authoritative parent sets a clear bedtime, explains why sleep matters, and listens when the child asks for a reasonable change. An authoritarian parent may insist on the same rule without discussion. A permissive parent may avoid setting a bedtime, while an uninvolved parent may rarely check whether the child is getting enough rest. Parenting styles are patterns, and real families can show a mix depending on the situation."],
-["A baby who looks for a toy after it is hidden is showing object permanence. A young child who assumes everyone can see the toy from the same angle may be showing egocentric thinking. If the same amount of juice is poured from a short wide cup into a tall narrow glass, a child who understands conservation knows the amount has not changed. An older child may use formal operational thinking to reason through a hypothetical question."],
-["A teenager may feel that everyone noticed a small mistake in class, even though most classmates barely noticed; this is adolescent egocentrism. During identity development, a teen might try different activities and interests to learn what fits them. Later, a person may work on building close relationships, contributing to younger generations, or reflecting on the meaning of their life. Erikson’s stages describe these changing social and emotional challenges across life."],
-["An older adult may take longer to solve a brand-new puzzle but still have a strong vocabulary built over decades. Activity theory would emphasize that staying socially involved, such as volunteering or joining a walking group, can support well-being. Continuity theory highlights keeping familiar interests and routines, such as continuing to read every evening after retirement. These are different ways of understanding adjustment to aging."],
-["When someone is thirsty, drinking reduces the body’s drive and helps restore balance, or homeostasis. A bird’s seasonal migration is often used as an example of instinctive behavior. A student may work hard because a scholarship is an incentive. If a person plays guitar because it feels enjoyable, that is intrinsic motivation; if they play only to earn money, that is extrinsic motivation. More than one motive can operate at once."],
-["A hungry student may struggle to concentrate on a creative project because basic physical needs are not met. Once food and safety are secure, belonging, respect, and personal growth may become more important. Someone might set a challenging grade goal to meet an achievement motive, join a club to build friendships, or run for class president to influence decisions. Maslow’s hierarchy is a model for thinking about needs, not a strict rule that every person follows in the same order."],
-["In the James-Lange theory, a person notices a racing heart and trembling and interprets those bodily changes as fear. Cannon-Bard proposes that bodily arousal and the feeling of fear happen at the same time. In the Schachter-Singer theory, the person experiences arousal and uses the situation to label it: the same racing heart might be called fear before a test or excitement before a performance."],
-["A school psychologist might predict that students who sleep enough will perform better, help change behavior by teaching a strategy for managing test anxiety, and explain procrastination by studying how avoidance temporarily reduces stress. These goals work together: describing a pattern can lead to predictions, explanations, and interventions that are tested for effectiveness."],
-["A psychologist might study both child development and clinical psychology when helping a young person manage anxiety, because age affects how anxiety is expressed and which treatments are appropriate. Combining subfields lets researchers consider the person’s developmental stage as well as their symptoms and treatment needs."],
-["Researchers could follow the same group of children from preschool through high school and into adulthood, checking in every few years about friendships. This long-term design can reveal how relationships change within the same people, though it takes time and some participants may stop taking part."],
-["A company might use a personality questionnaire when hiring for a role that requires frequent teamwork. Psychologists would need to check that the test measures the relevant trait consistently and actually predicts job behavior, rather than using a score as the only reason to hire or reject someone."],
-["A schema is a mental framework built from experience. If you have visited restaurants before, you may expect to see a menu, order food, eat, and pay even in a new restaurant. In forensic psychology, researchers might test whether a leading question or a lineup that subtly suggests one suspect changes an eyewitness’s memory or choice."],
-["A neuroscience study might use brain imaging to examine which areas are active during a stressful task, while also measuring behavior. A separate long-term study could examine whether conscientiousness, such as planning ahead and following routines, is associated with health outcomes. An association does not mean conscientiousness alone determines how long someone lives; many biological and social factors affect health."],
-["Social psychologists might study whether a student joins a group chat because friends are already in it or because they fear being left out. Cross-cultural psychologists might compare how families in different cultures balance individual preferences with family responsibilities. They look for patterns without assuming every person in a culture thinks the same way."],
-["You see someone waiting at a bus stop and imagine that they may be late for work, worried about a family member, or heading toward an important event. The feeling of sonder is recognizing that strangers have complex lives of their own, even though you know very little about them."],
-["A clinical psychologist may help a client practice coping strategies for panic attacks. An industrial-organizational psychologist might help a workplace improve manager training and teamwork. A sport psychologist could teach a basketball player a consistent breathing and attention routine before free throws. All apply psychological research to practical goals in different settings."],
-["Clinical neuropsychologists may assess how a brain injury affects memory, planning, or impulse control. Behavioral geneticists compare relatives or twins to study how genes and environments contribute to differences. Evolutionary psychologists ask how behaviors may have been shaped over generations. These perspectives can offer different explanations, and each explanation needs evidence rather than assumptions about a person."],
-["If the question asks why toddlers’ language changes quickly, developmental psychology is the best fit. If it asks how stress affects blood pressure or sleep, health psychology is relevant. If it asks how a witness’s memory might be influenced during an investigation, forensic psychology fits. Focus on the question being asked, not just a keyword in the scenario."],
-["A researcher designing a memory experiment may need doctoral training and may choose a Ph.D. because research is central to the role. A practitioner focused on providing psychological services may choose a Psy.D. A behaviorist explaining why a student studies after receiving praise would focus on reinforcement and observable behavior."],
-["To test whether sleep improves memory, a researcher could assign participants to different sleep-duration conditions when it is safe and ethical, then give everyone the same word-recall test. The study must define how sleep is measured, keep other conditions as similar as possible, and avoid claiming that sleep caused a difference unless the design supports that conclusion."],
-["If a scale always gives the same reading but is consistently off, it is reliable but not valid. If a child seeks comfort and then shows mixed anger when a caregiver returns, that behavior may resemble an ambivalent attachment pattern in the study context. If a student is too hungry to focus on a difficult assignment, Maslow’s model helps explain how unmet physiological needs can compete with higher-level goals."]
-];
-function exLongHtml(si){var e=EX_LONG[si];return e&&e.length?'<div class="exlong"><b>Longer examples</b>'+e.map(function(x){return'<p>'+x+'</p>'}).join('')+'</div>':""}
+function exHtml(si){var e=EX[si];return e&&e.length?'<div class="exs"><b>Examples</b><ul>'+e.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>':""}
 function draw(t){
   var h="",n=0;
   N.forEach(function(s,si){
     var items=s[1].filter(function(x){return !t||(s[0]+" "+x).toLowerCase().indexOf(t)>-1});
     if(!items.length)return;
     n++;
-    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul>'+exHtml(si)+exLongHtml(si)+'</div></details>';
+    h+='<details class="'+(s[2]?"star":"")+'"'+(t?" open":"")+'><summary>'+s[0]+'</summary><div class="body"><ul>'+items.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul>'+exHtml(si)+'</div></details>';
   });
   list.innerHTML=h||'<p class="sub">No notes match that search.</p>';
 }
@@ -869,7 +821,7 @@ function gcount(){var t=0,d=0;G.forEach(function(g,gi){g[3].forEach(function(_,t
 })();
 $("glist").onchange=function(e){var k=e.target.dataset.k;if(!k)return;if(e.target.checked)gs[k]=1;else delete gs[k];try{localStorage.setItem("psych2-guide",JSON.stringify(gs))}catch(x){}gcount()};
 $("glist").onclick=function(e){var b=e.target.closest(".gbtn");if(!b)return;st.ch=+b.dataset.ch;st.mode="all";st.i=0;st.flip=false;chips();render();showTab("cards")};
-function showTab(n){["cards","notes","learn","path","guide","test"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});if(n==="path")renderPath();window.scrollTo(0,0)}
+function showTab(n){["cards","notes","learn","guide","test"].forEach(function(t){$("tab-"+t).hidden=t!==n;document.querySelector('[data-tab="'+t+'"]').setAttribute("aria-selected",t===n)});window.scrollTo(0,0)}
 document.querySelector(".tabs").onclick=function(e){var b=e.target.closest("button");if(b)showTab(b.dataset.tab)};
 var L=[
 ["Chapter 1",[
@@ -1785,44 +1737,6 @@ function mount(cfg){
   $("next").onclick=function(){if(qs.length){qi=(qi+1)%qs.length;renderQ()}};
   $("shuf").onclick=build;
 }
-
-/* ---------- Guided learning path ---------- */
-(function(){
- var lessons=[
-  {title:"Scientific method",chapter:"Chapter 2",idea:"Psychologists use a planned process to answer questions with evidence instead of guessing.",example:"A teacher wonders whether a short review before class improves quiz scores. She asks a question, predicts what will happen, decides how to measure review time and quiz scores, tests the idea, then shares the results.",trap:"A hypothesis is not the same as a theory. A theory is a broad explanation; a hypothesis is a specific prediction that can be tested.",q:"Which is the best example of a testable hypothesis?",opts:["Students who sleep better will score higher on a quiz.","Sleep is an interesting topic.","Learning is important."],correct:0,why:"The first statement predicts a relationship that researchers can measure. The other statements are broad opinions, not specific testable predictions.",hook:"Ask → Explain → Test → Tell."},
-  {title:"Research methods",chapter:"Chapter 2",idea:"Choose the research method based on what the researcher actually does.",example:"Watching students study in the library without changing their behavior is naturalistic observation. Asking 500 students how often they study is a survey. Studying one student in depth is a case study.",trap:"Descriptive methods can describe behavior, but they do not prove that one variable causes another.",q:"A researcher watches children on a playground without interfering. Which method is this?",opts:["Survey research","Naturalistic observation","Archival research"],correct:1,why:"The researcher observes behavior as it naturally happens and does not intervene. A survey asks questions, while archival research uses existing records.",hook:"Naturalistic = watch nature as it happens."},
-  {title:"Correlation vs. causation",chapter:"Chapter 2",idea:"Correlation means two variables are related. It does not prove that one variable causes the other.",example:"Ice cream sales and sunburns may both increase in summer. Ice cream does not cause sunburn; sunny weather helps explain why both rise.",trap:"If two things change together, do not immediately say one caused the other. A third variable may explain the relationship.",q:"Students who spend more time studying often earn higher grades. What can you conclude from correlation alone?",opts:["Studying definitely causes every higher grade.","The two variables are related, but this alone does not prove cause and effect.","There is no relationship."],correct:1,why:"Correlation shows an association. Other factors, such as prior knowledge or access to help, could affect both studying and grades.",hook:"Related does not mean caused."},
-  {title:"Independent vs. dependent variables",chapter:"Chapter 2",idea:"In an experiment, the independent variable is changed by the researcher; the dependent variable is measured.",example:"A researcher gives one group a quiet study room and another group a noisy room, then compares test scores. Room condition is the independent variable; test score is the dependent variable.",trap:"Ask two questions: What did the researcher change? That is the independent variable. What outcome did they measure? That is the dependent variable.",q:"A researcher changes how much caffeine participants drink and measures their reaction time. What is the dependent variable?",opts:["Amount of caffeine","Reaction time","The participants"],correct:1,why:"Reaction time is the measured outcome. Caffeine amount is what the researcher changes, so it is the independent variable.",hook:"I change the IV; the DV depends on it."},
-  {title:"Reliability vs. validity",chapter:"Chapter 7",idea:"Reliability means consistency. Validity means measuring what the test is supposed to measure.",example:"A scale that shows the same weight every time is reliable. If it is always 10 pounds too high, it is not accurate, so it may be reliable without being valid.",trap:"A test can be reliable without being valid. Consistency alone does not prove that a test measures the right thing.",q:"A personality test gives nearly the same result each time, but it does not actually measure personality. What is true?",opts:["It is reliable but not valid.","It is valid but not reliable.","It is both reliable and valid."],correct:0,why:"The results are consistent, which suggests reliability. But the test does not measure what it claims to measure, so it lacks validity.",hook:"Reliable = repeats. Valid = measures the right thing."}
- ];
- var current=0, answers={}, mastered={};
- try{answers=JSON.parse(localStorage.getItem("psych2-path-answers")||"{}");mastered=JSON.parse(localStorage.getItem("psych2-path-mastered")||"{}")}catch(e){answers={};mastered={}}
- function save(){try{localStorage.setItem("psych2-path-answers",JSON.stringify(answers));localStorage.setItem("psych2-path-mastered",JSON.stringify(mastered))}catch(e){}}
- function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
- function renderPath(){
-  var l=lessons[current],a=answers[current],done=Object.keys(mastered).filter(function(k){return mastered[k]}).length;
-  $("lp-count").textContent=done+" of "+lessons.length+" lessons mastered";$("lp-step").textContent="Lesson "+(current+1)+" of "+lessons.length;$("lp-fill").style.width=(done/lessons.length*100)+"%";
-  $("lp-picker").innerHTML=lessons.map(function(x,i){return '<button type="button" data-lesson="'+i+'" aria-pressed="'+(i===current)+'"><b>'+(i+1)+'. '+esc(x.title)+'</b><br><small>'+esc(x.chapter)+(mastered[i]?' · ✓ mastered':'')+'</small></button>'}).join("");
-  var h='<div class="lesson-card"><div class="lesson-kicker">Step 1 · Understand · '+esc(l.chapter)+'</div><h3>'+esc(l.title)+'</h3><p>'+esc(l.idea)+'</p><div class="lesson-example"><b>Step 2 · See it in action</b><br>'+esc(l.example)+'</div><div class="lesson-trap"><b>Step 3 · Watch for this mix-up</b><br>'+esc(l.trap)+'</div><div class="lesson-example"><b>Memory hook</b><br>'+esc(l.hook)+'</div><div class="lesson-kicker" style="margin-top:20px">Step 4 · Try it yourself</div><p><b>'+esc(l.q)+'</b></p>';
-  l.opts.forEach(function(o,i){h+='<label class="lesson-option"><input type="radio" name="lp-answer" value="'+i+'" '+(a&&a.choice===i?'checked':'')+' '+(a&&a.checked?'disabled':'')+'>'+esc(o)+'</label>'});
-  h+='<div class="row"><button type="button" class="btn go" id="lp-check" '+(a&&a.checked?'disabled':'')+'>Check my answer</button><button type="button" class="btn" id="lp-reset-answer">Try again</button></div>';
-  if(a&&a.checked)h+='<div class="lesson-feedback '+(a.correct?'good':'bad')+'" role="status"><b>'+(a.correct?'That’s right!':'Not quite yet.')+'</b> '+esc(l.why)+'</div>';
-  if(mastered[current])h+='<p class="mastery-pill">✓ Marked as mastered. You can revisit this lesson anytime.</p>';
-  h+='</div>';$('lp-content').innerHTML=h;
-  $('lp-prev').disabled=current===0;$('lp-next').textContent=current===lessons.length-1?'Back to first lesson':'Next lesson';
- }
- $("lp-picker").addEventListener("click",function(e){var b=e.target.closest("button[data-lesson]");if(!b)return;current=+b.dataset.lesson;renderPath()});
- $("lp-content").addEventListener("click",function(e){
-  if(e.target.id==="lp-check"){
-   var l=lessons[current],sel=document.querySelector('input[name="lp-answer"]:checked');if(!sel){alert("Choose an answer first, then check it.");return}var c=+sel.value,correct=c===l.correct;answers[current]={choice:c,checked:true,correct:correct};if(correct)mastered[current]=true;else delete mastered[current];save();renderPath();
-  }
-  if(e.target.id==="lp-reset-answer"){delete answers[current];delete mastered[current];save();renderPath()}
- });
- $("lp-prev").onclick=function(){if(current>0){current--;renderPath()}};
- $("lp-next").onclick=function(){current=current===lessons.length-1?0:current+1;renderPath()};
- window.renderPath=renderPath;
-})();
-
 var D=window.SPD;
 mount({id:"psych",root:"class-psych",K:"psych2",names:{4:"My notes"},cards:function(){return C},T:function(){return T},checkBtn:"checkone",cur:function(){return{q:testSet[testPos],r:checkedMap[testPos]}},compare:D.psych.compare,scen:D.psych.scen});
 var A=window.PH_API;
